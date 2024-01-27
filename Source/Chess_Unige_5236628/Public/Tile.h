@@ -24,6 +24,17 @@ public:
 	// Sets default values for this actor's properties
 	ATile();
 
+	// White material interface 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
+		UMaterialInterface* WhiteMaterial;
+
+	// Black material interface 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
+		UMaterialInterface* BlackMaterial;
+
+	// set tile material
+	void SetTileMaterial(const int32 ElementIndex, UMaterialInterface* TileMaterial);
+
 	// set the player owner and the status of a tile
 	void SetTileStatus(const int32 TileOwner, const ETileStatus TileStatus);
 
@@ -58,9 +69,5 @@ protected:
 	// (x, y) position of the tile
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		FVector2D TileGridPosition;
-
-//public:	
-	// Called every frame
-	//virtual void Tick(float DeltaTime) override;
 
 };

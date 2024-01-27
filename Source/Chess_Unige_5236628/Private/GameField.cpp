@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "BaseSign.h"
 
+
 // Sets default values
 AGameField::AGameField()
 {
@@ -55,6 +56,9 @@ void AGameField::ResetField()
 
 void AGameField::GenerateField()
 {
+	// TileMaterial variable declaration
+	UMaterialInterface* TileMaterial;
+
 	for (int32 x = 0; x < Size; x++)
 	{
 		for (int32 y = 0; y < Size; y++)
@@ -66,7 +70,22 @@ void AGameField::GenerateField()
 			Obj->SetGridPosition(x, y);
 			TileArray.Add(Obj);
 			TileMap.Add(FVector2D(x, y), Obj);
+
+			// Set TileMaterial using chessboard pattern
+			if ((x + y) % 2 == 0)
+			{
+				TileMaterial = Obj->WhiteMaterial;
+			}
+			else
+			{
+				TileMaterial = Obj->BlackMaterial;
+			}
+
+			// Apply TileMaterial to the last created tile using method SetTileMaterial
+			Obj->SetTileMaterial(0,TileMaterial);
 		}
+			
+		
 	}
 }
 

@@ -35,6 +35,12 @@ void ATile::SetTileStatus(const int32 TileOwner, const ETileStatus TileStatus)
 	Status = TileStatus;
 }
 
+// Apply TileMaterial to the StaticMeshComponent of the tile
+void ATile::SetTileMaterial(const int32 ElementIndex, UMaterialInterface* TileMaterial)
+{
+	StaticMeshComponent->SetMaterial(0, TileMaterial);
+}
+
 ETileStatus ATile::GetTileStatus()
 {
 	return Status;
