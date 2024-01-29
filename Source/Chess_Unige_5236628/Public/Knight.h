@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BaseSign.h"
+#include "BasePiece.h"
 #include "GameFramework/Actor.h"
 #include "Knight.generated.h"
 
 UCLASS()
-class CHESS_UNIGE_5236628_API AKnight : public ABaseSign
+class CHESS_UNIGE_5236628_API AKnight : public ABasePiece
 {
 	GENERATED_BODY()
 	

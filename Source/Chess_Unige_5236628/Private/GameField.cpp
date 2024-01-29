@@ -3,7 +3,7 @@
 
 #include "GameField.h"
 #include "Kismet/GameplayStatics.h"
-#include "BaseSign.h"
+#include "BasePiece.h"
 
 
 // Sets default values
@@ -98,6 +98,7 @@ TArray<ATile*>& AGameField::GetTileArray()
 {
 	return TileArray;
 }
+
 
 FVector AGameField::GetRelativeLocationByXYPosition(const int32 InX, const int32 InY) const
 {

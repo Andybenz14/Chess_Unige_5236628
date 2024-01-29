@@ -4,16 +4,27 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "BaseSign.generated.h"
+#include "BasePiece.generated.h"
+
+
+UENUM()
+enum class EPieceColor : uint8
+{
+	WHITE     UMETA(DisplayName = "White"),
+	BLACK      UMETA(DisplayName = "Black"),
+};
+
+
+
 
 UCLASS()
-class CHESS_UNIGE_5236628_API ABaseSign : public AActor
+class CHESS_UNIGE_5236628_API ABasePiece : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ABaseSign();
+	ABasePiece();
 
 protected:
 	// Called when the game starts or when spawned
@@ -24,6 +35,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		UStaticMeshComponent* StaticMeshComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Color")
+		EPieceColor Color;
 
 //public:	
 	// Called every frame

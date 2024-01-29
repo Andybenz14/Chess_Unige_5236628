@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "BaseSign.h"
+#include "BasePiece.h"
 #include "GameField.h"
 #include "CHS_GameMode.h"
 
 // Sets default values
-ABaseSign::ABaseSign()
+ABasePiece::ABasePiece()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -22,7 +22,7 @@ ABaseSign::ABaseSign()
 }
 
 // Called when the game starts or when spawned
-void ABaseSign::BeginPlay()
+void ABasePiece::BeginPlay()
 {
 	Super::BeginPlay();
 
