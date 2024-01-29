@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Tile.h"
+#include "BaseSign.h"
 #include "GameFramework/Actor.h"
 #include "GameField.generated.h"
 
