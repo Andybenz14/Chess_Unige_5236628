@@ -33,10 +33,10 @@ enum class EPieceStartingPosition : uint8
 	H8     UMETA(DisplayName = "H8 Black Rook"),
 
 	D1     UMETA(DisplayName = "D1 White Queen"),
-	D8     UMETA(DisplayName = "D8 White Queen"),
+	D8     UMETA(DisplayName = "D8 Black Queen"),
 
 	E1     UMETA(DisplayName = "E1 White King"),
-	E8     UMETA(DisplayName = "E8 White King"),
+	E8     UMETA(DisplayName = "E8 Black King"),
 
 	A2     UMETA(DisplayName = "A2 White Pawn"),
 	B2     UMETA(DisplayName = "B2 White Pawn"),
@@ -46,14 +46,14 @@ enum class EPieceStartingPosition : uint8
 	F2     UMETA(DisplayName = "F2 White Pawn"),
 	G2     UMETA(DisplayName = "G2 White Pawn"),
 	H2     UMETA(DisplayName = "H2 White Pawn"),
-	A7     UMETA(DisplayName = "A8 Black Pawn"),
-	B7     UMETA(DisplayName = "B8 Black Pawn"),
-	C7     UMETA(DisplayName = "C1 Black Pawn"),
-	D7     UMETA(DisplayName = "D8 Black Pawn"),
-	E7     UMETA(DisplayName = "E8 Black Pawn"),
-	F7     UMETA(DisplayName = "F1 Black Pawn"),
-	G7     UMETA(DisplayName = "G8 Black Pawn"),
-	H7     UMETA(DisplayName = "H8 Black Pawn"),
+	A7     UMETA(DisplayName = "A7 Black Pawn"),
+	B7     UMETA(DisplayName = "B7 Black Pawn"),
+	C7     UMETA(DisplayName = "C7 Black Pawn"),
+	D7     UMETA(DisplayName = "D7 Black Pawn"),
+	E7     UMETA(DisplayName = "E7 Black Pawn"),
+	F7     UMETA(DisplayName = "F7 Black Pawn"),
+	G7     UMETA(DisplayName = "G7 Black Pawn"),
+	H7     UMETA(DisplayName = "H7 Black Pawn"),
 
 
 };
