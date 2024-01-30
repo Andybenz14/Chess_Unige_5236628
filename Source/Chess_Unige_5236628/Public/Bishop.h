@@ -7,6 +7,8 @@
 #include "GameFramework/Actor.h"
 #include "Bishop.generated.h"
 
+
+
 UCLASS()
 class CHESS_UNIGE_5236628_API ABishop : public ABasePiece
 {
