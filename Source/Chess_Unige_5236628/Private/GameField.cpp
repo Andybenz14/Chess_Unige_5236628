@@ -2,8 +2,9 @@
 
 
 #include "GameField.h"
-#include "Kismet/GameplayStatics.h"
 #include "BasePiece.h"
+#include "Kismet/GameplayStatics.h"
+
 
 
 // Sets default values
@@ -44,7 +45,7 @@ void AGameField::ResetField()
 	{
 		Obj->SetTileStatus(NOT_ASSIGNED, ETileStatus::EMPTY);
 	}
-
+	//TODO RESET ANCHE PER PEDINE
 	// send broadcast event to registered objects 
 	OnResetEvent.Broadcast();
 
@@ -80,13 +81,194 @@ void AGameField::GenerateField()
 			{
 				TileMaterial = Obj->BlackMaterial;
 			}
-
-			// Apply TileMaterial to the last created tile using method SetTileMaterial
-			Obj->SetTileMaterial(0,TileMaterial);
-		}
 			
+			// Apply TileMaterial to the tile using method SetTileMaterial
+			Obj->SetTileMaterial(0,TileMaterial);
+
+			// Chess Pieces spawn in their starting position
+			if ((x == 2 && y==7)||(x==5 && y==7))
+			{
+				// Color = 1 = WHITE; Color = 2 = BLACK;
+				//WHITE
+				int32 Color = 1;
+				SpawnBishop(x, y, Location, TileScale, Color);
+			}
+			if ((x == 2 && y == 0) || (x == 5 && y == 0))
+			{
+				// Color = 1 = WHITE; Color = 2 = BLACK;
+				//BLACK
+				int32 Color = 2;
+				SpawnBishop(x, y, Location, TileScale, Color);
+			}
+			if ((-1 < x && x < 8) && y == 6)
+			{
+				// Color = 1 = WHITE; Color = 2 = BLACK;
+				//WHITE
+				int32 Color = 1;
+				SpawnPawn(x, y, Location, TileScale, Color);
+			}
+			if ((-1 < x && x < 8) && y == 1)
+			{
+				// Color = 1 = WHITE; Color = 2 = BLACK;
+				//BLACK
+				int32 Color = 2;
+				SpawnPawn(x, y, Location, TileScale, Color);
+			}
+			if ((x == 0 && y == 7) || (x == 7 && y == 7))
+			{
+				// Color = 1 = WHITE; Color = 2 = BLACK;
+				//WHITE
+				int32 Color = 1;
+				SpawnRook(x, y, Location, TileScale, Color);
+			}
+			if ((x == 0 && y == 0) || (x == 7 && y == 0))
+			{
+				// Color = 1 = WHITE; Color = 2 = BLACK;
+				//BLACK
+				int32 Color = 2;
+				SpawnRook(x, y, Location, TileScale, Color);
+			}
+			if ((x == 1 && y == 7) || (x == 6 && y == 7))
+			{
+				// Color = 1 = WHITE; Color = 2 = BLACK;
+				//WHITE
+				int32 Color = 1;
+				SpawnKnight(x, y, Location, TileScale, Color);
+			}
+			if ((x == 1 && y == 0) || (x == 6 && y == 0))
+			{
+				// Color = 1 = WHITE; Color = 2 = BLACK;
+				//BLACK
+				int32 Color = 2;
+				SpawnKnight(x, y, Location, TileScale, Color);
+			}
+			if ((x == 4 && y == 7))
+			{
+				// Color = 1 = WHITE; Color = 2 = BLACK;
+				//WHITE
+				int32 Color = 1;
+				SpawnKing(x, y, Location, TileScale, Color);
+			}
+			if ((x == 4 && y == 0))
+			{
+				// Color = 1 = WHITE; Color = 2 = BLACK;
+				//BLACK
+				int32 Color = 2;
+				SpawnKing(x, y, Location, TileScale, Color);
+			}
+			if ((x == 3 && y == 7))
+			{
+				// Color = 1 = WHITE; Color = 2 = BLACK;
+				//WHITE
+				int32 Color = 1;
+				SpawnQueen(x, y, Location, TileScale, Color);
+			}
+			if ((x == 3 && y == 0))
+			{
+				// Color = 1 = WHITE; Color = 2 = BLACK;
+				//BLACK
+				int32 Color = 2;
+				SpawnQueen(x, y, Location, TileScale, Color);
+			}
+		}
 		
 	}
+	
+}
+
+
+// Spawn function for Bishop 
+void AGameField::SpawnBishop(int32 x, int32 y, FVector Location, float TileScale, int32 Color)
+{
+	ABishop* ChessPiece = GetWorld()->SpawnActor<ABishop>(BishopClass, FVector(Location.X, Location.Y, Location.Z + 10), FRotator::ZeroRotator);
+	ChessPiece->SetActorScale3D(FVector(TileScale, TileScale, 0.01));
+	ChessPiece->SetBasePieceGridPosition(x, y);
+	BasePieceArray.Add(ChessPiece);
+	BasePieceMap.Add(FVector2D(x, y), ChessPiece);
+	SetPieceColor(Color, ChessPiece);
+	
+}
+
+// Spawn function for Pawn
+void AGameField::SpawnPawn(int32 x, int32 y, FVector Location, float TileScale, int32 Color)
+{
+	APawnChess* ChessPiece = GetWorld()->SpawnActor<APawnChess>(PawnClass, FVector(Location.X, Location.Y, Location.Z + 10), FRotator::ZeroRotator);
+	ChessPiece->SetActorScale3D(FVector(TileScale, TileScale, 0.01));
+	ChessPiece->SetBasePieceGridPosition(x, y);
+	BasePieceArray.Add(ChessPiece);
+	BasePieceMap.Add(FVector2D(x, y), ChessPiece);
+	SetPieceColor(Color, ChessPiece);
+
+}
+
+// Spawn function for Knight
+void AGameField::SpawnKnight(int32 x, int32 y, FVector Location, float TileScale, int32 Color)
+{
+	AKnight* ChessPiece = GetWorld()->SpawnActor<AKnight>(KnightClass, FVector(Location.X, Location.Y, Location.Z + 10), FRotator::ZeroRotator);
+	ChessPiece->SetActorScale3D(FVector(TileScale, TileScale, 0.01));
+	ChessPiece->SetBasePieceGridPosition(x, y);
+	BasePieceArray.Add(ChessPiece);
+	BasePieceMap.Add(FVector2D(x, y), ChessPiece);
+	SetPieceColor(Color, ChessPiece);
+
+}
+
+// Spawn function for King
+void AGameField::SpawnKing(int32 x, int32 y, FVector Location, float TileScale, int32 Color)
+{
+	AKing* ChessPiece = GetWorld()->SpawnActor<AKing>(KingClass, FVector(Location.X, Location.Y, Location.Z + 10), FRotator::ZeroRotator);
+	ChessPiece->SetActorScale3D(FVector(TileScale, TileScale, 0.01));
+	ChessPiece->SetBasePieceGridPosition(x, y);
+	BasePieceArray.Add(ChessPiece);
+	BasePieceMap.Add(FVector2D(x, y), ChessPiece);
+	SetPieceColor(Color, ChessPiece);
+
+}
+
+// Spawn function for Queen
+void AGameField::SpawnQueen(int32 x, int32 y, FVector Location, float TileScale, int32 Color)
+{
+	AQueen* ChessPiece = GetWorld()->SpawnActor<AQueen>(QueenClass, FVector(Location.X, Location.Y, Location.Z + 10), FRotator::ZeroRotator);
+	ChessPiece->SetActorScale3D(FVector(TileScale, TileScale, 0.01));
+	ChessPiece->SetBasePieceGridPosition(x, y);
+	BasePieceArray.Add(ChessPiece);
+	BasePieceMap.Add(FVector2D(x, y), ChessPiece);
+	SetPieceColor(Color, ChessPiece);
+	
+
+}
+
+//Spawn function for Rook
+void AGameField::SpawnRook(int32 x, int32 y, FVector Location, float TileScale, int32 Color)
+{
+	ARook* ChessPiece = GetWorld()->SpawnActor<ARook>(RookClass, FVector(Location.X, Location.Y, Location.Z + 10), FRotator::ZeroRotator);
+	ChessPiece->SetActorScale3D(FVector(TileScale, TileScale, 0.01));
+	ChessPiece->SetBasePieceGridPosition(x, y);
+	BasePieceArray.Add(ChessPiece);
+	BasePieceMap.Add(FVector2D(x, y), ChessPiece);
+	SetPieceColor(Color, ChessPiece);
+
+}
+
+// Set Material to chess pieces using color paremeter, defined in GenerateField using pieces positions
+template <typename T>
+void AGameField::SetPieceColor(int32 Color, T* ChessPiece)
+{
+	// BasePiece Material variable declaration
+	UMaterialInterface* BasePieceMaterial;
+
+	if (Color == 1)
+	{
+		BasePieceMaterial = ChessPiece->WhiteMaterial;
+		ChessPiece->SetBasePieceMaterial(0, BasePieceMaterial);
+	}
+	else
+	{
+		BasePieceMaterial = ChessPiece->BlackMaterial;
+		ChessPiece->SetBasePieceMaterial(0, BasePieceMaterial);
+	}
+
+
 }
 
 FVector2D AGameField::GetPosition(const FHitResult& Hit)
@@ -97,6 +279,11 @@ FVector2D AGameField::GetPosition(const FHitResult& Hit)
 TArray<ATile*>& AGameField::GetTileArray()
 {
 	return TileArray;
+}
+
+TArray<ABasePiece*>& AGameField::GetBasePieceArray()
+{
+	return BasePieceArray;
 }
 
 

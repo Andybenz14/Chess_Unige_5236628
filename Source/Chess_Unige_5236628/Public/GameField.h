@@ -5,6 +5,12 @@
 #include "CoreMinimal.h"
 #include "Tile.h"
 #include "BasePiece.h"
+#include "PawnChess.h"
+#include "Knight.h"
+#include "Queen.h"
+#include "King.h"
+#include "Bishop.h"
+#include "Rook.h"
 #include "GameFramework/Actor.h"
 #include "GameField.generated.h"
 
@@ -22,9 +28,17 @@ public:
 	UPROPERTY(Transient)
 		TArray<ATile*> TileArray;
 
+	// keeps track of pieces
+	UPROPERTY(Transient)
+		TArray<ABasePiece*> BasePieceArray;
+
 	//given a position returns a tile
 	UPROPERTY(Transient)
 		TMap<FVector2D, ATile*> TileMap;
+
+	//given a position returns a piece
+	UPROPERTY(Transient)
+		TMap<FVector2D, ABasePiece*> BasePieceMap;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		float NormalizedCellPadding;
@@ -48,6 +62,30 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<ATile> TileClass;
 
+	// TSubclassOf template class that provides UClass type safety
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<ABishop> BishopClass;
+
+	// TSubclassOf template class that provides UClass type safety
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<APawnChess> PawnClass;
+	
+	// TSubclassOf template class that provides UClass type safety
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<ARook> RookClass;
+
+	// TSubclassOf template class that provides UClass type safety
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<AKing> KingClass;
+
+	// TSubclassOf template class that provides UClass type safety
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<AQueen> QueenClass;
+
+	// TSubclassOf template class that provides UClass type safety
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<AKnight> KnightClass; 
+
 	// tile padding dimension
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		float CellPadding;
@@ -55,6 +93,7 @@ public:
 	// tile size
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		float TileSize;
+
 
 	// Sets default values for this actor's properties
 	AGameField();
@@ -78,6 +117,9 @@ public:
 	// return the array of tile pointers
 	TArray<ATile*>& GetTileArray();
 
+	// return the array of tile pointers
+	TArray<ABasePiece*>& GetBasePieceArray();
+
 	// return a relative position given (x,y) position
 	FVector GetRelativeLocationByXYPosition(const int32 InX, const int32 InY) const;
 
@@ -98,6 +140,30 @@ public:
 
 	// check if a line contains all equal elements
 	bool AllEqual(const TArray<int32>& Array) const;
+
+	// spawn bishop 
+	void SpawnBishop(int32 x, int32 y, FVector Location, float TileScale, int32 Color);
+
+	// spawn pawn
+	void SpawnPawn(int32 x, int32 y, FVector Location, float TileScale, int32 Color);
+
+	// spawn rook
+	void SpawnRook(int32 x, int32 y, FVector Location, float TileScale, int32 Color);
+
+	// spawn king
+	void SpawnKing(int32 x, int32 y, FVector Location, float TileScale, int32 Color);
+	
+	// spawn queen
+	void SpawnQueen(int32 x, int32 y, FVector Location, float TileScale, int32 Color);
+	
+	// spawn knight
+	void SpawnKnight(int32 x, int32 y, FVector Location, float TileScale, int32 Color);
+
+	// set chess pieces materials (called at spawn)
+	template <typename T>
+	void SetPieceColor(int32 Color, T* ChessPiece);
+	
+
 
 	//public:	
 	//	// Called every frame

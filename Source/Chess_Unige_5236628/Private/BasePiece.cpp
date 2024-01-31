@@ -2,8 +2,7 @@
 
 
 #include "BasePiece.h"
-#include "GameField.h"
-#include "CHS_GameMode.h"
+
 
 // Sets default values
 ABasePiece::ABasePiece()
@@ -19,6 +18,8 @@ ABasePiece::ABasePiece()
 	SetRootComponent(Scene);
 	StaticMeshComponent->SetupAttachment(Scene);
 
+	BasePieceGridPosition = FVector2D(0, 0);
+
 }
 
 // Called when the game starts or when spawned
@@ -29,4 +30,17 @@ void ABasePiece::BeginPlay()
 	
 }
 
+void ABasePiece::SetBasePieceGridPosition(const double InX, const double InY)
+{
+	BasePieceGridPosition.Set(InX, InY);
+}
 
+FVector2D ABasePiece::GetBasePieceGridPosition()
+{
+	return BasePieceGridPosition;
+}
+
+void ABasePiece::SetBasePieceMaterial(const int32 ElementIndex, UMaterialInterface* TileMaterial)
+{
+	StaticMeshComponent->SetMaterial(0, TileMaterial);
+}

@@ -8,6 +8,7 @@ ABishop::ABishop()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	BasePieceGridPosition = FVector2D(0, 0);
 
 }
 
@@ -24,4 +25,5 @@ void ABishop::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
+
 
