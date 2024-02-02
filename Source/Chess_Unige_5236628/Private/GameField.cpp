@@ -43,13 +43,13 @@ void AGameField::ResetField()
 {
 	for (ATile* Obj : TileArray)
 	{
-		Obj->SetTileStatus(NOT_ASSIGNED, ETileStatus::EMPTY);
+		Obj->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
 	}
 	//TODO RESET ANCHE PER PEDINE
 	// send broadcast event to registered objects 
 	OnResetEvent.Broadcast();
 
-	//ATTT_GameMode* GameMode = Cast<ATTT_GameMode>(GetWorld()->GetAuthGameMode());
+	//ACHS_GameMode* GameMode = Cast<ACHS_GameMode>(GetWorld()->GetAuthGameMode());
 	//GameMode->IsGameOver = false;
 	//GameMode->MoveCounter = 0;
 	//GameMode->ChoosePlayerAndStartGame();
@@ -71,6 +71,8 @@ void AGameField::GenerateField()
 			Obj->SetGridPosition(x, y);
 			TileArray.Add(Obj);
 			TileMap.Add(FVector2D(x, y), Obj);
+			Obj->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
+			int32 Color=NULL;
 
 			// Set TileMaterial using chessboard pattern
 			if ((x + y) % 2 == 0)
@@ -90,85 +92,92 @@ void AGameField::GenerateField()
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//WHITE
-				int32 Color = 1;
+				Color = 1;
 				SpawnBishop(x, y, Location, TileScale, Color);
 			}
 			if ((x == 7 && y == 2) || (x == 7 && y == 5))
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//BLACK
-				int32 Color = 2;
+				Color = 2;
 				SpawnBishop(x, y, Location, TileScale, Color);
 			}
 			if ((-1 < y && y < 8) && x == 1)
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//WHITE
-				int32 Color = 1;
+				Color = 1;
 				SpawnPawn(x, y, Location, TileScale, Color);
 			}
 			if ((-1 < y && y < 8) && x == 6)
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//BLACK
-				int32 Color = 2;
+				Color = 2;
 				SpawnPawn(x, y, Location, TileScale, Color);
 			}
 			if ((x == 0 && y == 0) || (x == 0 && y == 7))
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//WHITE
-				int32 Color = 1;
+				Color = 1;
 				SpawnRook(x, y, Location, TileScale, Color);
 			}
 			if ((x == 7 && y == 0) || (x == 7 && y == 7))
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//BLACK
-				int32 Color = 2;
+				Color = 2;
 				SpawnRook(x, y, Location, TileScale, Color);
 			}
 			if ((x == 0 && y == 1) || (x == 0 && y == 6))
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//WHITE
-				int32 Color = 1;
+				Color = 1;
 				SpawnKnight(x, y, Location, TileScale, Color);
 			}
 			if ((x == 7 && y == 1) || (x == 7 && y == 6))
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//BLACK
-				int32 Color = 2;
+				Color = 2;
 				SpawnKnight(x, y, Location, TileScale, Color);
 			}
 			if ((x == 0 && y == 4))
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//WHITE
-				int32 Color = 1;
+				Color = 1;
 				SpawnKing(x, y, Location, TileScale, Color);
 			}
 			if ((x == 7 && y == 4))
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//BLACK
-				int32 Color = 2;
+				Color = 2;
 				SpawnKing(x, y, Location, TileScale, Color);
 			}
 			if ((x == 0 && y == 3))
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//WHITE
-				int32 Color = 1;
+				Color = 1;
 				SpawnQueen(x, y, Location, TileScale, Color);
 			}
 			if ((x == 7 && y == 3))
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//BLACK
-				int32 Color = 2;
+				Color = 2;
 				SpawnQueen(x, y, Location, TileScale, Color);
+			}
+
+			if(Color==1){
+				Obj->SetTileStatus(ETileOwner::WHITE, ETileStatus::OCCUPIED);
+			}
+			if (Color == 2) {
+				Obj->SetTileStatus(ETileOwner::BLACK, ETileStatus::OCCUPIED);
 			}
 		}
 		
@@ -185,6 +194,7 @@ void AGameField::SpawnBishop(int32 x, int32 y, FVector Location, float TileScale
 	ChessPiece->SetBasePieceGridPosition(x, y);
 	BasePieceArray.Add(ChessPiece);
 	BasePieceMap.Add(FVector2D(x, y), ChessPiece);
+
 	SetPieceColor(Color, ChessPiece);
 	
 }

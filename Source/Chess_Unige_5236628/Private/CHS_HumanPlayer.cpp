@@ -13,6 +13,8 @@ ACHS_HumanPlayer::ACHS_HumanPlayer()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	// Set this pawn to be controlled by the lowest-numbered player
+	AutoPossessPlayer = EAutoReceiveInput::Player0;
 	// create a camera component
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	//set the camera as RootComponent
@@ -43,13 +45,34 @@ void ACHS_HumanPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void ACHS_HumanPlayer::OnClick()
 {
+	
 	//Structure containing information about one hit of a trace, such as point of impact and surface normal at that point
 	FHitResult Hit = FHitResult(ForceInit);
 	// GetHitResultUnderCursor function sends a ray from the mouse position and gives the corresponding hit results
 	GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursor(ECollisionChannel::ECC_Pawn, true, Hit);
-	
-	
+
+	if (Hit.bBlockingHit)
+	{
+		if (ABasePiece* CurrPiece = Cast<ABasePiece>(Hit.GetActor()))
+		{
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("clicked"));
+				/*CurrTile->SetTileStatus(PlayerNumber, ETileStatus::OCCUPIED);
+				FVector SpawnPosition = CurrTile->GetActorLocation();
+				ATTT_GameMode* GameMode = Cast<ATTT_GameMode>(GetWorld()->GetAuthGameMode());
+				GameMode->SetCellSign(PlayerNumber, SpawnPosition);
+				IsMyTurn = false; */
+			
+		}
 	}
+	
+}
+
+void ACHS_HumanPlayer::OnTurn()
+{
+	IsMyTurn = true;
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Your Turn"));
+	
+}
 
 
 

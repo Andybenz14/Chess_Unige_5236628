@@ -2,6 +2,8 @@
 
 
 #include "BasePiece.h"
+#include "CHS_GameMode.h"
+#include "GameField.h"
 
 
 // Sets default values
@@ -28,6 +30,8 @@ void ABasePiece::BeginPlay()
 	Super::BeginPlay();
 
 	
+
+	
 }
 
 void ABasePiece::SetBasePieceGridPosition(const double InX, const double InY)
@@ -43,4 +47,9 @@ FVector2D ABasePiece::GetBasePieceGridPosition()
 void ABasePiece::SetBasePieceMaterial(const int32 ElementIndex, UMaterialInterface* TileMaterial)
 {
 	StaticMeshComponent->SetMaterial(0, TileMaterial);
+}
+
+void ABasePiece::SelfDestroy()
+{
+	Destroy();
 }

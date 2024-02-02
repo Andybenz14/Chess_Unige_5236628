@@ -6,13 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "BasePiece.generated.h"
 
-// Settable pieces' color (white or black)
-UENUM()
-enum class EPieceColor : uint8
-{
-	WHITE     UMETA(DisplayName = "White"),
-	BLACK     UMETA(DisplayName = "Black"),
-};
 
 
 UCLASS()
@@ -41,6 +34,11 @@ public:
 	// set tile material
 	void SetBasePieceMaterial(const int32 ElementIndex, UMaterialInterface* TileMaterial);
 
+	// destroy a base sign actor
+	UFUNCTION()
+		void SelfDestroy();
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -52,10 +50,6 @@ protected:
 	// Static mesh
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		UStaticMeshComponent* StaticMeshComponent;
-
-	// Pieces color 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Color")
-		EPieceColor Color;
 
 	// (x, y) position of the tile
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

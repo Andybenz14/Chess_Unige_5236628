@@ -13,6 +13,14 @@ enum class ETileStatus : uint8
 	OCCUPIED      UMETA(DisplayName = "Occupied"),
 };
 
+UENUM()
+enum class ETileOwner : uint8
+{
+	WHITE     UMETA(DisplayName = "White"),
+	BLACK     UMETA(DisplayName = "BLack"),
+	NONE      UMETA(DisplayName = "None"),
+};
+
 
 
 UCLASS()
@@ -36,13 +44,13 @@ public:
 	void SetTileMaterial(const int32 ElementIndex, UMaterialInterface* TileMaterial);
 
 	// set the player owner and the status of a tile
-	void SetTileStatus(const int32 TileOwner, const ETileStatus TileStatus);
+	void SetTileStatus(const ETileOwner TileOwner, const ETileStatus TileStatus);
 
 	// get the tile status
 	ETileStatus GetTileStatus();
 
 	// get the tile owner
-	int32 GetOwner();
+	ETileOwner GetOwner();
 
 	// set the (x, y) position
 	void SetGridPosition(const double InX, const double InY);
@@ -64,7 +72,7 @@ protected:
 		ETileStatus Status;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-		int32 PlayerOwner;
+		ETileOwner PlayerOwner;
 
 	// (x, y) position of the tile
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
