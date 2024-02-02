@@ -12,8 +12,6 @@ AGameField::AGameField()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
-	// size of winnning line
-	WinSize = 3;
 	// size of the field (3x3)
 	Size = 3;
 	// tile dimension
@@ -302,54 +300,13 @@ FVector2D AGameField::GetXYPositionByRelativeLocation(const FVector& Location) c
 	return FVector2D(x, y);
 }
 
-bool AGameField::IsWinPosition(const FVector2D Position) const
-{
-	const int32 Offset = WinSize - 1;
-	// vertical lines
-	for (int32 i = Position[0] - Offset; i <= Position[0]; i++)
-	{
-		if (IsWinLine(FVector2D(i, Position[1]), FVector2D(i + Offset, Position[1])))
-		{
-			return true;
-		}
-	}
-
-	// horizontal lines
-	for (int32 i = Position[1] - Offset; i <= Position[1]; i++)
-	{
-		if (IsWinLine(FVector2D(Position[0], i), FVector2D(Position[0], i + Offset)))
-		{
-			return true;
-		}
-	}
-
-	// diagonal lines
-	for (int32 i = -Offset; i <= 0; i++)
-	{
-		if (IsWinLine(FVector2D(Position[0] + i, Position[1] + i), FVector2D(Position[0] + Offset + i, Position[1] + Offset + i)))
-		{
-			return true;
-		}
-		if (IsWinLine(FVector2D(Position[0] + i, Position[1] - i), FVector2D(Position[0] + Offset + i, Position[1] - Offset - i)))
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
-inline bool AGameField::IsWinLine(const FVector2D Begin, const FVector2D End) const
-{
-	return IsValidPosition(Begin) && IsValidPosition(End) && AllEqual(GetLine(Begin, End));
-}
-
+//TODO CONVERT TO LEGAL
 inline bool AGameField::IsValidPosition(const FVector2D Position) const
 {
 	return 0 <= Position[0] && Position[0] < Size && 0 <= Position[1] && Position[1] < Size;
 }
 
-TArray<int32> AGameField::GetLine(const FVector2D Begin, const FVector2D End) const
+/*TArray<int32> AGameField::GetLine(const FVector2D Begin, const FVector2D End) const
 {
 	int32 xSign;
 	if (Begin[0] == End[0])
@@ -384,34 +341,11 @@ TArray<int32> AGameField::GetLine(const FVector2D Begin, const FVector2D End) co
 	return Line;
 }
 
-bool AGameField::AllEqual(const TArray<int32>& Array) const
-{
-	if (Array.Num() == 0)
-	{
-		return false;
-	}
-	const int32 Value = Array[0];
-
-	if (Value == NOT_ASSIGNED)
-	{
-		return false;
-	}
-
-	for (int32 i = 1; i < Array.Num(); i++)
-	{
-		if (Value != Array[i])
-		{
-			return false;
-		}
-	}
-
-	return true;
-}
 
 // Called every frame
 //void AGameField::Tick(float DeltaTime)
 //{
 //	Super::Tick(DeltaTime);
 
-//}
+//}*/
 

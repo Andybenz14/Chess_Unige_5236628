@@ -2,6 +2,11 @@
 
 
 #include "CHS_HumanPlayer.h"
+#include "GameField.h"
+#include "CHS_GameMode.h"
+#include "Components/InputComponent.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
 
 // Sets default values
 ACHS_HumanPlayer::ACHS_HumanPlayer()
@@ -42,6 +47,7 @@ void ACHS_HumanPlayer::OnClick()
 	FHitResult Hit = FHitResult(ForceInit);
 	// GetHitResultUnderCursor function sends a ray from the mouse position and gives the corresponding hit results
 	GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursor(ECollisionChannel::ECC_Pawn, true, Hit);
+	
 	
 	}
 
