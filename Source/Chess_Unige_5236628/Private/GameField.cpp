@@ -36,6 +36,8 @@ void AGameField::BeginPlay()
 {
 	Super::BeginPlay();
 	GenerateField();
+	// Ruota il GameField di 90 gradi a destra
+	
 }
 
 
@@ -75,95 +77,95 @@ void AGameField::GenerateField()
 			// Set TileMaterial using chessboard pattern
 			if ((x + y) % 2 == 0)
 			{
-				TileMaterial = Obj->WhiteMaterial;
+				TileMaterial = Obj->BlackMaterial;
 			}
 			else
 			{
-				TileMaterial = Obj->BlackMaterial;
+				TileMaterial = Obj->WhiteMaterial;
 			}
 			
 			// Apply TileMaterial to the tile using method SetTileMaterial
 			Obj->SetTileMaterial(0,TileMaterial);
 
 			// Chess Pieces spawn in their starting position
-			if ((x == 2 && y==7)||(x==5 && y==7))
+			if ((x == 0 && y==2)||(x==0 && y==5))
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//WHITE
 				int32 Color = 1;
 				SpawnBishop(x, y, Location, TileScale, Color);
 			}
-			if ((x == 2 && y == 0) || (x == 5 && y == 0))
+			if ((x == 7 && y == 2) || (x == 7 && y == 5))
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//BLACK
 				int32 Color = 2;
 				SpawnBishop(x, y, Location, TileScale, Color);
 			}
-			if ((-1 < x && x < 8) && y == 6)
+			if ((-1 < y && y < 8) && x == 1)
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//WHITE
 				int32 Color = 1;
 				SpawnPawn(x, y, Location, TileScale, Color);
 			}
-			if ((-1 < x && x < 8) && y == 1)
+			if ((-1 < y && y < 8) && x == 6)
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//BLACK
 				int32 Color = 2;
 				SpawnPawn(x, y, Location, TileScale, Color);
 			}
-			if ((x == 0 && y == 7) || (x == 7 && y == 7))
+			if ((x == 0 && y == 0) || (x == 0 && y == 7))
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//WHITE
 				int32 Color = 1;
 				SpawnRook(x, y, Location, TileScale, Color);
 			}
-			if ((x == 0 && y == 0) || (x == 7 && y == 0))
+			if ((x == 7 && y == 0) || (x == 7 && y == 7))
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//BLACK
 				int32 Color = 2;
 				SpawnRook(x, y, Location, TileScale, Color);
 			}
-			if ((x == 1 && y == 7) || (x == 6 && y == 7))
+			if ((x == 0 && y == 1) || (x == 0 && y == 6))
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//WHITE
 				int32 Color = 1;
 				SpawnKnight(x, y, Location, TileScale, Color);
 			}
-			if ((x == 1 && y == 0) || (x == 6 && y == 0))
+			if ((x == 7 && y == 1) || (x == 7 && y == 6))
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//BLACK
 				int32 Color = 2;
 				SpawnKnight(x, y, Location, TileScale, Color);
 			}
-			if ((x == 4 && y == 7))
+			if ((x == 0 && y == 4))
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//WHITE
 				int32 Color = 1;
 				SpawnKing(x, y, Location, TileScale, Color);
 			}
-			if ((x == 4 && y == 0))
+			if ((x == 7 && y == 4))
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//BLACK
 				int32 Color = 2;
 				SpawnKing(x, y, Location, TileScale, Color);
 			}
-			if ((x == 3 && y == 7))
+			if ((x == 0 && y == 3))
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//WHITE
 				int32 Color = 1;
 				SpawnQueen(x, y, Location, TileScale, Color);
 			}
-			if ((x == 3 && y == 0))
+			if ((x == 7 && y == 3))
 			{
 				// Color = 1 = WHITE; Color = 2 = BLACK;
 				//BLACK

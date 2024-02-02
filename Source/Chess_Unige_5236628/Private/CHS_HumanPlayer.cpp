@@ -8,6 +8,10 @@ ACHS_HumanPlayer::ACHS_HumanPlayer()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	// create a camera component
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	//set the camera as RootComponent
+	SetRootComponent(Camera);
 
 }
 
@@ -31,4 +35,16 @@ void ACHS_HumanPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
+
+void ACHS_HumanPlayer::OnClick()
+{
+	//Structure containing information about one hit of a trace, such as point of impact and surface normal at that point
+	FHitResult Hit = FHitResult(ForceInit);
+	// GetHitResultUnderCursor function sends a ray from the mouse position and gives the corresponding hit results
+	GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursor(ECollisionChannel::ECC_Pawn, true, Hit);
+	
+	}
+
+
+
 

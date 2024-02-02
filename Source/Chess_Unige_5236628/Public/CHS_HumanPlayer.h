@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "Camera/CameraComponent.h"
 #include "CHS_PlayerInterface.h"
 #include "CHS_HumanPlayer.generated.h"
 
@@ -17,6 +18,9 @@ public:
 	// Sets default values for this pawn's properties
 	ACHS_HumanPlayer();
 
+	// camera component attacched to player pawn
+	UCameraComponent* Camera;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -27,5 +31,9 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	// called on left mouse click (binding)
+	UFUNCTION()
+		void OnClick();
 
 };
