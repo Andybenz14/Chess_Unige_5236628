@@ -69,8 +69,18 @@ void AGameField::GenerateField()
 			const float TileScale = TileSize / 100;
 			Obj->SetActorScale3D(FVector(TileScale, TileScale, 0.2));
 			Obj->SetGridPosition(x, y);
+
+			// Get last tile xyz coordinates
+			FVector LocationXYZCoordinate = Obj -> GetActorLocation();
+
+			// Tile vector xy coordinates
+			FVector2D LocationXYCoordinate(LocationXYZCoordinate);
+
 			TileArray.Add(Obj);
-			TileMap.Add(FVector2D(x, y), Obj);
+
+			// TileMap key uses XY coordinates. Not relative
+			TileMap.Add(LocationXYCoordinate, Obj);
+
 			Obj->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
 			int32 Color=NULL;
 
@@ -271,11 +281,14 @@ void AGameField::SetPieceColor(int32 Color, T* ChessPiece)
 	{
 		BasePieceMaterial = ChessPiece->WhiteMaterial;
 		ChessPiece->SetBasePieceMaterial(0, BasePieceMaterial);
+		ChessPiece->SetPieceColor(EPieceColor::WHITE);
+		
 	}
 	else
 	{
 		BasePieceMaterial = ChessPiece->BlackMaterial;
 		ChessPiece->SetBasePieceMaterial(0, BasePieceMaterial);
+		ChessPiece->SetPieceColor(EPieceColor::BLACK);
 	}
 
 
@@ -296,6 +309,10 @@ TArray<ABasePiece*>& AGameField::GetBasePieceArray()
 	return BasePieceArray;
 }
 
+TMap<FVector2D, ATile*>& AGameField::GetTileMap() {
+
+	return TileMap;
+}
 
 FVector AGameField::GetRelativeLocationByXYPosition(const int32 InX, const int32 InY) const
 {

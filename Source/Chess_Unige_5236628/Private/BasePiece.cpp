@@ -53,3 +53,14 @@ void ABasePiece::SelfDestroy()
 {
 	Destroy();
 }
+
+// Apply TileMaterial to the StaticMeshComponent of the tile
+void ABasePiece::SetPieceColor(const EPieceColor Color)
+{
+	Colour = Color;
+}
+
+EPieceColor ABasePiece::GetPieceColor()
+{
+	return Colour;
+}

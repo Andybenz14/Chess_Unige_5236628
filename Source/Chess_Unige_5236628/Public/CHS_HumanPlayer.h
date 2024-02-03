@@ -28,6 +28,18 @@ protected:
 	// keeps track of turn
 	bool IsMyTurn = true;
 
+	// size of field
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		int32 ClickCounter;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		FVector ClickedActorLocation;
+
+	// TSubclassOf template class that provides UClass type safety
+	UPROPERTY(EditDefaultsOnly)
+		ABasePiece* BasePieceActor;
+
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -36,6 +48,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void OnTurn();
+
+
 
 	// called on left mouse click (binding)
 	UFUNCTION()

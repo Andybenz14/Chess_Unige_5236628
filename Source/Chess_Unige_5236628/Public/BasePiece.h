@@ -7,6 +7,13 @@
 #include "BasePiece.generated.h"
 
 
+UENUM()
+enum class EPieceColor : uint8
+{
+	WHITE     UMETA(DisplayName = "White"),
+	BLACK     UMETA(DisplayName = "BLack"),
+
+};
 
 UCLASS()
 class CHESS_UNIGE_5236628_API ABasePiece : public AActor
@@ -34,6 +41,13 @@ public:
 	// set tile material
 	void SetBasePieceMaterial(const int32 ElementIndex, UMaterialInterface* TileMaterial);
 
+
+	// set the player owner and the status of a tile
+	void SetPieceColor(const EPieceColor Color);
+
+	// get the tile status
+	EPieceColor GetPieceColor();
+
 	// destroy a base sign actor
 	UFUNCTION()
 		void SelfDestroy();
@@ -54,6 +68,9 @@ protected:
 	// (x, y) position of the tile
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		FVector2D BasePieceGridPosition;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		EPieceColor Colour;
 
 
 };

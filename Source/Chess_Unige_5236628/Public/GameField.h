@@ -38,7 +38,7 @@ public:
 
 	//given a position returns a piece
 	UPROPERTY(Transient)
-		TMap<FVector2D, ABasePiece*> BasePieceMap;
+	    TMap<FVector2D, ABasePiece*> BasePieceMap;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		float NormalizedCellPadding;
@@ -115,6 +115,9 @@ public:
 
 	// return the array of tile pointers
 	TArray<ABasePiece*>& GetBasePieceArray();
+
+	// return the array of tile pointers
+	TMap<FVector2D, ATile*>& GetTileMap();
 
 	// return a relative position given (x,y) position
 	FVector GetRelativeLocationByXYPosition(const int32 InX, const int32 InY) const;
