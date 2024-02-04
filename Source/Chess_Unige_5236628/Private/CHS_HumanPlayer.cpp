@@ -53,65 +53,154 @@ void ACHS_HumanPlayer::OnClick()
 	// GetHitResultUnderCursor function sends a ray from the mouse position and gives the corresponding hit results
 	GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursor(ECollisionChannel::ECC_Pawn, true, Hit);
 
-	//Hit check and MyTurn check)
+	// Hit check and MyTurn check
 	if (Hit.bBlockingHit && IsMyTurn)
 	{
-		//Pawn actor hit check
+		// Generic chess piece hit check
 		if (ABasePiece* CurrPiece = Cast<ABasePiece>(Hit.GetActor()))
 		{
-			BasePieceActor = CurrPiece;
-
-			//Get hitted piece color
+			// Get the color of the clicked piece
 			EPieceColor Color = CurrPiece->GetPieceColor();
 
-			//User can use only white pieces
+			// Check if the user clicked white piece. User can use only white pieces.
 			if (Color == EPieceColor::WHITE) {
 				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("clicked"));
 				ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
 				ClickCounter = ClickCounter + 1;
-				//Get clicked piece xyz location
+				// Get clicked piece xyz location
 				ClickedActorLocation = CurrPiece->GetActorLocation();
 				GEngine->AddOnScreenDebugMessage(-1, 200, FColor::Green, FString::Printf(TEXT("Piece %s"), *ClickedActorLocation.ToString()));
+				// Save the first clicked piece for the future if conditions
+				BasePieceActor = CurrPiece;
 			}
 		}
 	}
-
 	if (Hit.bBlockingHit && IsMyTurn && ClickCounter != 0)
 	{
+		// Check if the second click is on a tile
 		if (ATile* CurrTile = Cast<ATile>(Hit.GetActor()))
+
 		{
+			FVector TileLocation = CurrTile->GetActorLocation();
+			ETileStatus Status = CurrTile->GetTileStatus();
+
+			// START PAWN TO EMPTY TILES MOVES SECTION
+			// Check if the tile is empty, if the first clicked actor was a pawn and if it's a legal move for the pawn
+			if (Status == ETileStatus::EMPTY && TileLocation.X - ClickedActorLocation.X <= 240.0f && TileLocation.Y == ClickedActorLocation.Y && TurnCounter == 0 && BasePieceActor->IsA(APawnChess::StaticClass())) {
+
 				//Get clicked piece xyz location
-				FVector TileLocation = CurrTile->GetActorLocation();
 				GEngine->AddOnScreenDebugMessage(-1, 200, FColor::Green, FString::Printf(TEXT("Piece %s"), *TileLocation.ToString()));
 				BasePieceActor->SetActorLocation(TileLocation);
 				FVector2D ClickedActorLocation2D(ClickedActorLocation);
-				//Search Tile at the same position of the clicked piece and set owner and status
-				ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
-				GameMode->GField->TileMap[ClickedActorLocation2D]->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
-				
-			}
-		if (ABasePiece* ClickedPiece = Cast<ABasePiece>(Hit.GetActor()))
-		{
-			
-			EPieceColor Color = ClickedPiece->GetPieceColor();
-		
-			if (Color == EPieceColor::BLACK) {
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("clicked"));
-				ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
-				//Get clicked piece xyz location
-				ClickedActorLocation = ClickedPiece->GetActorLocation();
-				GEngine->AddOnScreenDebugMessage(-1, 200, FColor::Green, FString::Printf(TEXT("Piece %s"), *ClickedActorLocation.ToString()));
-				BasePieceActor->SetActorLocation(ClickedActorLocation);
-				FVector2D ClickedActorLocation2D(ClickedActorLocation);
-				GameMode->GField->TileMap[ClickedActorLocation2D]->SetTileStatus(ETileOwner::WHITE, ETileStatus::OCCUPIED);
-			}
-		}
-		ClickCounter = 0;
-		IsMyTurn = false;
+				FVector NewActorLocation = BasePieceActor->GetActorLocation();
+				FVector2D NewActorLocation2D(NewActorLocation);
 
+				// Check if the actor is in the new position. If yes sets the new tiles status.
+				if (NewActorLocation == TileLocation) {
+					ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+					GameMode->GField->TileMap[ClickedActorLocation2D]->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
+					GameMode->GField->TileMap[NewActorLocation2D]->SetTileStatus(ETileOwner::WHITE, ETileStatus::OCCUPIED);
+				}
+
+				ClickCounter = 0;
+				TurnCounter = TurnCounter + 1; //TODO al momento si può muovere solo al primo turno di 2, ma per il futuro deve essere la prima mosse per ogni pawn non del player
+				//IsMyTurn = false;
+			}
+			else if (Status == ETileStatus::EMPTY && TileLocation.X - ClickedActorLocation.X == 120.0f && TileLocation.Y == ClickedActorLocation.Y && BasePieceActor->IsA(APawnChess::StaticClass())) {
+				//Get clicked piece xyz location
+				GEngine->AddOnScreenDebugMessage(-1, 200, FColor::Green, FString::Printf(TEXT("Tile %s"), *TileLocation.ToString()));
+				BasePieceActor->SetActorLocation(TileLocation);
+				FVector2D ClickedActorLocation2D(ClickedActorLocation);
+				FVector NewActorLocation = BasePieceActor->GetActorLocation();
+				FVector2D NewActorLocation2D(NewActorLocation);
+
+				if (NewActorLocation == TileLocation) {
+					ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+					GameMode->GField->TileMap[ClickedActorLocation2D]->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
+					GameMode->GField->TileMap[NewActorLocation2D]->SetTileStatus(ETileOwner::WHITE, ETileStatus::OCCUPIED);
+				}
+
+				ClickCounter = 0;
+				TurnCounter = TurnCounter + 1;
+				//IsMyTurn = false;
+			}
+			//END OF PAWN TO EMPTY TILES MOVES SECTION
+
+			//START TOWER TO EMPTY TILE MOVES
+			// Check if the tile is empty, if the first clicked actor was a rook and if it's a legal move for the rook
+			else if (Status == ETileStatus::EMPTY && (TileLocation.X == ClickedActorLocation.X || TileLocation.Y == ClickedActorLocation.Y) && BasePieceActor->IsA(ARook::StaticClass())) {
+				
+				//Get clicked piece xyz location
+				GEngine->AddOnScreenDebugMessage(-1, 200, FColor::Green, FString::Printf(TEXT("Tile %s"), *TileLocation.ToString()));
+				BasePieceActor->SetActorLocation(TileLocation, true, nullptr, ETeleportType::TeleportPhysics);
+				FVector2D ClickedActorLocation2D(ClickedActorLocation);
+				FVector NewActorLocation = BasePieceActor->GetActorLocation();
+				FVector2D NewActorLocation2D(NewActorLocation);
+
+				if (NewActorLocation == TileLocation) {
+					ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+					GameMode->GField->TileMap[ClickedActorLocation2D]->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
+					GameMode->GField->TileMap[NewActorLocation2D]->SetTileStatus(ETileOwner::WHITE, ETileStatus::OCCUPIED);
+				}
+
+				ClickCounter = 0;
+				TurnCounter = TurnCounter + 1;
+				//IsMyTurn = false;
+			}
+			//END OF ROOK TO EMPTY TILES MOVES SECTION
+		}
+		else if (ABasePiece* ClickedPiece = Cast<ABasePiece>(Hit.GetActor()))
+		{
+				EPieceColor Color = ClickedPiece->GetPieceColor();
+
+				if (Color == EPieceColor::BLACK) {
+					FVector BlackActorLocation = ClickedPiece->GetActorLocation();
+
+					// START PAWN TO OCCUPIED TILES MOVES SECTION
+			        // Check if the first clicked actor was a pawn and if it's a legal move for the pawn
+					if (BlackActorLocation.X - ClickedActorLocation.X == 120.0f && (BlackActorLocation.Y - ClickedActorLocation.Y == 120.0f || BlackActorLocation.Y - ClickedActorLocation.Y == -120.0f) && BasePieceActor->IsA(APawnChess::StaticClass())) {
+						GEngine->AddOnScreenDebugMessage(-1, 200, FColor::Green, FString::Printf(TEXT("BLACK %s"), *BlackActorLocation.ToString()));
+						ClickedPiece->Destroy();
+						BasePieceActor->SetActorLocation(BlackActorLocation);
+						ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+						FVector2D BlackActorLocation2D(BlackActorLocation);
+						FVector2D ClickedActorLocation2D(ClickedActorLocation);
+						FVector NewActorLocation = BasePieceActor->GetActorLocation();
+						if (NewActorLocation == BlackActorLocation) {
+							GameMode->GField->TileMap[BlackActorLocation2D]->SetTileStatus(ETileOwner::WHITE, ETileStatus::OCCUPIED);
+							GameMode->GField->TileMap[ClickedActorLocation2D]->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
+						}
+						TurnCounter = TurnCounter + 1;
+						ClickCounter = 0;
+						//IsMyTurn = false;
+					}
+					// END PAWN TO OCCUPIED TILES MOVES SECTION
+
+					//START ROOK TO OCCUPIED TILES MOVES SECTION
+					if ((BlackActorLocation.X == ClickedActorLocation.X || BlackActorLocation.Y == ClickedActorLocation.Y) && BasePieceActor->IsA(ARook::StaticClass())) {
+						GEngine->AddOnScreenDebugMessage(-1, 200, FColor::Green, FString::Printf(TEXT("BLACK %s"), *BlackActorLocation.ToString()));
+						ClickedPiece->Destroy();
+						BasePieceActor->SetActorLocation(BlackActorLocation);
+						ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+						FVector2D BlackActorLocation2D(BlackActorLocation);
+						FVector2D ClickedActorLocation2D(ClickedActorLocation);
+						FVector NewActorLocation = BasePieceActor->GetActorLocation();
+						if (NewActorLocation == BlackActorLocation) {
+							GameMode->GField->TileMap[BlackActorLocation2D]->SetTileStatus(ETileOwner::WHITE, ETileStatus::OCCUPIED);
+							GameMode->GField->TileMap[ClickedActorLocation2D]->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
+						}
+						TurnCounter = TurnCounter + 1;
+						ClickCounter = 0;
+						//IsMyTurn = false;
+					}
+
+				}
+			}
+
+		
+		
 	}
 }
-	
 
 
 

@@ -28,16 +28,20 @@ protected:
 	// keeps track of turn
 	bool IsMyTurn = true;
 
-	// size of field
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		int32 ClickCounter;
+		int32 ClickCounter = 0;
+
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		int32 TurnCounter = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		FVector ClickedActorLocation;
 
-	// TSubclassOf template class that provides UClass type safety
 	UPROPERTY(EditDefaultsOnly)
 		ABasePiece* BasePieceActor;
+
 
 
 public:	
@@ -48,6 +52,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void OnTurn();
+
+	void PawnMove();
 
 
 
