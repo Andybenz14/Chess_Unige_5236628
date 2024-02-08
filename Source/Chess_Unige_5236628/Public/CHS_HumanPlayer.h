@@ -43,8 +43,25 @@ protected:
 		ABasePiece* BasePieceActor;
 
 	UPROPERTY(EditDefaultsOnly)
-	TMap<FVector2D, UMaterialInterface*> OriginalMaterials;
+		TMap<FVector2D, UMaterialInterface*> OriginalMaterials;
 
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleKnightMoves;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleKingMoves;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleQueenMoves;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossiblePawnMoves;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleRookMoves;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleBishopMoves;
 
 public:	
 	// Called every frame
@@ -57,16 +74,20 @@ public:
 
 	void PawnMove();
 
-	int32 RookIsValidMovement(FVector FirstClickedActorLocation, FVector TileLocation, int32 ToTileOrToBlack);
-	int32 PawnIsValidMovement(FVector FirstClickedActorLocation, FVector TileLocation, int32 ToTileOrToBlack);
-	int32 QueenIsValidMovement(FVector FirstClickedActorLocation, FVector TileLocation, int32 ToTileOrToBlack);
-	int32 BishopIsValidMovement(FVector FirstClickedActorLocation, FVector TileLocation, int32 ToTileOrToBlack);
-	int32 KingIsValidMovement(FVector FirstClickedActorLocation, FVector TileLocation);
-	int32 KnightIsValidMovement(FVector FirstClickedActorLocation, FVector TileLocation);
 
 	void KnightPossibleMoves(FVector KnightLocation);
 	void KingPossibleMoves(FVector KingLocation);
 	void PawnPossibleMoves(FVector PawnLocation);
+	void RookPossibleMoves(FVector RookLocation);
+	void BishopPossibleMoves(FVector BishopLocation);
+	void QueenPossibleMoves(FVector QueenLocation);
+
+	int32 IsPawnMoveValid(FVector2D Position);
+	int32 IsKingMoveValid(FVector2D Position);
+	int32 IsQueenMoveValid(FVector2D Position);
+	int32 IsBishopMoveValid(FVector2D Position);
+	int32 IsRookMoveValid(FVector2D Position);
+	int32 IsKnightMoveValid(FVector2D Position);
 
 	void MoveBasePiece(ABasePiece*, FVector OldLocation, FVector NewLocation);
 
