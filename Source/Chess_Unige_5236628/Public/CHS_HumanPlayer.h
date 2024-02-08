@@ -82,12 +82,8 @@ public:
 	void BishopPossibleMoves(FVector BishopLocation);
 	void QueenPossibleMoves(FVector QueenLocation);
 
-	int32 IsPawnMoveValid(FVector2D Position);
-	int32 IsKingMoveValid(FVector2D Position);
-	int32 IsQueenMoveValid(FVector2D Position);
-	int32 IsBishopMoveValid(FVector2D Position);
-	int32 IsRookMoveValid(FVector2D Position);
-	int32 IsKnightMoveValid(FVector2D Position);
+	
+	int32 IsPieceMoveValid(FVector2D Position, TArray<FVector2D> PossiblePieceMoves);
 
 	void MoveBasePiece(ABasePiece*, FVector OldLocation, FVector NewLocation);
 

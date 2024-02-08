@@ -67,7 +67,8 @@ void ACHS_HumanPlayer::OnClick()
 			EPieceColor Color = CurrPiece->GetPieceColor();
 
 			// Check if the user clicked white piece. User can use only white pieces.
-			if (Color == EPieceColor::WHITE) {
+			if (Color == EPieceColor::WHITE) 
+			{
 				
 				ClickCounter = ClickCounter + 1;
 
@@ -77,22 +78,28 @@ void ACHS_HumanPlayer::OnClick()
 				// Save the first clicked piece for the future if conditions
 				BasePieceActor = CurrPiece;
 
-				if (BasePieceActor->IsA(AKnight::StaticClass())) {
+				if (BasePieceActor->IsA(AKnight::StaticClass())) 
+				{
 					KnightPossibleMoves(ClickedActorLocation);
 				}
-				else if (BasePieceActor->IsA(AKing::StaticClass())) {
+				else if (BasePieceActor->IsA(AKing::StaticClass())) 
+				{
 					KingPossibleMoves(ClickedActorLocation);
 				}
-				else if (BasePieceActor->IsA(APawnChess::StaticClass())) {
+				else if (BasePieceActor->IsA(APawnChess::StaticClass())) 
+				{
 					PawnPossibleMoves(ClickedActorLocation);
 				}
-				else if (BasePieceActor->IsA(ARook::StaticClass())) {
+				else if (BasePieceActor->IsA(ARook::StaticClass())) 
+				{
 					RookPossibleMoves(ClickedActorLocation);
 				}
-				else if (BasePieceActor->IsA(ABishop::StaticClass())) {
+				else if (BasePieceActor->IsA(ABishop::StaticClass())) 
+				{
 					BishopPossibleMoves(ClickedActorLocation);
 				}
-				else if (BasePieceActor->IsA(AQueen::StaticClass())) {
+				else if (BasePieceActor->IsA(AQueen::StaticClass())) 
+				{
 					QueenPossibleMoves(ClickedActorLocation);
 				}
 			}
@@ -111,43 +118,55 @@ void ACHS_HumanPlayer::OnClick()
 			FVector2d Position(TileLocation);
 			ETileStatus Status = CurrTile->GetTileStatus();
 
-			if (BasePieceActor->IsA(APawnChess::StaticClass())) {
-				if (int32 IsValid = IsPawnMoveValid(Position) == 1) {
+			if (BasePieceActor->IsA(APawnChess::StaticClass())) 
+			{
+				if (int32 IsValid = IsPieceMoveValid(Position, PossiblePawnMoves) == 1) 
+				{
 					MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
 
 				}
 			}
 
-			else if (BasePieceActor->IsA(AKing::StaticClass())) {
-				if (int32 IsValid = IsKingMoveValid(Position) == 1) {
+			else if (BasePieceActor->IsA(AKing::StaticClass())) 
+			{
+				if (int32 IsValid = IsPieceMoveValid(Position, PossibleKingMoves) == 1) 
+				{
 					MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
 
 				}
 			}
 
-			else if (BasePieceActor->IsA(AQueen::StaticClass())) {
-				if (int32 IsValid = IsQueenMoveValid(Position) == 1) {
+			else if (BasePieceActor->IsA(AQueen::StaticClass())) 
+			{
+				if (int32 IsValid = IsPieceMoveValid(Position, PossibleQueenMoves) == 1) 
+				{
 					MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
 
 				}
 			}
 
-			else if (BasePieceActor->IsA(ABishop::StaticClass())) {
-				if (int32 IsValid = IsBishopMoveValid(Position) == 1) {
+			else if (BasePieceActor->IsA(ABishop::StaticClass())) 
+			{
+				if (int32 IsValid = IsPieceMoveValid(Position, PossibleBishopMoves) == 1) 
+				{
 					MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
 
 				}
 			}
 
-			else if (BasePieceActor->IsA(AKnight::StaticClass())) {
-				if (int32 IsValid = IsKnightMoveValid(Position) == 1) {
+			else if (BasePieceActor->IsA(AKnight::StaticClass())) 
+			{
+				if (int32 IsValid = IsPieceMoveValid(Position, PossibleKnightMoves) == 1) 
+				{
 					MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
 
 				}
 			}
 
-			else if (BasePieceActor->IsA(ARook::StaticClass())) {
-				if (int32 IsValid = IsRookMoveValid(Position) == 1) {
+			else if (BasePieceActor->IsA(ARook::StaticClass())) 
+			{
+				if (int32 IsValid = IsPieceMoveValid(Position, PossibleRookMoves) == 1) 
+				{
 					MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
 
 				}
@@ -158,48 +177,56 @@ void ACHS_HumanPlayer::OnClick()
 		{
 			EPieceColor Color = ClickedPiece->GetPieceColor();
 
-			if (Color == EPieceColor::BLACK) {
+			if (Color == EPieceColor::BLACK) 
+			{
 
 				FVector BlackActorLocation = ClickedPiece->GetActorLocation();
 				FVector2D Position (BlackActorLocation);
 
-				if (BasePieceActor->IsA(APawnChess::StaticClass())) {
-					if (int32 IsValid = IsPawnMoveValid(Position) == 1) {
+				if (BasePieceActor->IsA(APawnChess::StaticClass())) 
+				{
+					if (int32 IsValid = IsPieceMoveValid(Position, PossiblePawnMoves) == 1) 
+					{
 						ClickedPiece->Destroy();
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 					}
 				}
 	
-				else if (BasePieceActor->IsA(AKing::StaticClass())) {
-					if (int32 IsValid = IsKingMoveValid(Position) == 1) {
+				else if (BasePieceActor->IsA(AKing::StaticClass())) 
+				{
+					if (int32 IsValid = IsPieceMoveValid(Position, PossibleKingMoves) == 1) {
 						ClickedPiece->Destroy();
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 					}
 				}
 
-				else if (BasePieceActor->IsA(AQueen::StaticClass())) {
-					if (int32 IsValid = IsQueenMoveValid(Position) == 1) {
+				else if (BasePieceActor->IsA(AQueen::StaticClass())) 
+				{
+					if (int32 IsValid = IsPieceMoveValid(Position, PossibleQueenMoves) == 1) {
 						ClickedPiece->Destroy();
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 					}
 				}
 
-				else if (BasePieceActor->IsA(ABishop::StaticClass())) {
-					if (int32 IsValid = IsBishopMoveValid(Position) == 1) {
+				else if (BasePieceActor->IsA(ABishop::StaticClass())) 
+				{
+					if (int32 IsValid = IsPieceMoveValid(Position, PossibleBishopMoves) == 1) {
 						ClickedPiece->Destroy();
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 					}
 				}
 
-				else if (BasePieceActor->IsA(AKnight::StaticClass())) {
-					if (int32 IsValid = IsKnightMoveValid(Position) == 1) {
+				else if (BasePieceActor->IsA(AKnight::StaticClass())) 
+				{
+					if (int32 IsValid = IsPieceMoveValid(Position, PossibleKnightMoves) == 1) {
 						ClickedPiece->Destroy();
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 					}
 				}
 
-				else if (BasePieceActor->IsA(ARook::StaticClass())) {
-					if (int32 IsValid = IsRookMoveValid(Position) == 1) {
+				else if (BasePieceActor->IsA(ARook::StaticClass())) 
+				{
+					if (int32 IsValid = IsPieceMoveValid(Position, PossibleRookMoves) == 1){
 						ClickedPiece->Destroy();
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 					}
@@ -649,69 +676,15 @@ void ACHS_HumanPlayer::SetOriginalTileMaterial() {
 
 }
 
-int32 ACHS_HumanPlayer::IsPawnMoveValid(FVector2D Position) {
+int32 ACHS_HumanPlayer::IsPieceMoveValid(FVector2D Position, TArray<FVector2D> PossiblePieceMoves) {
 	int32 ValidMove = 0;
-	for (const FVector2D& PossibleMove : PossiblePawnMoves) {
-		if (Position == PossibleMove) {
-			ValidMove = 1;
-			
-		}
-	}
-return ValidMove;
-}
-
-
-int32 ACHS_HumanPlayer::IsBishopMoveValid(FVector2D Position) {
-	int32 ValidMove = 0;
-	for (const FVector2D& PossibleMove : PossibleBishopMoves) {
+	for (const FVector2D& PossibleMove : PossiblePieceMoves) {
 		if (Position == PossibleMove) {
 			ValidMove = 1;
 
 		}
 	}
 	return ValidMove;
-}
 
-int32 ACHS_HumanPlayer::IsKnightMoveValid(FVector2D Position) {
-	int32 ValidMove = 0;
-	for (const FVector2D& PossibleMove : PossibleKnightMoves) {
-		if (Position == PossibleMove) {
-			ValidMove = 1;
 
-		}
-	}
-	return ValidMove;
-}
-
-int32 ACHS_HumanPlayer::IsQueenMoveValid(FVector2D Position) {
-	int32 ValidMove = 0;
-	for (const FVector2D& PossibleMove : PossibleQueenMoves) {
-		if (Position == PossibleMove) {
-			ValidMove = 1;
-
-		}
-	}
-	return ValidMove;
-}
-
-int32 ACHS_HumanPlayer::IsKingMoveValid(FVector2D Position) {
-	int32 ValidMove = 0;
-	for (const FVector2D& PossibleMove : PossibleKingMoves) {
-		if (Position == PossibleMove) {
-			ValidMove = 1;
-
-		}
-	}
-	return ValidMove;
-}
-
-int32 ACHS_HumanPlayer::IsRookMoveValid(FVector2D Position) {
-	int32 ValidMove = 0;
-	for (const FVector2D& PossibleMove : PossibleRookMoves) {
-		if (Position == PossibleMove) {
-			ValidMove = 1;
-
-		}
-	}
-	return ValidMove;
 }

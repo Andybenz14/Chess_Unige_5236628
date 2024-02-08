@@ -125,12 +125,6 @@ public:
 	// return (x,y) position given a relative position
 	FVector2D GetXYPositionByRelativeLocation(const FVector& Location) const;
 
-	// checking if is a valid field position
-	inline bool IsValidPosition(const FVector2D Position) const;
-
-	// get a line given a begin and end positions
-	//TArray<int32> GetLine(const FVector2D Begin, const FVector2D End) const;
-
 	// spawn bishop 
 	void SpawnBishop(int32 x, int32 y, FVector Location, float TileScale, int32 Color);
 
