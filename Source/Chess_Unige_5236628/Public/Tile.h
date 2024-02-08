@@ -40,11 +40,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
 		UMaterialInterface* BlackMaterial;
 
+	// Black material interface 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
+		UMaterialInterface* PossibleMoveMaterial;
+
 	// set tile material
 	void SetTileMaterial(const int32 ElementIndex, UMaterialInterface* TileMaterial);
 
 	// set the player owner and the status of a tile
 	void SetTileStatus(const ETileOwner TileOwner, const ETileStatus TileStatus);
+
+	UMaterialInterface* GetTileMaterial(const int32 ElementIndex) const;
 
 	// get the tile status
 	ETileStatus GetTileStatus();

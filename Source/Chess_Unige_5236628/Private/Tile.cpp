@@ -41,6 +41,15 @@ void ATile::SetTileMaterial(const int32 ElementIndex, UMaterialInterface* TileMa
 	StaticMeshComponent->SetMaterial(0, TileMaterial);
 }
 
+UMaterialInterface* ATile::GetTileMaterial(const int32 ElementIndex) const
+{
+	if (StaticMeshComponent)
+	{
+		return StaticMeshComponent->GetMaterial(ElementIndex);
+	}
+	return nullptr;
+}
+
 ETileStatus ATile::GetTileStatus()
 {
 	return Status;

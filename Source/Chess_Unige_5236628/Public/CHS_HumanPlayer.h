@@ -42,6 +42,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 		ABasePiece* BasePieceActor;
 
+	UPROPERTY(EditDefaultsOnly)
+	TMap<FVector2D, UMaterialInterface*> OriginalMaterials;
 
 
 public:	
@@ -55,7 +57,20 @@ public:
 
 	void PawnMove();
 
+	int32 RookIsValidMovement(FVector FirstClickedActorLocation, FVector TileLocation, int32 ToTileOrToBlack);
+	int32 PawnIsValidMovement(FVector FirstClickedActorLocation, FVector TileLocation, int32 ToTileOrToBlack);
+	int32 QueenIsValidMovement(FVector FirstClickedActorLocation, FVector TileLocation, int32 ToTileOrToBlack);
+	int32 BishopIsValidMovement(FVector FirstClickedActorLocation, FVector TileLocation, int32 ToTileOrToBlack);
+	int32 KingIsValidMovement(FVector FirstClickedActorLocation, FVector TileLocation);
+	int32 KnightIsValidMovement(FVector FirstClickedActorLocation, FVector TileLocation);
 
+	void KnightPossibleMoves(FVector KnightLocation);
+	void KingPossibleMoves(FVector KingLocation);
+	void PawnPossibleMoves(FVector PawnLocation);
+
+	void MoveBasePiece(ABasePiece*, FVector OldLocation, FVector NewLocation);
+
+	void SetOriginalTileMaterial();
 
 	// called on left mouse click (binding)
 	UFUNCTION()
