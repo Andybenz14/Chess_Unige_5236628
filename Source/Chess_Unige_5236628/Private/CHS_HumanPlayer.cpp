@@ -118,61 +118,63 @@ void ACHS_HumanPlayer::OnClick()
 			FVector2d Position(TileLocation);
 			ETileStatus Status = CurrTile->GetTileStatus();
 
-			if (BasePieceActor->IsA(APawnChess::StaticClass())) 
+			if (Status == ETileStatus::EMPTY)
 			{
-				if (int32 IsValid = IsPieceMoveValid(Position, PossiblePawnMoves) == 1) 
+				if (BasePieceActor->IsA(APawnChess::StaticClass()))
 				{
-					MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
-
+					if (int32 IsValid = IsPieceMoveValid(Position, PossiblePawnMoves) == 1)
+					{
+						MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
+						//IsMyTurn = false;
+					}
 				}
-			}
 
-			else if (BasePieceActor->IsA(AKing::StaticClass())) 
-			{
-				if (int32 IsValid = IsPieceMoveValid(Position, PossibleKingMoves) == 1) 
+				else if (BasePieceActor->IsA(AKing::StaticClass()))
 				{
-					MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
-
+					if (int32 IsValid = IsPieceMoveValid(Position, PossibleKingMoves) == 1)
+					{
+						MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
+						//IsMyTurn = false;
+					}
 				}
-			}
 
-			else if (BasePieceActor->IsA(AQueen::StaticClass())) 
-			{
-				if (int32 IsValid = IsPieceMoveValid(Position, PossibleQueenMoves) == 1) 
+				else if (BasePieceActor->IsA(AQueen::StaticClass()))
 				{
-					MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
-
+					if (int32 IsValid = IsPieceMoveValid(Position, PossibleQueenMoves) == 1)
+					{
+						MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
+						//IsMyTurn = false;
+					}
 				}
-			}
 
-			else if (BasePieceActor->IsA(ABishop::StaticClass())) 
-			{
-				if (int32 IsValid = IsPieceMoveValid(Position, PossibleBishopMoves) == 1) 
+				else if (BasePieceActor->IsA(ABishop::StaticClass()))
 				{
-					MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
-
+					if (int32 IsValid = IsPieceMoveValid(Position, PossibleBishopMoves) == 1)
+					{
+						MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
+						//IsMyTurn = false;
+					}
 				}
-			}
 
-			else if (BasePieceActor->IsA(AKnight::StaticClass())) 
-			{
-				if (int32 IsValid = IsPieceMoveValid(Position, PossibleKnightMoves) == 1) 
+				else if (BasePieceActor->IsA(AKnight::StaticClass()))
 				{
-					MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
-
+					if (int32 IsValid = IsPieceMoveValid(Position, PossibleKnightMoves) == 1)
+					{
+						MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
+						//IsMyTurn = false;
+					}
 				}
-			}
 
-			else if (BasePieceActor->IsA(ARook::StaticClass())) 
-			{
-				if (int32 IsValid = IsPieceMoveValid(Position, PossibleRookMoves) == 1) 
+				else if (BasePieceActor->IsA(ARook::StaticClass()))
 				{
-					MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
-
+					if (int32 IsValid = IsPieceMoveValid(Position, PossibleRookMoves) == 1)
+					{
+						MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
+						//IsMyTurn = false;
+					}
 				}
 			}
 		}
-
 		else if (ABasePiece* ClickedPiece = Cast<ABasePiece>(Hit.GetActor()))
 		{
 			EPieceColor Color = ClickedPiece->GetPieceColor();
@@ -189,46 +191,57 @@ void ACHS_HumanPlayer::OnClick()
 					{
 						ClickedPiece->Destroy();
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
+						//IsMyTurn = false;
 					}
 				}
 	
 				else if (BasePieceActor->IsA(AKing::StaticClass())) 
 				{
-					if (int32 IsValid = IsPieceMoveValid(Position, PossibleKingMoves) == 1) {
+					if (int32 IsValid = IsPieceMoveValid(Position, PossibleKingMoves) == 1) 
+					{
 						ClickedPiece->Destroy();
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
+						//IsMyTurn = false;
 					}
 				}
 
 				else if (BasePieceActor->IsA(AQueen::StaticClass())) 
 				{
-					if (int32 IsValid = IsPieceMoveValid(Position, PossibleQueenMoves) == 1) {
+					if (int32 IsValid = IsPieceMoveValid(Position, PossibleQueenMoves) == 1) 
+					{
 						ClickedPiece->Destroy();
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
+						//IsMyTurn = false;
 					}
 				}
 
 				else if (BasePieceActor->IsA(ABishop::StaticClass())) 
 				{
-					if (int32 IsValid = IsPieceMoveValid(Position, PossibleBishopMoves) == 1) {
+					if (int32 IsValid = IsPieceMoveValid(Position, PossibleBishopMoves) == 1) 
+					{
 						ClickedPiece->Destroy();
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
+						//IsMyTurn = false;
 					}
 				}
 
 				else if (BasePieceActor->IsA(AKnight::StaticClass())) 
 				{
-					if (int32 IsValid = IsPieceMoveValid(Position, PossibleKnightMoves) == 1) {
+					if (int32 IsValid = IsPieceMoveValid(Position, PossibleKnightMoves) == 1) 
+					{
 						ClickedPiece->Destroy();
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
+						//IsMyTurn = false;
 					}
 				}
 
 				else if (BasePieceActor->IsA(ARook::StaticClass())) 
 				{
-					if (int32 IsValid = IsPieceMoveValid(Position, PossibleRookMoves) == 1){
+					if (int32 IsValid = IsPieceMoveValid(Position, PossibleRookMoves) == 1)
+					{
 						ClickedPiece->Destroy();
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
+						//IsMyTurn = false;
 					}
 				}
 			}
@@ -246,7 +259,8 @@ void ACHS_HumanPlayer::OnTurn()
 	
 }
 
-void ACHS_HumanPlayer::MoveBasePiece(ABasePiece*, FVector OldLocation, FVector NewLocation) {
+void ACHS_HumanPlayer::MoveBasePiece(ABasePiece*, FVector OldLocation, FVector NewLocation) 
+{
 
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
 	BasePieceActor->SetActorLocation(NewLocation);
@@ -265,16 +279,18 @@ void ACHS_HumanPlayer::MoveBasePiece(ABasePiece*, FVector OldLocation, FVector N
 	
 	ClickCounter = 0;
 	TurnCounter = TurnCounter + 1;
-	//IsMyTurn = false;
+	
 
 
 }
 
-void ACHS_HumanPlayer::KnightPossibleMoves(FVector KnightLocation) {
+void ACHS_HumanPlayer::KnightPossibleMoves(FVector KnightLocation) 
+{
 
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
 
-	 PossibleKnightMoves = {
+	 PossibleKnightMoves = 
+	 {
 		FVector2D(KnightLocation.X + 120, KnightLocation.Y + 240),
 		FVector2D(KnightLocation.X + 120, KnightLocation.Y - 240),
 		FVector2D(KnightLocation.X - 120, KnightLocation.Y + 240),
@@ -288,14 +304,17 @@ void ACHS_HumanPlayer::KnightPossibleMoves(FVector KnightLocation) {
 	UMaterialInterface* TileMaterial;
 	
 
-	for (const FVector2D& PossibleMove : PossibleKnightMoves) {
+	for (const FVector2D& PossibleMove : PossibleKnightMoves) 
+	{
 
-		if (GameMode->GField->TileMap.Contains(PossibleMove)) {
+		if (GameMode->GField->TileMap.Contains(PossibleMove)) 
+		{
 
 			ATile* Tile = GameMode->GField->TileMap[PossibleMove];
 			OriginalMaterials.Add(PossibleMove, Tile->GetTileMaterial(0));
 
-			if (Tile->GetOwner() != ETileOwner::WHITE) {
+			if (Tile->GetOwner() != ETileOwner::WHITE) 
+			{
 
 				TileMaterial = Tile->PossibleMoveMaterial;
 				Tile->SetTileMaterial(0, TileMaterial);
@@ -304,11 +323,13 @@ void ACHS_HumanPlayer::KnightPossibleMoves(FVector KnightLocation) {
 	}
 }
 
-void ACHS_HumanPlayer::KingPossibleMoves(FVector KingLocation) {
+void ACHS_HumanPlayer::KingPossibleMoves(FVector KingLocation) 
+{
 
-	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+	PossibleKingMoves.Empty();
 
-	PossibleKingMoves = {
+	PossibleKingMoves = 
+	{
 		FVector2D(KingLocation.X + 120, KingLocation.Y + 120),
 		FVector2D(KingLocation.X + 120, KingLocation.Y - 120),
 		FVector2D(KingLocation.X - 120, KingLocation.Y + 120),
@@ -322,13 +343,17 @@ void ACHS_HumanPlayer::KingPossibleMoves(FVector KingLocation) {
 	UMaterialInterface* TileMaterial;
 
 
-	for (const FVector2D& PossibleMove : PossibleKingMoves) {
-		if (GameMode->GField->TileMap.Contains(PossibleMove)) {
+	for (const FVector2D& PossibleMove : PossibleKingMoves) 
+	{
+		ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+		if (GameMode->GField->TileMap.Contains(PossibleMove)) 
+		{
 
 			ATile* Tile = GameMode->GField->TileMap[PossibleMove];
 			OriginalMaterials.Add(PossibleMove, Tile->GetTileMaterial(0));
 
-			if (Tile->GetOwner() != ETileOwner::WHITE) {
+			if (Tile->GetOwner() != ETileOwner::WHITE) 
+			{
 
 				TileMaterial = Tile->PossibleMoveMaterial;
 				Tile->SetTileMaterial(0, TileMaterial);
@@ -337,20 +362,24 @@ void ACHS_HumanPlayer::KingPossibleMoves(FVector KingLocation) {
 	}
 }
 
-void ACHS_HumanPlayer::PawnPossibleMoves(FVector PawnLocation) {
-
-	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+void ACHS_HumanPlayer::PawnPossibleMoves(FVector PawnLocation) 
+{
 
 	UMaterialInterface* TileMaterial;
 
 	PossiblePawnMoves.Empty();
 
 	FVector2D Pawn2dLocation0(PawnLocation.X + 120, PawnLocation.Y);
-	if (GameMode->GField->TileMap.Contains(Pawn2dLocation0)) {
+
+	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+
+	if (GameMode->GField->TileMap.Contains(Pawn2dLocation0)) 
+	{
 
 		ETileStatus status0 = GameMode->GField->TileMap[Pawn2dLocation0]->GetTileStatus();
 
-		if (status0 == ETileStatus::EMPTY) {
+		if (status0 == ETileStatus::EMPTY) 
+		{
 
 			PossiblePawnMoves.Add(FVector2D(PawnLocation.X + 120.0, PawnLocation.Y));
 		}
@@ -358,11 +387,13 @@ void ACHS_HumanPlayer::PawnPossibleMoves(FVector PawnLocation) {
 
 	FVector2D Pawn2dLocation3(PawnLocation.X + 240, PawnLocation.Y);
 
-	if (GameMode->GField->TileMap.Contains(Pawn2dLocation3)) {
+	if (GameMode->GField->TileMap.Contains(Pawn2dLocation3)) 
+	{
 
 		ETileStatus status1 = GameMode->GField->TileMap[Pawn2dLocation3]->GetTileStatus();
 
-		if (PawnLocation.X == 120.0 && status1 == ETileStatus::EMPTY) {
+		if (PawnLocation.X == 120.0 && status1 == ETileStatus::EMPTY)
+		{
 
 			PossiblePawnMoves.Add(FVector2D(PawnLocation.X + 240.0, PawnLocation.Y));
 		}
@@ -370,7 +401,8 @@ void ACHS_HumanPlayer::PawnPossibleMoves(FVector PawnLocation) {
 
 	FVector2D Pawn2dLocation1(PawnLocation.X + 120, PawnLocation.Y + 120);
 
-	if (GameMode->GField->TileMap.Contains(Pawn2dLocation1)) {
+	if (GameMode->GField->TileMap.Contains(Pawn2dLocation1)) 
+	{
 
 		ETileOwner Owner0 = GameMode->GField->TileMap[Pawn2dLocation1]->GetOwner();
 
@@ -382,19 +414,23 @@ void ACHS_HumanPlayer::PawnPossibleMoves(FVector PawnLocation) {
 
 	FVector2D Pawn2dLocation2(PawnLocation.X + 120, PawnLocation.Y - 120);
 
-	if (GameMode->GField->TileMap.Contains(Pawn2dLocation2)) {
+	if (GameMode->GField->TileMap.Contains(Pawn2dLocation2))
+	{
 
 		ETileOwner Owner1 = GameMode->GField->TileMap[Pawn2dLocation2]->GetOwner();
 
-		if (Owner1 == ETileOwner::BLACK) {
+		if (Owner1 == ETileOwner::BLACK) 
+		{
 
 			PossiblePawnMoves.Add(FVector2D(PawnLocation.X + 120.0, PawnLocation.Y - 120.0));
 		}
 	}
 
-	for (const FVector2D& PossibleMove : PossiblePawnMoves) {
+	for (const FVector2D& PossibleMove : PossiblePawnMoves) 
+	{
 
-		if (GameMode->GField->TileMap.Contains(PossibleMove)) {
+		if (GameMode->GField->TileMap.Contains(PossibleMove)) 
+		{
 
 			ATile* Tile = GameMode->GField->TileMap[PossibleMove];
 			OriginalMaterials.Add(PossibleMove, Tile->GetTileMaterial(0));
@@ -409,27 +445,33 @@ void ACHS_HumanPlayer::PawnPossibleMoves(FVector PawnLocation) {
 
 }
 
-void ACHS_HumanPlayer::RookPossibleMoves(FVector RookLocation) {
+void ACHS_HumanPlayer::RookPossibleMoves(FVector RookLocation)
+{
 	ACHS_GameMode* GameMode = Cast<ACHS_GameMode>(GetWorld()->GetAuthGameMode());
 
 	UMaterialInterface* TileMaterial;
 	PossibleRookMoves.Empty();
 
-	for (int32 i = 1; i <= 7; ++i) {
+	for (int32 i = 1; i <= 7; ++i) 
+	{
 
 		FVector2D NextTileLocation(RookLocation.X, RookLocation.Y + (i * 120.0));
 
-		if (GameMode->GField->TileMap.Contains(NextTileLocation)) {
+		if (GameMode->GField->TileMap.Contains(NextTileLocation))
+		{
 
 			ATile* NextTile = GameMode->GField->TileMap[NextTileLocation];
 			ETileStatus Status = NextTile->GetTileStatus();
 
-			if (Status == ETileStatus::EMPTY) {
+			if (Status == ETileStatus::EMPTY) 
+			{
 				PossibleRookMoves.Add(NextTileLocation);
 			}
-			else if (Status == ETileStatus::OCCUPIED) {
+			else if (Status == ETileStatus::OCCUPIED) 
+			{
 
-				if (NextTile->GetOwner() == ETileOwner::BLACK) {
+				if (NextTile->GetOwner() == ETileOwner::BLACK)
+				{
 					PossibleRookMoves.Add(NextTileLocation); 
 				}
 				break; 
@@ -441,20 +483,25 @@ void ACHS_HumanPlayer::RookPossibleMoves(FVector RookLocation) {
 	}
 
 	
-	for (int32 i = 1; i <= 7; ++i) {
+	for (int32 i = 1; i <= 7; ++i) 
+	{
 
 		FVector2D NextTileLocation(RookLocation.X, RookLocation.Y - (i * 120.0));
 
-		if (GameMode->GField->TileMap.Contains(NextTileLocation)) {
+		if (GameMode->GField->TileMap.Contains(NextTileLocation)) 
+		{
 
 			ATile* NextTile = GameMode->GField->TileMap[NextTileLocation];
 			ETileStatus Status = NextTile->GetTileStatus();
 
-			if (Status == ETileStatus::EMPTY) {
+			if (Status == ETileStatus::EMPTY)
+			{
 				PossibleRookMoves.Add(NextTileLocation);
 			}
-			else if (Status == ETileStatus::OCCUPIED) {
-				if (NextTile->GetOwner() == ETileOwner::BLACK) {
+			else if (Status == ETileStatus::OCCUPIED)
+			{
+				if (NextTile->GetOwner() == ETileOwner::BLACK) 
+				{
 					PossibleRookMoves.Add(NextTileLocation); 
 				}
 				break; 
@@ -470,17 +517,21 @@ void ACHS_HumanPlayer::RookPossibleMoves(FVector RookLocation) {
 
 		FVector2D NextTileLocation(RookLocation.X + (i * 120.0), RookLocation.Y);
 
-		if (GameMode->GField->TileMap.Contains(NextTileLocation)) {
+		if (GameMode->GField->TileMap.Contains(NextTileLocation))
+		{
 
 			ATile* NextTile = GameMode->GField->TileMap[NextTileLocation];
 			ETileStatus Status = NextTile->GetTileStatus();
 
-			if (Status == ETileStatus::EMPTY) {
+			if (Status == ETileStatus::EMPTY)
+			{
 				PossibleRookMoves.Add(NextTileLocation);
 			}
-			else if (Status == ETileStatus::OCCUPIED) {
+			else if (Status == ETileStatus::OCCUPIED)
+			{
 
-				if (NextTile->GetOwner() == ETileOwner::BLACK) {
+				if (NextTile->GetOwner() == ETileOwner::BLACK) 
+				{
 					PossibleRookMoves.Add(NextTileLocation); 
 				}
 				// Esc from cycle if a Tile is occupied by black piece
@@ -494,21 +545,26 @@ void ACHS_HumanPlayer::RookPossibleMoves(FVector RookLocation) {
 	}
 
 
-	for (int32 i = 1; i <= 7; ++i) {
+	for (int32 i = 1; i <= 7; ++i)
+	{
 
 		FVector2D NextTileLocation(RookLocation.X - (i * 120.0), RookLocation.Y);
 
-		if (GameMode->GField->TileMap.Contains(NextTileLocation)) {
+		if (GameMode->GField->TileMap.Contains(NextTileLocation)) 
+		{
 
 			ATile* NextTile = GameMode->GField->TileMap[NextTileLocation];
 			ETileStatus Status = NextTile->GetTileStatus();
 
-			if (Status == ETileStatus::EMPTY) {
+			if (Status == ETileStatus::EMPTY)
+			{
 				PossibleRookMoves.Add(NextTileLocation);
 			}
-			else if (Status == ETileStatus::OCCUPIED) {
+			else if (Status == ETileStatus::OCCUPIED) 
+			{
 
-				if (NextTile->GetOwner() == ETileOwner::BLACK) {
+				if (NextTile->GetOwner() == ETileOwner::BLACK)
+				{
 					PossibleRookMoves.Add(NextTileLocation); 
 				}
 				break; 
@@ -519,11 +575,15 @@ void ACHS_HumanPlayer::RookPossibleMoves(FVector RookLocation) {
 		}
 	}
 
-	for (const FVector2D& PossibleMove : PossibleRookMoves) {
-		if (GameMode->GField->TileMap.Contains(PossibleMove)) {
+	for (const FVector2D& PossibleMove : PossibleRookMoves) 
+	{
+		if (GameMode->GField->TileMap.Contains(PossibleMove))
+		{
 			ATile* Tile = GameMode->GField->TileMap[PossibleMove];
 			OriginalMaterials.Add(PossibleMove, Tile->GetTileMaterial(0));
-			if (Tile->GetOwner() != ETileOwner::WHITE) {
+
+			if (Tile->GetOwner() != ETileOwner::WHITE) 
+			{
 				TileMaterial = Tile->PossibleMoveMaterial;
 				Tile->SetTileMaterial(0, TileMaterial);
 			}
@@ -531,7 +591,8 @@ void ACHS_HumanPlayer::RookPossibleMoves(FVector RookLocation) {
 	}
 }
 
-void ACHS_HumanPlayer::BishopPossibleMoves(FVector BishopLocation) {
+void ACHS_HumanPlayer::BishopPossibleMoves(FVector BishopLocation)
+{
 	ACHS_GameMode* GameMode = Cast<ACHS_GameMode>(GetWorld()->GetAuthGameMode());
 	
 
@@ -539,20 +600,25 @@ void ACHS_HumanPlayer::BishopPossibleMoves(FVector BishopLocation) {
 	PossibleBishopMoves.Empty();
 
 	
-	for (int32 i = 1; i <= 7; ++i) {
+	for (int32 i = 1; i <= 7; ++i) 
+	{
 
 		FVector2D NextTileLocation(BishopLocation.X + (i * 120.0f), BishopLocation.Y + (i * 120.0f));
 
-		if (GameMode->GField->TileMap.Contains(NextTileLocation)) {
+		if (GameMode->GField->TileMap.Contains(NextTileLocation))
+		{
 
 			ATile* NextTile = GameMode->GField->TileMap[NextTileLocation];
 			ETileStatus Status = NextTile->GetTileStatus();
 
-			if (Status == ETileStatus::EMPTY) {
+			if (Status == ETileStatus::EMPTY)
+			{
 				PossibleBishopMoves.Add(NextTileLocation);
 			}
-			else if (Status == ETileStatus::OCCUPIED) {
-				if (NextTile->GetOwner() == ETileOwner::BLACK) {
+			else if (Status == ETileStatus::OCCUPIED) 
+			{
+				if (NextTile->GetOwner() == ETileOwner::BLACK) 
+				{
 					PossibleBishopMoves.Add(NextTileLocation); 
 				}
 				break; 
@@ -564,20 +630,25 @@ void ACHS_HumanPlayer::BishopPossibleMoves(FVector BishopLocation) {
 	}
 
 	
-	for (int32 i = 1; i <= 7; ++i) {
+	for (int32 i = 1; i <= 7; ++i)
+	{
 
 		FVector2D NextTileLocation(BishopLocation.X + (i * 120.0), BishopLocation.Y - (i * 120.0));
 
-		if (GameMode->GField->TileMap.Contains(NextTileLocation)) {
+		if (GameMode->GField->TileMap.Contains(NextTileLocation)) 
+		{
 
 			ATile* NextTile = GameMode->GField->TileMap[NextTileLocation];
 			ETileStatus Status = NextTile->GetTileStatus();
 
-			if (Status == ETileStatus::EMPTY) {
+			if (Status == ETileStatus::EMPTY)
+			{
 				PossibleBishopMoves.Add(NextTileLocation);
 			}
-			else if (Status == ETileStatus::OCCUPIED) {
-				if (NextTile->GetOwner() == ETileOwner::BLACK) {
+			else if (Status == ETileStatus::OCCUPIED)
+			{
+				if (NextTile->GetOwner() == ETileOwner::BLACK) 
+				{
 
 					PossibleBishopMoves.Add(NextTileLocation); 
 				}
@@ -590,21 +661,26 @@ void ACHS_HumanPlayer::BishopPossibleMoves(FVector BishopLocation) {
 	}
 
 	
-	for (int32 i = 1; i <= 7; ++i) {
+	for (int32 i = 1; i <= 7; ++i) 
+	{
 
 		FVector2D NextTileLocation(BishopLocation.X - (i * 120.0), BishopLocation.Y + (i * 120.0));
 
-		if (GameMode->GField->TileMap.Contains(NextTileLocation)) {
+		if (GameMode->GField->TileMap.Contains(NextTileLocation)) 
+		{
 
 			ATile* NextTile = GameMode->GField->TileMap[NextTileLocation];
 			ETileStatus Status = NextTile->GetTileStatus();
 
-			if (Status == ETileStatus::EMPTY) {
+			if (Status == ETileStatus::EMPTY)
+			{
 				PossibleBishopMoves.Add(NextTileLocation);
 			}
-			else if (Status == ETileStatus::OCCUPIED) {
+			else if (Status == ETileStatus::OCCUPIED) 
+			{
 
-				if (NextTile->GetOwner() == ETileOwner::BLACK) {
+				if (NextTile->GetOwner() == ETileOwner::BLACK) 
+				{
 					PossibleBishopMoves.Add(NextTileLocation);
 				}
 				break; 
@@ -616,21 +692,26 @@ void ACHS_HumanPlayer::BishopPossibleMoves(FVector BishopLocation) {
 	}
 
 	
-	for (int32 i = 1; i <= 7; ++i) {
+	for (int32 i = 1; i <= 7; ++i) 
+	{
 
 		FVector2D NextTileLocation(BishopLocation.X - (i * 120.0), BishopLocation.Y - (i * 120.0));
 
-		if (GameMode->GField->TileMap.Contains(NextTileLocation)) {
+		if (GameMode->GField->TileMap.Contains(NextTileLocation))
+		{
 
 			ATile* NextTile = GameMode->GField->TileMap[NextTileLocation];
 			ETileStatus Status = NextTile->GetTileStatus();
 
-			if (Status == ETileStatus::EMPTY) {
+			if (Status == ETileStatus::EMPTY) 
+			{
 				PossibleBishopMoves.Add(NextTileLocation);
 			}
-			else if (Status == ETileStatus::OCCUPIED) {
+			else if (Status == ETileStatus::OCCUPIED) 
+			{
 
-				if (NextTile->GetOwner() == ETileOwner::BLACK) {
+				if (NextTile->GetOwner() == ETileOwner::BLACK)
+				{
 					PossibleBishopMoves.Add(NextTileLocation); 
 				}
 				break; 
@@ -641,11 +722,15 @@ void ACHS_HumanPlayer::BishopPossibleMoves(FVector BishopLocation) {
 		}
 	}
 
-	for (const FVector2D& PossibleMove : PossibleBishopMoves) {
-		if (GameMode->GField->TileMap.Contains(PossibleMove)) {
+	for (const FVector2D& PossibleMove : PossibleBishopMoves)
+	{
+		if (GameMode->GField->TileMap.Contains(PossibleMove)) 
+		{
 			ATile* Tile = GameMode->GField->TileMap[PossibleMove];
 			OriginalMaterials.Add(PossibleMove, Tile->GetTileMaterial(0));
-			if (Tile->GetOwner() != ETileOwner::WHITE) {
+
+			if (Tile->GetOwner() != ETileOwner::WHITE)
+			{
 				TileMaterial = Tile->PossibleMoveMaterial;
 				Tile->SetTileMaterial(0, TileMaterial);
 			}
@@ -653,7 +738,8 @@ void ACHS_HumanPlayer::BishopPossibleMoves(FVector BishopLocation) {
 	}
 }
 
-void ACHS_HumanPlayer::QueenPossibleMoves(FVector QueenLocation) {
+void ACHS_HumanPlayer::QueenPossibleMoves(FVector QueenLocation)
+{
 
 	PossibleQueenMoves.Empty();
 	RookPossibleMoves(QueenLocation);
@@ -665,21 +751,27 @@ void ACHS_HumanPlayer::QueenPossibleMoves(FVector QueenLocation) {
 
 
 
-void ACHS_HumanPlayer::SetOriginalTileMaterial() {
+void ACHS_HumanPlayer::SetOriginalTileMaterial() 
+{
 
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
 
-	for (const auto& Entry : OriginalMaterials) {
+	for (const auto& Entry : OriginalMaterials)
+	{
 		ATile* Tile = GameMode->GField->TileMap[Entry.Key];
 		Tile->SetTileMaterial(0, Entry.Value);
 	}
 
 }
 
-int32 ACHS_HumanPlayer::IsPieceMoveValid(FVector2D Position, TArray<FVector2D> PossiblePieceMoves) {
+int32 ACHS_HumanPlayer::IsPieceMoveValid(FVector2D Position, TArray<FVector2D> PossiblePieceMoves)
+{
 	int32 ValidMove = 0;
-	for (const FVector2D& PossibleMove : PossiblePieceMoves) {
-		if (Position == PossibleMove) {
+
+	for (const FVector2D& PossibleMove : PossiblePieceMoves)
+	{
+		if (Position == PossibleMove)
+		{
 			ValidMove = 1;
 
 		}

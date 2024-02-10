@@ -4,6 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "CHS_PlayerInterface.h"
+#include "CHS_GameInstance.h"
+#include "CHS_GameMode.h"
+#include "GameField.h"
+#include "Kismet/GameplayStatics.h"
 #include "CHS_RandomPlayer.generated.h"
 
 UCLASS()
@@ -19,11 +24,19 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(Transient)
+	TArray<ABasePiece*> BlackActor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		FVector BlackActorLocation;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	virtual void OnTurn();
 
 };

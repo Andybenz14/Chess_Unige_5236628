@@ -45,6 +45,17 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 		TMap<FVector2D, UMaterialInterface*> OriginalMaterials;
 
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	virtual void OnTurn();
+
+	void PawnMove();
+
 	UPROPERTY(EditDefaultsOnly)
 		TArray<FVector2D> PossibleKnightMoves;
 
@@ -62,18 +73,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 		TArray<FVector2D> PossibleBishopMoves;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	virtual void OnTurn();
-
-	void PawnMove();
-
 
 	void KnightPossibleMoves(FVector KnightLocation);
 	void KingPossibleMoves(FVector KingLocation);

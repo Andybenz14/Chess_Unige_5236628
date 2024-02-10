@@ -4,6 +4,7 @@
 #include "GameField.h"
 #include "BasePiece.h"
 #include "Kismet/GameplayStatics.h"
+#include "CHS_GameMode.h"
 
 
 
@@ -34,7 +35,7 @@ void AGameField::BeginPlay()
 {
 	Super::BeginPlay();
 	GenerateField();
-	// Ruota il GameField di 90 gradi a destra
+	
 	
 }
 

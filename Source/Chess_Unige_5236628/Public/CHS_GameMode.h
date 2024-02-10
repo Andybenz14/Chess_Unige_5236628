@@ -4,8 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameField.h"
+#include "CHS_HumanPlayer.h"
 #include "GameFramework/GameModeBase.h"
 #include "CHS_GameMode.generated.h"
+
+class AActor;
+
+struct FPosition;
 
 /**
  * 
@@ -21,6 +26,10 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<AGameField> GameFieldClass;
 
+	// TSubclassOf is a template class that provides UClass type safety.
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<ACHS_HumanPlayer> HumanPlayerClass;
+
 	// field size
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int32 FieldSize;
@@ -28,6 +37,10 @@ public:
 	// reference to a GameField object
 	UPROPERTY(VisibleAnywhere)
 		AGameField* GField;
+
+	
+	UPROPERTY(VisibleAnywhere)
+		ACHS_HumanPlayer* HPlayer;
 
 
 	ACHS_GameMode();

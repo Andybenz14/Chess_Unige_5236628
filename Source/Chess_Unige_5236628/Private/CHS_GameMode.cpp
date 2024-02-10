@@ -4,6 +4,7 @@
 #include "CHS_GameMode.h"
 #include "CHS_HumanPlayer.h"
 #include "CHS_PlayerController.h"
+#include "CHS_RandomPlayer.h"
 #include "GameField.h"
 #include "EngineUtils.h"
 
@@ -38,6 +39,9 @@ void ACHS_GameMode::BeginPlay()
 	FVector CameraPos(CameraPosX, CameraPosX, 1000.0f);
 	HumanPlayer->SetActorLocationAndRotation(CameraPos, FRotationMatrix::MakeFromX(FVector(0, 0, -1)).Rotator());
 
+	// Random Player
+	auto* AI = GetWorld()->SpawnActor<ACHS_RandomPlayer>(FVector(), FRotator());
 	
-
+	HumanPlayer->OnTurn();
+	AI->OnTurn();
 }
