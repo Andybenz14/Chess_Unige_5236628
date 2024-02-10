@@ -13,12 +13,15 @@ ACHS_GameMode::ACHS_GameMode()
 	PlayerControllerClass = ACHS_PlayerController::StaticClass();
 	DefaultPawnClass = ACHS_HumanPlayer::StaticClass();
 	FieldSize = 8;
+	
 }
 
 
 void ACHS_GameMode::BeginPlay()
 {
 	Super::BeginPlay();
+
+	IsMyTurn = 1;
 
 	ACHS_HumanPlayer* HumanPlayer = Cast<ACHS_HumanPlayer>(*TActorIterator<ACHS_HumanPlayer>(GetWorld()));
 
@@ -42,6 +45,44 @@ void ACHS_GameMode::BeginPlay()
 	// Random Player
 	auto* AI = GetWorld()->SpawnActor<ACHS_RandomPlayer>(FVector(), FRotator());
 	
-	HumanPlayer->OnTurn();
-	AI->OnTurn();
+	if (IsMyTurn)
+	{
+		HumanPlayer->OnTurn();
+	}
+	else
+	{
+		AI->OnTurn();
+	}
+
+}
+
+void ACHS_GameMode::EndHumanTurn()
+{
+	
+	IsMyTurn = 0;
+
+	auto* AI = GetWorld()->SpawnActor<ACHS_RandomPlayer>(FVector(), FRotator());
+	if (!IsGameFinished())
+	{
+		AI->OnTurn();
+	}
+}
+
+void ACHS_GameMode::EndAITurn()
+{
+	
+	IsMyTurn = 1;
+	ACHS_HumanPlayer* HumanPlayer = Cast<ACHS_HumanPlayer>(*TActorIterator<ACHS_HumanPlayer>(GetWorld()));
+	
+	if (!IsGameFinished())
+	{
+		HumanPlayer->OnTurn();
+	}
+}
+
+
+bool ACHS_GameMode::IsGameFinished() const
+{
+
+	return false; 
 }

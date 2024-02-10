@@ -26,22 +26,25 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<AGameField> GameFieldClass;
 
-	// TSubclassOf is a template class that provides UClass type safety.
-	UPROPERTY(EditDefaultsOnly)
-		TSubclassOf<ACHS_HumanPlayer> HumanPlayerClass;
-
 	// field size
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int32 FieldSize;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		int32 IsMyTurn;
+
 	// reference to a GameField object
 	UPROPERTY(VisibleAnywhere)
 		AGameField* GField;
+	
+
+	void EndHumanTurn();
 
 	
-	UPROPERTY(VisibleAnywhere)
-		ACHS_HumanPlayer* HPlayer;
+	void EndAITurn();
 
+	
+	bool IsGameFinished() const;
 
 	ACHS_GameMode();
 

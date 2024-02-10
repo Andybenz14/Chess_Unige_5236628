@@ -125,7 +125,7 @@ void ACHS_HumanPlayer::OnClick()
 					if (int32 IsValid = IsPieceMoveValid(Position, PossiblePawnMoves) == 1)
 					{
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
-						//IsMyTurn = false;
+						
 					}
 				}
 
@@ -134,7 +134,7 @@ void ACHS_HumanPlayer::OnClick()
 					if (int32 IsValid = IsPieceMoveValid(Position, PossibleKingMoves) == 1)
 					{
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
-						//IsMyTurn = false;
+					
 					}
 				}
 
@@ -143,7 +143,7 @@ void ACHS_HumanPlayer::OnClick()
 					if (int32 IsValid = IsPieceMoveValid(Position, PossibleQueenMoves) == 1)
 					{
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
-						//IsMyTurn = false;
+					
 					}
 				}
 
@@ -152,7 +152,7 @@ void ACHS_HumanPlayer::OnClick()
 					if (int32 IsValid = IsPieceMoveValid(Position, PossibleBishopMoves) == 1)
 					{
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
-						//IsMyTurn = false;
+						
 					}
 				}
 
@@ -161,7 +161,7 @@ void ACHS_HumanPlayer::OnClick()
 					if (int32 IsValid = IsPieceMoveValid(Position, PossibleKnightMoves) == 1)
 					{
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
-						//IsMyTurn = false;
+						
 					}
 				}
 
@@ -170,7 +170,7 @@ void ACHS_HumanPlayer::OnClick()
 					if (int32 IsValid = IsPieceMoveValid(Position, PossibleRookMoves) == 1)
 					{
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, TileLocation);
-						//IsMyTurn = false;
+						
 					}
 				}
 			}
@@ -191,7 +191,7 @@ void ACHS_HumanPlayer::OnClick()
 					{
 						ClickedPiece->Destroy();
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
-						//IsMyTurn = false;
+						
 					}
 				}
 	
@@ -201,7 +201,7 @@ void ACHS_HumanPlayer::OnClick()
 					{
 						ClickedPiece->Destroy();
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
-						//IsMyTurn = false;
+						
 					}
 				}
 
@@ -211,7 +211,7 @@ void ACHS_HumanPlayer::OnClick()
 					{
 						ClickedPiece->Destroy();
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
-						//IsMyTurn = false;
+						
 					}
 				}
 
@@ -221,7 +221,7 @@ void ACHS_HumanPlayer::OnClick()
 					{
 						ClickedPiece->Destroy();
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
-						//IsMyTurn = false;
+						
 					}
 				}
 
@@ -231,7 +231,7 @@ void ACHS_HumanPlayer::OnClick()
 					{
 						ClickedPiece->Destroy();
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
-						//IsMyTurn = false;
+						
 					}
 				}
 
@@ -241,7 +241,7 @@ void ACHS_HumanPlayer::OnClick()
 					{
 						ClickedPiece->Destroy();
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
-						//IsMyTurn = false;
+						
 					}
 				}
 			}
@@ -280,7 +280,7 @@ void ACHS_HumanPlayer::MoveBasePiece(ABasePiece*, FVector OldLocation, FVector N
 	ClickCounter = 0;
 	TurnCounter = TurnCounter + 1;
 	
-
+	GameMode->EndHumanTurn();
 
 }
 
@@ -288,6 +288,8 @@ void ACHS_HumanPlayer::KnightPossibleMoves(FVector KnightLocation)
 {
 
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+
+	PossibleKnightMoves.Empty();
 
 	 PossibleKnightMoves = 
 	 {

@@ -30,6 +30,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		FVector BlackActorLocation;
 
+	UPROPERTY(EditDefaultsOnly)
+		ABasePiece* RandomSelectedActor;
+
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -38,5 +42,35 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual void OnTurn();
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleBKnightMoves;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleBKingMoves;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleBQueenMoves;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleBPawnMoves;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleBRookMoves;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleBBishopMoves;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<ABasePiece*> BlackMovableActors;
+
+	void BKnightPossibleMoves(FVector KnightLocation);
+	void BKingPossibleMoves(FVector KingLocation);
+	void BPawnPossibleMoves(FVector PawnLocation);
+	void BRookPossibleMoves(FVector RookLocation);
+	void BBishopPossibleMoves(FVector BishopLocation);
+	void BQueenPossibleMoves(FVector QueenLocation);
+
+	void MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVector NewLocation);
 
 };

@@ -54,8 +54,6 @@ public:
 
 	virtual void OnTurn();
 
-	void PawnMove();
-
 	UPROPERTY(EditDefaultsOnly)
 		TArray<FVector2D> PossibleKnightMoves;
 
