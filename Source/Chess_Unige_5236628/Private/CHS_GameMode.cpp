@@ -54,6 +54,7 @@ void ACHS_GameMode::BeginPlay()
 		AI->OnTurn();
 	}
 
+	
 }
 
 void ACHS_GameMode::EndHumanTurn()
@@ -61,7 +62,7 @@ void ACHS_GameMode::EndHumanTurn()
 	
 	IsMyTurn = 0;
 
-	auto* AI = GetWorld()->SpawnActor<ACHS_RandomPlayer>(FVector(), FRotator());
+	ACHS_RandomPlayer* AI = Cast<ACHS_RandomPlayer>(*TActorIterator<ACHS_RandomPlayer>(GetWorld()));
 	if (!IsGameFinished())
 	{
 		AI->OnTurn();

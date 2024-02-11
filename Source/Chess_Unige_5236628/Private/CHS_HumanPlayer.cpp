@@ -190,6 +190,7 @@ void ACHS_HumanPlayer::OnClick()
 					if (int32 IsValid = IsPieceMoveValid(Position, PossiblePawnMoves) == 1) 
 					{
 						ClickedPiece->Destroy();
+						GameMode->GField->BasePieceMap.Remove(Position);
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}
@@ -200,6 +201,7 @@ void ACHS_HumanPlayer::OnClick()
 					if (int32 IsValid = IsPieceMoveValid(Position, PossibleKingMoves) == 1) 
 					{
 						ClickedPiece->Destroy();
+						GameMode->GField->BasePieceMap.Remove(Position);
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}
@@ -210,6 +212,7 @@ void ACHS_HumanPlayer::OnClick()
 					if (int32 IsValid = IsPieceMoveValid(Position, PossibleQueenMoves) == 1) 
 					{
 						ClickedPiece->Destroy();
+						GameMode->GField->BasePieceMap.Remove(Position);
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}
@@ -220,6 +223,7 @@ void ACHS_HumanPlayer::OnClick()
 					if (int32 IsValid = IsPieceMoveValid(Position, PossibleBishopMoves) == 1) 
 					{
 						ClickedPiece->Destroy();
+						GameMode->GField->BasePieceMap.Remove(Position);
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}
@@ -230,6 +234,7 @@ void ACHS_HumanPlayer::OnClick()
 					if (int32 IsValid = IsPieceMoveValid(Position, PossibleKnightMoves) == 1) 
 					{
 						ClickedPiece->Destroy();
+						GameMode->GField->BasePieceMap.Remove(Position);
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}
@@ -240,6 +245,7 @@ void ACHS_HumanPlayer::OnClick()
 					if (int32 IsValid = IsPieceMoveValid(Position, PossibleRookMoves) == 1)
 					{
 						ClickedPiece->Destroy();
+						GameMode->GField->BasePieceMap.Remove(Position);
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}
@@ -279,7 +285,12 @@ void ACHS_HumanPlayer::MoveBasePiece(ABasePiece*, FVector OldLocation, FVector N
 	
 	ClickCounter = 0;
 	TurnCounter = TurnCounter + 1;
-	
+	ClickedActorLocation2D.X = ClickedActorLocation2D.X / 120;
+	ClickedActorLocation2D.Y = ClickedActorLocation2D.Y / 120;
+	NewActorLocation2D.X = NewActorLocation2D.X / 120;
+	NewActorLocation2D.Y = NewActorLocation2D.Y / 120;
+	GameMode->GField->BasePieceMap.Remove(ClickedActorLocation2D);
+	GameMode->GField->BasePieceMap.Add(NewActorLocation2D, BasePieceActor);
 	GameMode->EndHumanTurn();
 
 }
@@ -393,8 +404,9 @@ void ACHS_HumanPlayer::PawnPossibleMoves(FVector PawnLocation)
 	{
 
 		ETileStatus status1 = GameMode->GField->TileMap[Pawn2dLocation3]->GetTileStatus();
+		ETileStatus status2 = GameMode->GField->TileMap[Pawn2dLocation0]->GetTileStatus();
 
-		if (PawnLocation.X == 120.0 && status1 == ETileStatus::EMPTY)
+		if (PawnLocation.X == 120.0 && status1 == ETileStatus::EMPTY && status2 == ETileStatus::EMPTY)
 		{
 
 			PossiblePawnMoves.Add(FVector2D(PawnLocation.X + 240.0, PawnLocation.Y));

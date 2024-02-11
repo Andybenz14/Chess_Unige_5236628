@@ -3,6 +3,7 @@
 #include "CHS_RandomPlayer.h"
 
 
+
 // Sets default values
 ACHS_RandomPlayer::ACHS_RandomPlayer()
 {
@@ -15,7 +16,10 @@ ACHS_RandomPlayer::ACHS_RandomPlayer()
 void ACHS_RandomPlayer::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	FTimerHandle TimerHandle;
+
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &ACHS_RandomPlayer::OnTurn, 2.0f, false);
 }
 
 // Called every frame
@@ -35,10 +39,13 @@ void ACHS_RandomPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 void ACHS_RandomPlayer::OnTurn()
 {
 	TArray<ABasePiece*> BlackActors;
-	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("AI (Random) Turn"));
+	BlackActors.Empty();
+	BlackMovableActors.Empty();
 
-	for (auto& BlackTile : GameMode->GField->GetTileArray())
+	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+	
+
+	for (const auto& BlackTile : GameMode->GField->TileArray)
 	{
 		if (BlackTile->GetOwner() == ETileOwner::BLACK)
 		{
@@ -47,11 +54,11 @@ void ACHS_RandomPlayer::OnTurn()
 			FVector2D BlackPieceLocation2d(BlackActorLocation);
 			BlackPieceLocation2d.X = BlackPieceLocation2d.X / 120;
 			BlackPieceLocation2d.Y = BlackPieceLocation2d.Y / 120;
-			GEngine->AddOnScreenDebugMessage(-1, 200, FColor::Green, FString::Printf(TEXT("Piece %s"), *BlackPieceLocation2d.ToString()));
+			
 
 			if (GameMode->GField->BasePieceMap.Contains(BlackPieceLocation2d))
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("AI (Random) Turn second if"));
+			
 				ABasePiece* Actor = GameMode->GField->BasePieceMap[BlackPieceLocation2d];
 				BlackActors.Add(Actor);
 			}
@@ -126,7 +133,7 @@ void ACHS_RandomPlayer::OnTurn()
 
 		if (BlackMovableActors.Num() > 0)
 		{
-			int32 RandIdx = FMath::Rand() % BlackMovableActors.Num();
+			int32 RandIdx = FMath::RandRange(0, BlackMovableActors.Num() - 1);
 			RandomSelectedActor = BlackMovableActors[RandIdx];
 			FVector RandomActorLocation = RandomSelectedActor->GetActorLocation();
 
@@ -138,7 +145,7 @@ void ACHS_RandomPlayer::OnTurn()
 				
 				if (PossibleBKingMoves.Num() > 0)
 				{
-					int32 RandIdx1 = FMath::Rand() % PossibleBKingMoves.Num();
+					int32 RandIdx1 = FMath::RandRange(0, PossibleBKingMoves.Num()-1);
 					FVector2D RandomPosition= PossibleBKingMoves[RandIdx1];
 					FVector RandomPosition3d;
 					RandomPosition3d.X = RandomPosition.X;
@@ -147,7 +154,9 @@ void ACHS_RandomPlayer::OnTurn()
 					FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
 					if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
 					{
+						GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("King mangia: %s"), *NormalizedPosition.ToString()));
 						GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
+						GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
 					}
 					MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 				}
@@ -158,7 +167,7 @@ void ACHS_RandomPlayer::OnTurn()
 
 				if (PossibleBPawnMoves.Num() > 0)
 				{
-					int32 RandIdx1 = FMath::Rand() % PossibleBPawnMoves.Num();
+					int32 RandIdx1 = FMath::RandRange(0, PossibleBPawnMoves.Num() - 1);
 					FVector2D RandomPosition = PossibleBPawnMoves[RandIdx1];
 					FVector RandomPosition3d;
 					RandomPosition3d.X = RandomPosition.X;
@@ -168,7 +177,9 @@ void ACHS_RandomPlayer::OnTurn()
 					FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
 					if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
 					{
+						GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("PAWN mangia: %s"), *NormalizedPosition.ToString()));
 						GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
+						GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
 					}
 					MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 				}
@@ -179,7 +190,7 @@ void ACHS_RandomPlayer::OnTurn()
 
 				if (PossibleBQueenMoves.Num() > 0)
 				{
-					int32 RandIdx1 = FMath::Rand() % PossibleBQueenMoves.Num();
+					int32 RandIdx1 = FMath::RandRange(0, PossibleBQueenMoves.Num() - 1);
 					FVector2D RandomPosition = PossibleBQueenMoves[RandIdx1];
 					FVector RandomPosition3d;
 					RandomPosition3d.X = RandomPosition.X;
@@ -188,7 +199,9 @@ void ACHS_RandomPlayer::OnTurn()
 					FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
 					if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
 					{
+						GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("QUEEn mangia: %s"), *NormalizedPosition.ToString()));
 						GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
+						GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
 					}
 					MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 				}
@@ -199,7 +212,7 @@ void ACHS_RandomPlayer::OnTurn()
 
 				if (PossibleBBishopMoves.Num() > 0)
 				{
-					int32 RandIdx1 = FMath::Rand() % PossibleBBishopMoves.Num();
+					int32 RandIdx1 = FMath::RandRange(0, PossibleBBishopMoves.Num() - 1);
 					FVector2D RandomPosition = PossibleBBishopMoves[RandIdx1];
 					FVector RandomPosition3d;
 					RandomPosition3d.X = RandomPosition.X;
@@ -208,7 +221,9 @@ void ACHS_RandomPlayer::OnTurn()
 					FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
 					if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
 					{
+						GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Bishop mangia: %s"), *NormalizedPosition.ToString()));
 						GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
+						GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
 					}
 					MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 				}
@@ -219,7 +234,7 @@ void ACHS_RandomPlayer::OnTurn()
 
 				if (PossibleBKnightMoves.Num() > 0)
 				{
-					int32 RandIdx1 = FMath::Rand() % PossibleBKnightMoves.Num();
+					int32 RandIdx1 = FMath::RandRange(0, PossibleBKnightMoves.Num() - 1);
 					FVector2D RandomPosition = PossibleBKnightMoves[RandIdx1];
 					FVector RandomPosition3d;
 					RandomPosition3d.X = RandomPosition.X;
@@ -228,7 +243,9 @@ void ACHS_RandomPlayer::OnTurn()
 					FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
 					if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
 					{
+						GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Knight mangia: %s"), *NormalizedPosition.ToString()));
 						GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
+						GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
 					}
 					MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 				}
@@ -239,7 +256,13 @@ void ACHS_RandomPlayer::OnTurn()
 
 				if (PossibleBRookMoves.Num() > 0)
 				{
-					int32 RandIdx1 = FMath::Rand() % PossibleBRookMoves.Num();
+					for (int32 i = 0; i < PossibleBRookMoves.Num(); ++i)
+					{
+						FVector2D RandomPosition = PossibleBRookMoves[i];
+						FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
+						GEngine->AddOnScreenDebugMessage(-1, 30.0f, FColor::Yellow, FString::Printf(TEXT("Possible Rook move: %s"), *NormalizedPosition.ToString()));
+					}
+					int32 RandIdx1 = FMath::RandRange(0, PossibleBRookMoves.Num() - 1);
 					FVector2D RandomPosition = PossibleBRookMoves[RandIdx1];
 					FVector RandomPosition3d;
 					RandomPosition3d.X = RandomPosition.X;
@@ -248,7 +271,9 @@ void ACHS_RandomPlayer::OnTurn()
 					FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
 					if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
 					{
+						GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Rook mangia: %s"), *NormalizedPosition.ToString()));
 						GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
+						GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
 					}
 					MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 				}
@@ -256,6 +281,7 @@ void ACHS_RandomPlayer::OnTurn()
 
 
 		}
+	
 }
 
 
@@ -278,6 +304,12 @@ void ACHS_RandomPlayer::MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVe
 		GameMode->GField->TileMap[NewActorLocation2D]->SetTileStatus(ETileOwner::BLACK, ETileStatus::OCCUPIED);
 	}
 
+	ClickedActorLocation2D.X = ClickedActorLocation2D.X / 120;
+	ClickedActorLocation2D.Y = ClickedActorLocation2D.Y / 120;
+	NewActorLocation2D.X = NewActorLocation2D.X / 120;
+	NewActorLocation2D.Y = NewActorLocation2D.Y / 120;
+	GameMode->GField->BasePieceMap.Remove(ClickedActorLocation2D);
+	GameMode->GField->BasePieceMap.Add(NewActorLocation2D, RandomSelectedActor);
 	GameMode->EndAITurn();
 }
 
@@ -379,7 +411,9 @@ void ACHS_RandomPlayer::BPawnPossibleMoves(FVector PawnLocation)
 
 		ETileStatus status1 = GameMode->GField->TileMap[Pawn2dLocation3]->GetTileStatus();
 
-		if (PawnLocation.X == 720.0 && status1 == ETileStatus::EMPTY)
+		ETileStatus status2 = GameMode->GField->TileMap[Pawn2dLocation0]->GetTileStatus();
+
+		if (PawnLocation.X == 720.0 && status1 == ETileStatus::EMPTY && status2 == ETileStatus::EMPTY)
 		{
 
 			PossibleBPawnMoves.Add(FVector2D(PawnLocation.X - 240.0, PawnLocation.Y));
@@ -438,7 +472,7 @@ void ACHS_RandomPlayer::BRookPossibleMoves(FVector RookLocation)
 			else if (Status == ETileStatus::OCCUPIED)
 			{
 
-				if (NextTile->GetOwner() == ETileOwner::WHITE)
+				if (NextTile->GetOwner() == ETileOwner::WHITE)		
 				{
 					PossibleBRookMoves.Add(NextTileLocation);
 				}
