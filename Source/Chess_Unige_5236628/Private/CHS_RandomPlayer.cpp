@@ -17,9 +17,7 @@ void ACHS_RandomPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FTimerHandle TimerHandle;
 
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &ACHS_RandomPlayer::OnTurn, 2.0f, false);
 }
 
 // Called every frame
@@ -38,6 +36,10 @@ void ACHS_RandomPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 void ACHS_RandomPlayer::OnTurn()
 {
+	FTimerHandle TimerHandle;
+
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&]()
+		{
 	TArray<ABasePiece*> BlackActors;
 	BlackActors.Empty();
 	BlackMovableActors.Empty();
@@ -281,7 +283,7 @@ void ACHS_RandomPlayer::OnTurn()
 
 
 		}
-	
+	}, 1, false);
 }
 
 
