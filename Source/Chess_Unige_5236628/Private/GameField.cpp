@@ -314,9 +314,9 @@ void AGameField::PawnPromotion(ABasePiece* Pawn, int32 Color, FString NewPiece)
 	{
 		SpawnRook(PawnPositionNormalized.X, PawnPositionNormalized.Y, PawnPosition, 1.2, Color);
 	}
-	else if (NewPiece == "King")
+	else if (NewPiece == "Knight")
 	{
-		SpawnKing(PawnPositionNormalized.X, PawnPositionNormalized.Y, PawnPosition, 1.2, Color);
+		SpawnKnight(PawnPositionNormalized.X, PawnPositionNormalized.Y, PawnPosition, 1.2, Color);
 	}
 	else if (NewPiece == "Bishop")
 	{

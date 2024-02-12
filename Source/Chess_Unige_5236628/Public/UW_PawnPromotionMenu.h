@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameField.h"
-#include "BasePiece.h"
+
+#include "Blueprint/UserWidget.h"
 #include "Blueprint/UserWidget.h"
 #include "UW_PawnPromotionMenu.generated.h"
 

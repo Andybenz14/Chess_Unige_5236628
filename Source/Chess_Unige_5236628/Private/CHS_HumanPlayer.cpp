@@ -295,6 +295,8 @@ void ACHS_HumanPlayer::MoveBasePiece(ABasePiece*, FVector OldLocation, FVector N
 	if (BasePieceActor->IsA(APawnChess::StaticClass()) && NewActorLocation2D.X == 7)
 	{
 		FString Piece = "Queen";
+		//Promo = CreateWidget<UUW_PawnPromotionMenu>(GetWorld(), WidgetClass);
+		//Promo->AddToViewport();
 		GameMode->GField->PawnPromotion(BasePieceActor, 1, Piece);
 	
 	}

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "UW_PawnPromotionMenu.h"
 #include "Camera/CameraComponent.h"
 #include "CHS_PlayerInterface.h"
 #include "CHS_HumanPlayer.generated.h"
@@ -73,6 +74,12 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		TArray<FVector2D> PossibleBishopMoves;
 
+	// TSubclassOf is a template class that provides UClass type safety.
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<UUW_PawnPromotionMenu> WidgetClass;
+	// reference to a GameField object
+	UPROPERTY(VisibleAnywhere)
+		UUW_PawnPromotionMenu* Promo;
 
 	void KnightPossibleMoves(FVector KnightLocation);
 	void KingPossibleMoves(FVector KingLocation);

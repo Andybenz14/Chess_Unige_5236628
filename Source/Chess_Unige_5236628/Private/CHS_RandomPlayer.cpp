@@ -315,7 +315,15 @@ void ACHS_RandomPlayer::MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVe
 
 	if (RandomSelectedActor->IsA(APawnChess::StaticClass()) && NewActorLocation2D.X == 0)
 	{
-		FString Piece = "Queen";
+		TArray<FString> PossiblePromotionPiece = {
+			FString("Queen"),
+			FString("Rook"),
+			FString("Bishop"),
+			FString("Knight"),
+
+		};
+		int32 Random = FMath::RandRange(0, PossiblePromotionPiece.Num() - 1);
+		FString Piece = PossiblePromotionPiece[Random];
 		GameMode->GField->PawnPromotion(RandomSelectedActor, 2, Piece);
 
 	}
