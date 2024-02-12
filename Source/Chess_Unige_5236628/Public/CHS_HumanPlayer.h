@@ -36,6 +36,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int32 TurnCounter = 0;
 
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		FVector ClickedActorLocation;
 
@@ -71,6 +72,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 		TArray<FVector2D> PossibleBishopMoves;
+
 
 	void KnightPossibleMoves(FVector KnightLocation);
 	void KingPossibleMoves(FVector KingLocation);

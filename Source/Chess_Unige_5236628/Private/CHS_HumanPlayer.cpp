@@ -291,6 +291,15 @@ void ACHS_HumanPlayer::MoveBasePiece(ABasePiece*, FVector OldLocation, FVector N
 	NewActorLocation2D.Y = NewActorLocation2D.Y / 120;
 	GameMode->GField->BasePieceMap.Remove(ClickedActorLocation2D);
 	GameMode->GField->BasePieceMap.Add(NewActorLocation2D, BasePieceActor);
+		
+	if (BasePieceActor->IsA(APawnChess::StaticClass()) && NewActorLocation2D.X == 7)
+	{
+		FString Piece = "Queen";
+		GameMode->GField->PawnPromotion(BasePieceActor, 1, Piece);
+	
+	}
+
+
 	GameMode->EndHumanTurn();
 
 }

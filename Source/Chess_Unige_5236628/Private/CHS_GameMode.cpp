@@ -62,6 +62,11 @@ void ACHS_GameMode::EndHumanTurn()
 	
 	IsMyTurn = 0;
 
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0); 
+	
+		PlayerController->DisableInput(PlayerController);
+	
+
 	ACHS_RandomPlayer* AI = Cast<ACHS_RandomPlayer>(*TActorIterator<ACHS_RandomPlayer>(GetWorld()));
 	if (!IsGameFinished())
 	{
@@ -74,6 +79,10 @@ void ACHS_GameMode::EndAITurn()
 	
 	IsMyTurn = 1;
 	ACHS_HumanPlayer* HumanPlayer = Cast<ACHS_HumanPlayer>(*TActorIterator<ACHS_HumanPlayer>(GetWorld()));
+
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+
+	PlayerController->EnableInput(PlayerController);
 	
 	if (!IsGameFinished())
 	{

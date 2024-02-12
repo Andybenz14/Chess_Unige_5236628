@@ -295,6 +295,36 @@ void AGameField::SetPieceColor(int32 Color, T* ChessPiece)
 
 }
 
+void AGameField::PawnPromotion(ABasePiece* Pawn, int32 Color, FString NewPiece)
+{
+	FVector PawnPosition = Pawn->GetActorLocation();
+	FVector2D PawnPositionNormalized;
+	PawnPositionNormalized.X = (PawnPosition.X/120);
+	PawnPositionNormalized.Y = (PawnPosition.Y/120 );
+	FVector2D PawnPosition2d(PawnPosition);
+	Pawn->Destroy();
+	BasePieceMap.Remove(PawnPositionNormalized);
+
+	if (NewPiece == "Queen")
+
+	{
+		SpawnQueen(PawnPositionNormalized.X, PawnPositionNormalized.Y, PawnPosition, 1.2, Color);
+	}
+	else if (NewPiece == "Rook")
+	{
+		SpawnRook(PawnPositionNormalized.X, PawnPositionNormalized.Y, PawnPosition, 1.2, Color);
+	}
+	else if (NewPiece == "King")
+	{
+		SpawnKing(PawnPositionNormalized.X, PawnPositionNormalized.Y, PawnPosition, 1.2, Color);
+	}
+	else if (NewPiece == "Bishop")
+	{
+		SpawnBishop(PawnPositionNormalized.X, PawnPositionNormalized.Y, PawnPosition, 1.2, Color);
+	}
+
+}
+
 FVector2D AGameField::GetPosition(const FHitResult& Hit)
 {
 	return Cast<ATile>(Hit.GetActor())->GetGridPosition();

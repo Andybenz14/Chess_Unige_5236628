@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameField.h"
 #include "CHS_HumanPlayer.h"
+#include "UW_PawnPromotionMenu.h"
 #include "GameFramework/GameModeBase.h"
 #include "CHS_GameMode.generated.h"
 

@@ -312,6 +312,16 @@ void ACHS_RandomPlayer::MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVe
 	NewActorLocation2D.Y = NewActorLocation2D.Y / 120;
 	GameMode->GField->BasePieceMap.Remove(ClickedActorLocation2D);
 	GameMode->GField->BasePieceMap.Add(NewActorLocation2D, RandomSelectedActor);
+
+	if (RandomSelectedActor->IsA(APawnChess::StaticClass()) && NewActorLocation2D.X == 0)
+	{
+		FString Piece = "Queen";
+		GameMode->GField->PawnPromotion(RandomSelectedActor, 2, Piece);
+
+	}
+
+
+
 	GameMode->EndAITurn();
 }
 

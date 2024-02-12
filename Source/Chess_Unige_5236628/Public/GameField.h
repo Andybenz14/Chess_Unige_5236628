@@ -147,7 +147,7 @@ public:
 	template <typename T>
 	void SetPieceColor(int32 Color, T* ChessPiece);
 	
-
+	void PawnPromotion(ABasePiece* Pawn, int32 Color, FString NewPiece);
 
 	//public:	
 	//	// Called every frame
