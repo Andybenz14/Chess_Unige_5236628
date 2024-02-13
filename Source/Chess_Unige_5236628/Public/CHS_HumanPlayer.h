@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "UW_PawnPromotionMenu.h"
 #include "Camera/CameraComponent.h"
 #include "CHS_PlayerInterface.h"
+#include "Kismet/GameplayStatics.h"
 #include "CHS_HumanPlayer.generated.h"
 
 UCLASS()
@@ -19,31 +19,34 @@ public:
 	// Sets default values for this pawn's properties
 	ACHS_HumanPlayer();
 
-	// camera component attacched to player pawn
+	// Camera component attacched to player pawn
 	UCameraComponent* Camera;
 
 protected:
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	// keeps track of turn
+	// Keeps track of turn
 	bool IsMyTurn = true;
 
-	
+	// Click counter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int32 ClickCounter = 0;
 
-	
+	// Turn counter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int32 TurnCounter = 0;
 
-
+	// Store clicked actor location
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		FVector ClickedActorLocation;
 
+	// BasePieceActor pointer
 	UPROPERTY(EditDefaultsOnly)
 		ABasePiece* BasePieceActor;
 
+	// Map to save spawn tile materials before changing to show hint moves
 	UPROPERTY(EditDefaultsOnly)
 		TMap<FVector2D, UMaterialInterface*> OriginalMaterials;
 
@@ -54,7 +57,10 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	// Called when it's human turn
 	virtual void OnTurn();
+
+	// Possible moves array
 
 	UPROPERTY(EditDefaultsOnly)
 		TArray<FVector2D> PossibleKnightMoves;
@@ -74,13 +80,7 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		TArray<FVector2D> PossibleBishopMoves;
 
-	// TSubclassOf is a template class that provides UClass type safety.
-	UPROPERTY(EditDefaultsOnly)
-		TSubclassOf<UUW_PawnPromotionMenu> WidgetClass;
-	// reference to a GameField object
-	UPROPERTY(VisibleAnywhere)
-		UUW_PawnPromotionMenu* Promo;
-
+	// Possible moves functions
 	void KnightPossibleMoves(FVector KnightLocation);
 	void KingPossibleMoves(FVector KingLocation);
 	void PawnPossibleMoves(FVector PawnLocation);
@@ -88,15 +88,19 @@ public:
 	void BishopPossibleMoves(FVector BishopLocation);
 	void QueenPossibleMoves(FVector QueenLocation);
 
-	
+	// Check if the clicked tile/black actor position is a legit move
 	int32 IsPieceMoveValid(FVector2D Position, TArray<FVector2D> PossiblePieceMoves);
 
+	// Move actor into new location
 	void MoveBasePiece(ABasePiece*, FVector OldLocation, FVector NewLocation);
 
+	// Set spawn tile materials
 	void SetOriginalTileMaterial();
 
-	// called on left mouse click (binding)
+	// Called on left mouse click (binding)
 	UFUNCTION()
 		void OnClick();
 
+	void ApplyPossibleMovesMaterials(const TArray<FVector2D>& PossibleMoves);
+	
 };

@@ -11,6 +11,7 @@
 #include "King.h"
 #include "Bishop.h"
 #include "Rook.h"
+#include "Kismet/GameplayStatics.h"
 #include "GameFramework/Actor.h"
 #include "GameField.generated.h"
 
@@ -24,19 +25,19 @@ class CHESS_UNIGE_5236628_API AGameField : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// keeps track of tiles
+	// Keeps track of tiles
 	UPROPERTY(Transient)
 		TArray<ATile*> TileArray;
 
-	// keeps track of pieces
+	// Keeps track of pieces
 	UPROPERTY(Transient)
 		TArray<ABasePiece*> BasePieceArray;
 
-	//given a position returns a tile
+	// Given a position returns a tile
 	UPROPERTY(Transient)
 		TMap<FVector2D, ATile*> TileMap;
 
-	//given a position returns a piece
+	// Given a position returns a piece
 	UPROPERTY(Transient)
 	    TMap<FVector2D, ABasePiece*> BasePieceMap;
 
@@ -50,7 +51,7 @@ public:
 	UPROPERTY(BlueprintAssignable)
 		FOnReset OnResetEvent;
 
-	// size of field
+	// Size of field
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int32 Size;
 
@@ -82,11 +83,11 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<AKnight> KnightClass; 
 
-	// tile padding dimension
+	// Tile padding dimension
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		float CellPadding;
 
-	// tile size
+	// Tile size
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		float TileSize;
 
@@ -100,53 +101,55 @@ public:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	// remove all signs from the field
+	// Remove all signs from the field
 	UFUNCTION(BlueprintCallable)
 		void ResetField();
 
-	// generate an empty game field
+	// Generate an empty game field
 	void GenerateField();
 
-	// return a (x,y) position given a hit (click) on a field tile
+	// Return a (x,y) position given a hit (click) on a field tile
 	FVector2D GetPosition(const FHitResult& Hit);
 
-	// return the array of tile pointers
+	// Return the array of tile pointers
 	TArray<ATile*>& GetTileArray();
 
-	// return the array of tile pointers
+	// Return the array of tile pointers
 	TArray<ABasePiece*>& GetBasePieceArray();
 
-	// return the array of tile pointers
+	// Return the array of tile pointers
 	TMap<FVector2D, ATile*>& GetTileMap();
 
-	// return a relative position given (x,y) position
+	// Return a relative position given (x,y) position
 	FVector GetRelativeLocationByXYPosition(const int32 InX, const int32 InY) const;
 
-	// return (x,y) position given a relative position
+	// Return (x,y) position given a relative position
 	FVector2D GetXYPositionByRelativeLocation(const FVector& Location) const;
 
-	// spawn bishop 
+	// Spawn bishop given position, a scale and a color
 	void SpawnBishop(int32 x, int32 y, FVector Location, float TileScale, int32 Color);
 
-	// spawn pawn
+	// Spawn pawn given position, a scale and a color
 	void SpawnPawn(int32 x, int32 y, FVector Location, float TileScale, int32 Color);
 
-	// spawn rook
+	// Spawn rook given position, a scale and a color
 	void SpawnRook(int32 x, int32 y, FVector Location, float TileScale, int32 Color);
 
-	// spawn king
+	// Spawn king given position, a scale and a color
 	void SpawnKing(int32 x, int32 y, FVector Location, float TileScale, int32 Color);
 	
-	// spawn queen
+	// Spawn queen given position, a scale and a color
 	void SpawnQueen(int32 x, int32 y, FVector Location, float TileScale, int32 Color);
 	
-	// spawn knight
+	// Spawn knight given position, a scale and a color
 	void SpawnKnight(int32 x, int32 y, FVector Location, float TileScale, int32 Color);
 
-	// set chess pieces materials (called at spawn)
+	// Set chess pieces materials (called at spawn)
 	template <typename T>
 	void SetPieceColor(int32 Color, T* ChessPiece);
 	
+	// Change pawn actor with a new piece given a pawn, a color (1==WHITE, 2==BLACK) and the type of the new piece
+	UFUNCTION(BlueprintCallable)
 	void PawnPromotion(ABasePiece* Pawn, int32 Color, FString NewPiece);
 
 	//public:	

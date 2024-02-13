@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameField.h"
 #include "CHS_HumanPlayer.h"
-#include "UW_PawnPromotionMenu.h"
 #include "GameFramework/GameModeBase.h"
 #include "CHS_GameMode.generated.h"
 
@@ -27,24 +26,25 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<AGameField> GameFieldClass;
 
-	// field size
+	// Field size
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int32 FieldSize;
 
+	// Turn counter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int32 IsMyTurn;
 
-	// reference to a GameField object
+	// Reference to a GameField object
 	UPROPERTY(VisibleAnywhere)
 		AGameField* GField;
 	
-
+	// End human turn
 	void EndHumanTurn();
 
-	
+	// End AI turn
 	void EndAITurn();
 
-	
+	// Bool game finished
 	bool IsGameFinished() const;
 
 	ACHS_GameMode();

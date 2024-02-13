@@ -3,7 +3,6 @@
 
 #include "GameField.h"
 #include "BasePiece.h"
-#include "Kismet/GameplayStatics.h"
 #include "CHS_GameMode.h"
 
 
@@ -321,6 +320,12 @@ void AGameField::PawnPromotion(ABasePiece* Pawn, int32 Color, FString NewPiece)
 	else if (NewPiece == "Bishop")
 	{
 		SpawnBishop(PawnPositionNormalized.X, PawnPositionNormalized.Y, PawnPosition, 1.2, Color);
+	}
+
+	if (Color == 1)
+	{
+		ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+		GameMode->EndHumanTurn();
 	}
 
 }

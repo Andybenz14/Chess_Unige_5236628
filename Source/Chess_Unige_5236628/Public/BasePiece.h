@@ -24,10 +24,10 @@ public:
 	// Sets default values for this actor's properties
 	ABasePiece();
 
-	// set the (x, y) position
+	// Set the (x, y) position
 	void SetBasePieceGridPosition(const double InX, const double InY);
 
-	// get the (x, y) position
+	// Get the (x, y) position
 	FVector2D GetBasePieceGridPosition();
 
 	// White material interface 
@@ -38,22 +38,23 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
 		UMaterialInterface* BlackMaterial;
 
-	// set tile material
+	// Set tile material
 	void SetBasePieceMaterial(const int32 ElementIndex, UMaterialInterface* TileMaterial);
 
 
-	// set the player owner and the status of a tile
+	// Set the color of the piece
 	void SetPieceColor(const EPieceColor Color);
 
-	// get the tile status
+	// Get piece color
 	EPieceColor GetPieceColor();
 
-	// destroy a base sign actor
+	// Destroy a base sign actor
 	UFUNCTION()
 		void SelfDestroy();
 
 
 protected:
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -69,6 +70,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		FVector2D BasePieceGridPosition;
 
+	// Color of the piece
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		EPieceColor Colour;
 

@@ -12,11 +12,11 @@ ABasePiece::ABasePiece()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-	// template function that creates a components
+	// Template function that creates a components
 	Scene = CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
 
-	// every actor has a RootComponent that defines the transform in the World
+	// Every actor has a RootComponent that defines the transform in the World
 	SetRootComponent(Scene);
 	StaticMeshComponent->SetupAttachment(Scene);
 
@@ -34,21 +34,25 @@ void ABasePiece::BeginPlay()
 	
 }
 
+//Set grid position
 void ABasePiece::SetBasePieceGridPosition(const double InX, const double InY)
 {
 	BasePieceGridPosition.Set(InX, InY);
 }
 
+//Get grid position
 FVector2D ABasePiece::GetBasePieceGridPosition()
 {
 	return BasePieceGridPosition;
 }
 
+//Set piece material
 void ABasePiece::SetBasePieceMaterial(const int32 ElementIndex, UMaterialInterface* TileMaterial)
 {
 	StaticMeshComponent->SetMaterial(0, TileMaterial);
 }
 
+//Actor destroy
 void ABasePiece::SelfDestroy()
 {
 	Destroy();
@@ -60,6 +64,7 @@ void ABasePiece::SetPieceColor(const EPieceColor Color)
 	Colour = Color;
 }
 
+//Get piece color
 EPieceColor ABasePiece::GetPieceColor()
 {
 	return Colour;
