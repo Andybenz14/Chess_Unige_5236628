@@ -30,6 +30,8 @@ protected:
 	// Keeps track of turn
 	bool IsMyTurn = true;
 
+	bool Check = false;
+
 	// Click counter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int32 ClickCounter = 0;
@@ -80,6 +82,11 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		TArray<FVector2D> PossibleBishopMoves;
 
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> AllWhitePossibleMoves;
+
+	
+
 	// Possible moves functions
 	void KnightPossibleMoves(FVector KnightLocation);
 	void KingPossibleMoves(FVector KingLocation);
@@ -102,5 +109,7 @@ public:
 		void OnClick();
 
 	void ApplyPossibleMovesMaterials(const TArray<FVector2D>& PossibleMoves);
+
+	void CheckBKing();
 	
 };

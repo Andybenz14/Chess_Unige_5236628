@@ -81,26 +81,32 @@ void ACHS_HumanPlayer::OnClick()
 				if (BasePieceActor->IsA(AKnight::StaticClass())) 
 				{
 					KnightPossibleMoves(ClickedActorLocation);
+					ApplyPossibleMovesMaterials(PossibleKnightMoves);
 				}
 				else if (BasePieceActor->IsA(AKing::StaticClass())) 
 				{
 					KingPossibleMoves(ClickedActorLocation);
+					ApplyPossibleMovesMaterials(PossibleKingMoves);
 				}
 				else if (BasePieceActor->IsA(APawnChess::StaticClass())) 
 				{
 					PawnPossibleMoves(ClickedActorLocation);
+					ApplyPossibleMovesMaterials(PossiblePawnMoves);
 				}
 				else if (BasePieceActor->IsA(ARook::StaticClass())) 
 				{
 					RookPossibleMoves(ClickedActorLocation);
+					ApplyPossibleMovesMaterials(PossibleRookMoves);
 				}
 				else if (BasePieceActor->IsA(ABishop::StaticClass())) 
 				{
 					BishopPossibleMoves(ClickedActorLocation);
+					ApplyPossibleMovesMaterials(PossibleBishopMoves);
 				}
 				else if (BasePieceActor->IsA(AQueen::StaticClass())) 
 				{
 					QueenPossibleMoves(ClickedActorLocation);
+					ApplyPossibleMovesMaterials(PossibleQueenMoves);
 				}
 			}
 		}
@@ -301,7 +307,9 @@ void ACHS_HumanPlayer::MoveBasePiece(ABasePiece*, FVector OldLocation, FVector N
 	}
 	else
 	{
+		CheckBKing();
 		GameMode->EndHumanTurn();
+
 	}
 }
 
@@ -310,6 +318,7 @@ void ACHS_HumanPlayer::KnightPossibleMoves(FVector KnightLocation)
 	ACHS_GameMode* GameMode = Cast<ACHS_GameMode>(GetWorld()->GetAuthGameMode());
 
 	PossibleKnightMoves.Empty();
+
 
 	TArray<FVector2D> KnightPositions = {
 		FVector2D(1, 2),
@@ -355,6 +364,12 @@ void ACHS_HumanPlayer::KnightPossibleMoves(FVector KnightLocation)
 						if (!(IsKing->IsA(AKing::StaticClass())))
 						{
 							PossibleKnightMoves.Add(NextTileLocation);
+							AllWhitePossibleMoves.Add(NextTileLocation);
+						}
+						else
+						{
+							Check = true;
+							AllWhitePossibleMoves.Add(NextTileLocation);
 						}
 					}
 				}
@@ -362,7 +377,6 @@ void ACHS_HumanPlayer::KnightPossibleMoves(FVector KnightLocation)
 		}
 	}
 
-	ApplyPossibleMovesMaterials(PossibleKnightMoves);
 }
 
 
@@ -417,6 +431,12 @@ void ACHS_HumanPlayer::KingPossibleMoves(FVector KingLocation)
 						if (!(IsKing->IsA(AKing::StaticClass())))
 						{
 							PossibleKingMoves.Add(NextTileLocation);
+							AllWhitePossibleMoves.Add(NextTileLocation);
+						}
+						else
+						{
+							Check = true;
+							AllWhitePossibleMoves.Add(NextTileLocation);
 						}
 					}
 				}
@@ -424,7 +444,6 @@ void ACHS_HumanPlayer::KingPossibleMoves(FVector KingLocation)
 		}
 	}
 
-	ApplyPossibleMovesMaterials(PossibleKingMoves);
 }
 
 void ACHS_HumanPlayer::PawnPossibleMoves(FVector PawnLocation) 
@@ -484,6 +503,12 @@ void ACHS_HumanPlayer::PawnPossibleMoves(FVector PawnLocation)
 				{
 					PossiblePawnMoves.Add(Pawn2dLocation2);
 					//TODO potrei inserire un counter per lo scacco nell'else di questi if
+					AllWhitePossibleMoves.Add(Pawn2dLocation2);
+				}
+				else
+				{
+					Check = true;
+					AllWhitePossibleMoves.Add(Pawn2dLocation2);
 				}
 			}
 		}
@@ -509,12 +534,16 @@ void ACHS_HumanPlayer::PawnPossibleMoves(FVector PawnLocation)
 				{
 					PossiblePawnMoves.Add(Pawn2dLocation3);
 					//TODO potrei inserire un counter per lo scacco nell'else di questi if
+					AllWhitePossibleMoves.Add(Pawn2dLocation3);
+				}
+				else
+				{
+					Check = true;
+					AllWhitePossibleMoves.Add(Pawn2dLocation3);
 				}
 			}
 		}
 	}
-
-	ApplyPossibleMovesMaterials(PossiblePawnMoves);
 
 }
 
@@ -554,6 +583,12 @@ void ACHS_HumanPlayer::RookPossibleMoves(FVector RookLocation)
 						{
 							PossibleRookMoves.Add(NextTileLocation);
 							//TODO potrei inserire un counter per lo scacco nell'else di questi if
+							AllWhitePossibleMoves.Add(NextTileLocation);
+						}
+						else
+						{
+							Check = true;
+							AllWhitePossibleMoves.Add(NextTileLocation);
 						}
 					}
 				}
@@ -596,6 +631,12 @@ void ACHS_HumanPlayer::RookPossibleMoves(FVector RookLocation)
 						{
 							PossibleRookMoves.Add(NextTileLocation);
 							//TODO potrei inserire un counter per lo scacco nell'else di questi if
+							AllWhitePossibleMoves.Add(NextTileLocation);
+						}
+						else
+						{
+							Check = true;
+							AllWhitePossibleMoves.Add(NextTileLocation);
 						}
 					}
 				}
@@ -637,6 +678,12 @@ void ACHS_HumanPlayer::RookPossibleMoves(FVector RookLocation)
 						{
 							PossibleRookMoves.Add(NextTileLocation);
 							//TODO potrei inserire un counter per lo scacco nell'else di questi if
+							AllWhitePossibleMoves.Add(NextTileLocation);
+						}
+						else
+						{
+							Check = true;
+							AllWhitePossibleMoves.Add(NextTileLocation);
 						}
 					}
 				}
@@ -680,6 +727,12 @@ void ACHS_HumanPlayer::RookPossibleMoves(FVector RookLocation)
 						{
 							PossibleRookMoves.Add(NextTileLocation);
 							//TODO potrei inserire un counter per lo scacco nell'else di questi if
+							AllWhitePossibleMoves.Add(NextTileLocation);
+						}
+						else
+						{
+							Check = true;
+							AllWhitePossibleMoves.Add(NextTileLocation);
 						}
 					}
 				}
@@ -691,7 +744,6 @@ void ACHS_HumanPlayer::RookPossibleMoves(FVector RookLocation)
 		}
 	}
 
-	ApplyPossibleMovesMaterials(PossibleRookMoves);
 }
 
 void ACHS_HumanPlayer::BishopPossibleMoves(FVector BishopLocation)
@@ -732,6 +784,12 @@ void ACHS_HumanPlayer::BishopPossibleMoves(FVector BishopLocation)
 						{
 							PossibleBishopMoves.Add(NextTileLocation);
 							//TODO potrei inserire un counter per lo scacco nell'else di questi if
+							AllWhitePossibleMoves.Add(NextTileLocation);
+						}
+						else
+						{
+							Check = true;
+							AllWhitePossibleMoves.Add(NextTileLocation);
 						}
 					}
 				}
@@ -773,7 +831,13 @@ void ACHS_HumanPlayer::BishopPossibleMoves(FVector BishopLocation)
 						if (!(IsKing->IsA(AKing::StaticClass())))
 						{
 							PossibleBishopMoves.Add(NextTileLocation);
+							AllWhitePossibleMoves.Add(NextTileLocation);
 							//TODO potrei inserire un counter per lo scacco nell'else di questi if
+						}
+						else
+						{
+							Check = true;
+							AllWhitePossibleMoves.Add(NextTileLocation);
 						}
 					}
 				}
@@ -815,7 +879,13 @@ void ACHS_HumanPlayer::BishopPossibleMoves(FVector BishopLocation)
 						if (!(IsKing->IsA(AKing::StaticClass())))
 						{
 							PossibleBishopMoves.Add(NextTileLocation);
+							AllWhitePossibleMoves.Add(NextTileLocation);
 							//TODO potrei inserire un counter per lo scacco nell'else di questi if
+						}
+						else
+						{
+							Check = true;
+							AllWhitePossibleMoves.Add(NextTileLocation);
 						}
 					}
 				}
@@ -858,6 +928,12 @@ void ACHS_HumanPlayer::BishopPossibleMoves(FVector BishopLocation)
 						{
 							PossibleBishopMoves.Add(NextTileLocation);
 							//TODO potrei inserire un counter per lo scacco nell'else di questi if
+							AllWhitePossibleMoves.Add(NextTileLocation);
+						}
+						else
+						{
+							Check = true;
+							AllWhitePossibleMoves.Add(NextTileLocation);
 						}
 					}
 				}
@@ -869,7 +945,6 @@ void ACHS_HumanPlayer::BishopPossibleMoves(FVector BishopLocation)
 		}
 	}
 
-	ApplyPossibleMovesMaterials(PossibleBishopMoves);
 }
 
 void ACHS_HumanPlayer::QueenPossibleMoves(FVector QueenLocation)
@@ -934,4 +1009,113 @@ void ACHS_HumanPlayer::ApplyPossibleMovesMaterials(const TArray<FVector2D>& Poss
 			}
 		}
 	}
+}
+
+
+//FUNZIONE CHECK
+// Devo creare una funzione che calcola ad ogni fine turno tutte le mosse possibili dell'attuale player.
+// Se ci sono mosse che puntano al re allora l'altro player è costretto a spostarlo in una posizione che non sia critica
+// Se non può spostarlo allora vince l'altro giocatore.
+
+void ACHS_HumanPlayer::CheckBKing()
+{
+	
+	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+
+
+	AllWhitePossibleMoves.Empty();
+	// Set to false because could be set to true with precedent calls of possible moves functions
+	Check = false;
+
+	TArray<ABasePiece*> WhiteActors;
+	
+	// Iterate on TileArray to find tiles owned by black pieces
+	for (const auto& WhiteTile : GameMode->GField->TileArray)
+	{
+		// Tile owner must be BLACK
+		if (WhiteTile->GetOwner() == ETileOwner::WHITE)
+		{
+			// Get tile location
+			FVector WhiteActorLocation = WhiteTile->GetActorLocation();
+
+			// 2D black piece location (same as the tile position)
+			FVector2D WhitePieceLocation2d(WhiteActorLocation);
+
+			// Normalize
+			WhitePieceLocation2d.X = WhitePieceLocation2d.X / 120;
+			WhitePieceLocation2d.Y = WhitePieceLocation2d.Y / 120;
+
+			// Check if BasePieceMap contains the black piece by his 2d location
+			if (GameMode->GField->BasePieceMap.Contains(WhitePieceLocation2d))
+			{
+				// Initialize black piece actor
+				ABasePiece* Actor = GameMode->GField->BasePieceMap[WhitePieceLocation2d];
+
+				//Add black piece to blackActors array
+				WhiteActors.Add(Actor);
+			}
+		}
+	}
+	// Check if there is at least one black piece
+	if (WhiteActors.Num() > 0)
+	{
+		// Iterate on BlackActors array
+		for (ABasePiece* PossiblePiece : WhiteActors)
+		{
+			// Get iterated black actor location
+			FVector ActorLocation = PossiblePiece->GetActorLocation();
+
+			// Try to cast PossiblePice to AKing and check if cast is successful 
+			if (AKing* KingActor = Cast<AKing>(PossiblePiece))
+			{
+				// Calcolate King(PossiblePiece) possible moves
+				KingPossibleMoves(ActorLocation);
+
+			}
+
+			else if (APawnChess* PawnActor = Cast<APawnChess>(PossiblePiece))
+			{
+				PawnPossibleMoves(ActorLocation);
+				
+			}
+
+			else if (AQueen* QueenActor = Cast<AQueen>(PossiblePiece))
+			{
+				QueenPossibleMoves(ActorLocation);
+				
+			}
+			else if (ABishop* BishopActor = Cast<ABishop>(PossiblePiece))
+			{
+				BishopPossibleMoves(ActorLocation);
+				
+			}
+			else if (AKnight* KnightActor = Cast<AKnight>(PossiblePiece))
+			{
+				KnightPossibleMoves(ActorLocation);
+
+			}
+			else if (ARook* RookActor = Cast<ARook>(PossiblePiece))
+			{
+				RookPossibleMoves(ActorLocation);
+			
+			}
+
+		}
+		if (Check == true)
+		{
+			// L'avversario è in scacco
+
+
+
+		}
+
+
+
+
+
+
+
+	}
+
+	
 }
