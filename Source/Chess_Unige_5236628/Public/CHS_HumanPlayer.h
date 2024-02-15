@@ -107,8 +107,11 @@ public:
 
 	void ApplyPossibleMovesMaterials(const TArray<FVector2D>& PossibleMoves);
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 	
+=======
+>>>>>>> parent of 483c1e1 (Check starting implementatition)
 =======
 >>>>>>> parent of 483c1e1 (Check starting implementatition)
 	

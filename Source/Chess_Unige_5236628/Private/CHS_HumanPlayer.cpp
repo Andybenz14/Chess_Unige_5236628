@@ -128,6 +128,9 @@ void ACHS_HumanPlayer::OnClick()
 				else if (BasePieceActor->IsA(AQueen::StaticClass())) 
 				{
 					QueenPossibleMoves(ClickedActorLocation);
+<<<<<<< HEAD
+>>>>>>> parent of 483c1e1 (Check starting implementatition)
+=======
 >>>>>>> parent of 483c1e1 (Check starting implementatition)
 				}
 			}
@@ -330,7 +333,10 @@ void ACHS_HumanPlayer::MoveBasePiece(ABasePiece*, FVector OldLocation, FVector N
 	else
 	{
 <<<<<<< HEAD
+<<<<<<< HEAD
 		GameMode->GField->CheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
+=======
+>>>>>>> parent of 483c1e1 (Check starting implementatition)
 =======
 >>>>>>> parent of 483c1e1 (Check starting implementatition)
 		GameMode->EndHumanTurn();
@@ -971,7 +977,10 @@ void ACHS_HumanPlayer::ApplyPossibleMovesMaterials(const TArray<FVector2D>& Poss
 	}
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> parent of 483c1e1 (Check starting implementatition)
 =======
 >>>>>>> parent of 483c1e1 (Check starting implementatition)
