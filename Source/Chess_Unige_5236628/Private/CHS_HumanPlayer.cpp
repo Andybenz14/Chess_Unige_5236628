@@ -346,6 +346,7 @@ void ACHS_HumanPlayer::KnightPossibleMoves(FVector KnightLocation)
 			if (Status == ETileStatus::EMPTY)
 			{
 				PossibleKnightMoves.Add(NextTileLocation);
+				AllWhitePossibleMoves.Add(NextTileLocation);
 			}
 		
 			else if (Status == ETileStatus::OCCUPIED)
@@ -413,6 +414,7 @@ void ACHS_HumanPlayer::KingPossibleMoves(FVector KingLocation)
 			if (Status == ETileStatus::EMPTY)
 			{
 				PossibleKingMoves.Add(NextTileLocation);
+				AllWhitePossibleMoves.Add(NextTileLocation);
 			}
 
 			else if (Status == ETileStatus::OCCUPIED)
@@ -465,6 +467,7 @@ void ACHS_HumanPlayer::PawnPossibleMoves(FVector PawnLocation)
 		{
 
 			PossiblePawnMoves.Add(Pawn2dLocation0);
+			AllWhitePossibleMoves.Add(Pawn2dLocation0);
 		}
 	}
 
@@ -480,6 +483,7 @@ void ACHS_HumanPlayer::PawnPossibleMoves(FVector PawnLocation)
 		{
 
 			PossiblePawnMoves.Add(Pawn2dLocation1);
+			AllWhitePossibleMoves.Add(Pawn2dLocation1);
 		}
 	}
 
@@ -567,6 +571,7 @@ void ACHS_HumanPlayer::RookPossibleMoves(FVector RookLocation)
 			if (Status == ETileStatus::EMPTY) 
 			{
 				PossibleRookMoves.Add(NextTileLocation);
+				AllWhitePossibleMoves.Add(NextTileLocation);
 			}
 			else if (Status == ETileStatus::OCCUPIED) 
 			{
@@ -615,6 +620,7 @@ void ACHS_HumanPlayer::RookPossibleMoves(FVector RookLocation)
 			if (Status == ETileStatus::EMPTY)
 			{
 				PossibleRookMoves.Add(NextTileLocation);
+				AllWhitePossibleMoves.Add(NextTileLocation);
 			}
 			else if (Status == ETileStatus::OCCUPIED)
 			{
@@ -662,6 +668,7 @@ void ACHS_HumanPlayer::RookPossibleMoves(FVector RookLocation)
 			if (Status == ETileStatus::EMPTY)
 			{
 				PossibleRookMoves.Add(NextTileLocation);
+				AllWhitePossibleMoves.Add(NextTileLocation);
 			}
 			else if (Status == ETileStatus::OCCUPIED)
 			{
@@ -711,6 +718,7 @@ void ACHS_HumanPlayer::RookPossibleMoves(FVector RookLocation)
 			if (Status == ETileStatus::EMPTY)
 			{
 				PossibleRookMoves.Add(NextTileLocation);
+				AllWhitePossibleMoves.Add(NextTileLocation);
 			}
 			else if (Status == ETileStatus::OCCUPIED) 
 			{
@@ -768,6 +776,7 @@ void ACHS_HumanPlayer::BishopPossibleMoves(FVector BishopLocation)
 			if (Status == ETileStatus::EMPTY)
 			{
 				PossibleBishopMoves.Add(NextTileLocation);
+				AllWhitePossibleMoves.Add(NextTileLocation);
 			}
 			else if (Status == ETileStatus::OCCUPIED) 
 			{
@@ -816,6 +825,7 @@ void ACHS_HumanPlayer::BishopPossibleMoves(FVector BishopLocation)
 			if (Status == ETileStatus::EMPTY)
 			{
 				PossibleBishopMoves.Add(NextTileLocation);
+				AllWhitePossibleMoves.Add(NextTileLocation);
 			}
 			else if (Status == ETileStatus::OCCUPIED)
 			{
@@ -864,6 +874,7 @@ void ACHS_HumanPlayer::BishopPossibleMoves(FVector BishopLocation)
 			if (Status == ETileStatus::EMPTY)
 			{
 				PossibleBishopMoves.Add(NextTileLocation);
+				AllWhitePossibleMoves.Add(NextTileLocation);
 			}
 			else if (Status == ETileStatus::OCCUPIED) 
 			{
@@ -912,6 +923,7 @@ void ACHS_HumanPlayer::BishopPossibleMoves(FVector BishopLocation)
 			if (Status == ETileStatus::EMPTY) 
 			{
 				PossibleBishopMoves.Add(NextTileLocation);
+				AllWhitePossibleMoves.Add(NextTileLocation);
 			}
 			else if (Status == ETileStatus::OCCUPIED) 
 			{
