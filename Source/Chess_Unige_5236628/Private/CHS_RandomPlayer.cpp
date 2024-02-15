@@ -95,10 +95,10 @@ void ACHS_RandomPlayer::OnTurn()
 					if (AKing* KingActor = Cast<AKing>(PossiblePiece))
 					{
 						// Calcolate King(PossiblePiece) possible moves
-						BKingPossibleMoves(ActorLocation);
+						KingPossibleMoves(ActorLocation, ETileOwner::WHITE);
 
 						// Check if there is at least one possible move for the king
-						if(PossibleBKingMoves.Num() > 0)
+						if(PossibleKingMoves.Num() > 0)
 						{
 							// Add King(PossiblePiece) to an array of movable black pieces
 							BlackMovableActors.Add(PossiblePiece);
@@ -107,9 +107,9 @@ void ACHS_RandomPlayer::OnTurn()
 
 					else if (APawnChess* PawnActor = Cast<APawnChess>(PossiblePiece))
 					{
-						BPawnPossibleMoves(ActorLocation);
+						PawnPossibleMoves(ActorLocation, ETileOwner::WHITE);
 
-						if (PossibleBPawnMoves.Num() > 0)
+						if (PossiblePawnMoves.Num() > 0)
 						{
 							BlackMovableActors.Add(PossiblePiece);
 						}
@@ -117,27 +117,27 @@ void ACHS_RandomPlayer::OnTurn()
 
 					else if (AQueen* QueenActor = Cast<AQueen>(PossiblePiece))
 					{
-						BQueenPossibleMoves(ActorLocation);
+						QueenPossibleMoves(ActorLocation, ETileOwner::WHITE);
 
-						if (PossibleBQueenMoves.Num() > 0)
+						if (PossibleQueenMoves.Num() > 0)
 						{
 							BlackMovableActors.Add(PossiblePiece);
 						}
 					}
 					else if (ABishop* BishopActor = Cast<ABishop>(PossiblePiece))
 					{
-						BBishopPossibleMoves(ActorLocation);
+						BishopPossibleMoves(ActorLocation, ETileOwner::WHITE);
 
-						if (PossibleBBishopMoves.Num() > 0)
+						if (PossibleBishopMoves.Num() > 0)
 						{
 							BlackMovableActors.Add(PossiblePiece);
 						}
 					}
 					else if (AKnight* KnightActor = Cast<AKnight>(PossiblePiece))
 					{
-						BKnightPossibleMoves(ActorLocation);
+						KnightPossibleMoves(ActorLocation, ETileOwner::WHITE);
 
-						if (PossibleBKnightMoves.Num() > 0)
+						if (PossibleKnightMoves.Num() > 0)
 						{
 							BlackMovableActors.Add(PossiblePiece);
 						}
@@ -145,9 +145,9 @@ void ACHS_RandomPlayer::OnTurn()
 					}
 					else if (ARook* RookActor = Cast<ARook>(PossiblePiece))
 					{
-						BRookPossibleMoves(ActorLocation);
+						RookPossibleMoves(ActorLocation, ETileOwner::WHITE);
 
-						if (PossibleBRookMoves.Num() > 0)
+						if (PossibleRookMoves.Num() > 0)
 						{
 							BlackMovableActors.Add(PossiblePiece);
 						}
@@ -172,16 +172,16 @@ void ACHS_RandomPlayer::OnTurn()
 				if (AKing* KingActor = Cast<AKing>(RandomSelectedActor))
 				{
 					// Calcolate King(RandomSelectedActor) possible moves
-					BKingPossibleMoves(RandomActorLocation);
+					KingPossibleMoves(RandomActorLocation, ETileOwner::WHITE);
 
 					// Check if there is at least one king possible move (just for safety)
-					if (PossibleBKingMoves.Num() > 0)
+					if (PossibleKingMoves.Num() > 0)
 					{	
 						// Initialize Random index to choose randomly one king move
-						int32 RandIdx1 = FMath::RandRange(0, PossibleBKingMoves.Num()-1);
+						int32 RandIdx1 = FMath::RandRange(0, PossibleKingMoves.Num()-1);
 
 						// Get move 2d position
-						FVector2D RandomPosition= PossibleBKingMoves[RandIdx1];
+						FVector2D RandomPosition= PossibleKingMoves[RandIdx1];
 
 						// 3d move position
 						FVector RandomPosition3d;
@@ -210,12 +210,12 @@ void ACHS_RandomPlayer::OnTurn()
 				}
 				else if (APawnChess* PawnActor = Cast<APawnChess>(RandomSelectedActor))
 				{
-					BPawnPossibleMoves(RandomActorLocation);
+					PawnPossibleMoves(RandomActorLocation, ETileOwner::WHITE);
 
-					if (PossibleBPawnMoves.Num() > 0)
+					if (PossiblePawnMoves.Num() > 0)
 					{
-						int32 RandIdx1 = FMath::RandRange(0, PossibleBPawnMoves.Num() - 1);
-						FVector2D RandomPosition = PossibleBPawnMoves[RandIdx1];
+						int32 RandIdx1 = FMath::RandRange(0, PossiblePawnMoves.Num() - 1);
+						FVector2D RandomPosition = PossiblePawnMoves[RandIdx1];
 						FVector RandomPosition3d;
 						RandomPosition3d.X = RandomPosition.X;
 						RandomPosition3d.Y = RandomPosition.Y;
@@ -232,12 +232,12 @@ void ACHS_RandomPlayer::OnTurn()
 				}
 				else if (AQueen* QueenActor = Cast<AQueen>(RandomSelectedActor))
 				{
-					BQueenPossibleMoves(RandomActorLocation);
+					QueenPossibleMoves(RandomActorLocation, ETileOwner::WHITE);
 
-					if (PossibleBQueenMoves.Num() > 0)
+					if (PossibleQueenMoves.Num() > 0)
 					{
-						int32 RandIdx1 = FMath::RandRange(0, PossibleBQueenMoves.Num() - 1);
-						FVector2D RandomPosition = PossibleBQueenMoves[RandIdx1];
+						int32 RandIdx1 = FMath::RandRange(0, PossibleQueenMoves.Num() - 1);
+						FVector2D RandomPosition = PossibleQueenMoves[RandIdx1];
 						FVector RandomPosition3d;
 						RandomPosition3d.X = RandomPosition.X;
 						RandomPosition3d.Y = RandomPosition.Y;
@@ -253,12 +253,12 @@ void ACHS_RandomPlayer::OnTurn()
 				}
 				else if (ABishop* BishopActor = Cast<ABishop>(RandomSelectedActor))
 				{
-					BBishopPossibleMoves(RandomActorLocation);
+					BishopPossibleMoves(RandomActorLocation, ETileOwner::WHITE);
 
-					if (PossibleBBishopMoves.Num() > 0)
+					if (PossibleBishopMoves.Num() > 0)
 					{
-						int32 RandIdx1 = FMath::RandRange(0, PossibleBBishopMoves.Num() - 1);
-						FVector2D RandomPosition = PossibleBBishopMoves[RandIdx1];
+						int32 RandIdx1 = FMath::RandRange(0, PossibleBishopMoves.Num() - 1);
+						FVector2D RandomPosition = PossibleBishopMoves[RandIdx1];
 						FVector RandomPosition3d;
 						RandomPosition3d.X = RandomPosition.X;
 						RandomPosition3d.Y = RandomPosition.Y;
@@ -274,12 +274,12 @@ void ACHS_RandomPlayer::OnTurn()
 				}
 				else if (AKnight* KnightActor = Cast<AKnight>(RandomSelectedActor))
 				{
-					BKnightPossibleMoves(RandomActorLocation);
+					KnightPossibleMoves(RandomActorLocation, ETileOwner::WHITE);
 
-					if (PossibleBKnightMoves.Num() > 0)
+					if (PossibleKnightMoves.Num() > 0)
 					{
-						int32 RandIdx1 = FMath::RandRange(0, PossibleBKnightMoves.Num() - 1);
-						FVector2D RandomPosition = PossibleBKnightMoves[RandIdx1];
+						int32 RandIdx1 = FMath::RandRange(0, PossibleKnightMoves.Num() - 1);
+						FVector2D RandomPosition = PossibleKnightMoves[RandIdx1];
 						FVector RandomPosition3d;
 						RandomPosition3d.X = RandomPosition.X;
 						RandomPosition3d.Y = RandomPosition.Y;
@@ -295,17 +295,12 @@ void ACHS_RandomPlayer::OnTurn()
 				}
 				else if (ARook* RookActor = Cast<ARook>(RandomSelectedActor))
 				{
-					BRookPossibleMoves(RandomActorLocation);
+					RookPossibleMoves(RandomActorLocation, ETileOwner::WHITE);
 
-					if (PossibleBRookMoves.Num() > 0)
+					if (PossibleRookMoves.Num() > 0)
 					{
-						for (int32 i = 0; i < PossibleBRookMoves.Num(); ++i)
-						{
-							FVector2D RandomPosition = PossibleBRookMoves[i];
-							FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
-						}
-						int32 RandIdx1 = FMath::RandRange(0, PossibleBRookMoves.Num() - 1);
-						FVector2D RandomPosition = PossibleBRookMoves[RandIdx1];
+						int32 RandIdx1 = FMath::RandRange(0, PossibleRookMoves.Num() - 1);
+						FVector2D RandomPosition = PossibleRookMoves[RandIdx1];
 						FVector RandomPosition3d;
 						RandomPosition3d.X = RandomPosition.X;
 						RandomPosition3d.Y = RandomPosition.Y;
@@ -390,592 +385,4 @@ void ACHS_RandomPlayer::MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVe
 
 	// End AI turn 
 	GameMode->EndAITurn();
-}
-
-// Calculate black knight possible moves
-void ACHS_RandomPlayer::BKnightPossibleMoves(FVector KnightLocation)
-{
-	ACHS_GameMode* GameMode = Cast<ACHS_GameMode>(GetWorld()->GetAuthGameMode());
-
-	PossibleBKnightMoves.Empty();
-
-	TArray<FVector2D> KnightPositions = {
-		FVector2D(1, 2),
-		FVector2D(2, 1),
-		FVector2D(-1, 2),
-		FVector2D(-2, 1),
-		FVector2D(1, -2),
-		FVector2D(2, -1),
-		FVector2D(-1, -2),
-		FVector2D(-2, -1)
-	};
-
-
-	for (const FVector2D& Positions : KnightPositions)
-	{
-		FVector2D NextTileLocation(KnightLocation.X + (Positions.X * 120.0), KnightLocation.Y + (Positions.Y * 120.0));
-
-
-		if (GameMode->GField->TileMap.Contains(NextTileLocation))
-		{
-			ATile* NextTile = GameMode->GField->TileMap[NextTileLocation];
-			ETileStatus Status = NextTile->GetTileStatus();
-
-
-			if (Status == ETileStatus::EMPTY)
-			{
-				PossibleBKnightMoves.Add(NextTileLocation);
-			}
-
-			else if (Status == ETileStatus::OCCUPIED)
-			{
-
-				if (NextTile->GetOwner() == ETileOwner::WHITE)
-				{
-					FVector2D NextTileLocation2dNormalized;
-					NextTileLocation2dNormalized.X = NextTileLocation.X / 120;
-					NextTileLocation2dNormalized.Y = NextTileLocation.Y / 120;
-
-
-					if (GameMode->GField->BasePieceMap.Contains(NextTileLocation2dNormalized))
-					{
-						ABasePiece* IsKing = GameMode->GField->BasePieceMap[NextTileLocation2dNormalized];
-						if (!(IsKing->IsA(AKing::StaticClass())))
-						{
-							PossibleBKnightMoves.Add(NextTileLocation);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-
-
-void ACHS_RandomPlayer::BKingPossibleMoves(FVector KingLocation)
-{
-	ACHS_GameMode* GameMode = Cast<ACHS_GameMode>(GetWorld()->GetAuthGameMode());
-
-	PossibleBKingMoves.Empty();
-
-	TArray<FVector2D> KingPositions = {
-		FVector2D(1, 0),
-		FVector2D(1, 1),
-		FVector2D(0, 1),
-		FVector2D(-1, 1),
-		FVector2D(-1, 0),
-		FVector2D(-1, -1),
-		FVector2D(0, -1),
-		FVector2D(1, -1)
-	};
-
-
-	for (const FVector2D& Positions : KingPositions)
-	{
-		FVector2D NextTileLocation(KingLocation.X + (Positions.X * 120.0), KingLocation.Y + (Positions.Y * 120.0));
-
-
-		if (GameMode->GField->TileMap.Contains(NextTileLocation))
-		{
-			ATile* NextTile = GameMode->GField->TileMap[NextTileLocation];
-			ETileStatus Status = NextTile->GetTileStatus();
-
-
-			if (Status == ETileStatus::EMPTY)
-			{
-				PossibleBKingMoves.Add(NextTileLocation);
-			}
-
-			else if (Status == ETileStatus::OCCUPIED)
-			{
-
-				if (NextTile->GetOwner() == ETileOwner::WHITE)
-				{
-					FVector2D NextTileLocation2dNormalized;
-					NextTileLocation2dNormalized.X = NextTileLocation.X / 120;
-					NextTileLocation2dNormalized.Y = NextTileLocation.Y / 120;
-
-
-					if (GameMode->GField->BasePieceMap.Contains(NextTileLocation2dNormalized))
-					{
-						ABasePiece* IsKing = GameMode->GField->BasePieceMap[NextTileLocation2dNormalized];
-						if (!(IsKing->IsA(AKing::StaticClass())))
-						{
-							PossibleBKingMoves.Add(NextTileLocation);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-void ACHS_RandomPlayer::BPawnPossibleMoves(FVector PawnLocation)
-{
-
-	PossibleBPawnMoves.Empty();
-
-	// Location for the vertical move (one tile front)
-	FVector2D Pawn2dLocation0(PawnLocation.X - 120, PawnLocation.Y);
-
-	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
-
-	// Check if possible positions exist on game grid
-	if (GameMode->GField->TileMap.Contains(Pawn2dLocation0))
-	{
-
-		ETileStatus status0 = GameMode->GField->TileMap[Pawn2dLocation0]->GetTileStatus();
-
-		// Check if pawn frontal tile is empty
-		if (status0 == ETileStatus::EMPTY)
-		{
-
-			PossibleBPawnMoves.Add(Pawn2dLocation0);
-		}
-	}
-
-	// Location for the first optional move of 2 frontal tile
-	FVector2D Pawn2dLocation1(PawnLocation.X - 240, PawnLocation.Y);
-
-	if (GameMode->GField->TileMap.Contains(Pawn2dLocation1))
-	{
-
-		ETileStatus status1 = GameMode->GField->TileMap[Pawn2dLocation1]->GetTileStatus();
-
-		ETileStatus status2 = GameMode->GField->TileMap[Pawn2dLocation0]->GetTileStatus();
-
-		// Check if the pawn is at starting position and if the 2 tiles located in row in front of the pawn are empty 
-		if (PawnLocation.X == 720.0 && status1 == ETileStatus::EMPTY && status2 == ETileStatus::EMPTY)
-		{
-
-			PossibleBPawnMoves.Add(Pawn2dLocation1);
-		}
-	}
-
-	// Location for the kill move
-	FVector2D Pawn2dLocation2(PawnLocation.X - 120, PawnLocation.Y - 120);
-
-	if (GameMode->GField->TileMap.Contains(Pawn2dLocation2))
-	{
-
-		ETileOwner Owner0 = GameMode->GField->TileMap[Pawn2dLocation2]->GetOwner();
-
-		// Check if the diagonal tile is owned by white piece. If not it isn't a legal move for the pawn.
-		if (Owner0 == ETileOwner::WHITE) {
-
-			FVector2D Pawn2dLocation2Normalized;
-			Pawn2dLocation2Normalized.X = Pawn2dLocation2.X / 120;
-			Pawn2dLocation2Normalized.Y = Pawn2dLocation2.Y / 120;
-
-			// Check for safety
-			if (GameMode->GField->BasePieceMap.Contains(Pawn2dLocation2Normalized))
-			{
-				ABasePiece* IsKing = GameMode->GField->BasePieceMap[Pawn2dLocation2Normalized];
-
-				// Check if the the white actor is king. if not legal move
-				if (!(IsKing->IsA(AKing::StaticClass())))
-				{
-					PossibleBPawnMoves.Add(Pawn2dLocation2);
-					//TODO potrei inserire un counter per lo scacco nell'else di questi if
-				}
-			}
-		}
-	}
-
-	// Location for the kill move
-	FVector2D Pawn2dLocation3(PawnLocation.X - 120, PawnLocation.Y + 120);
-
-	if (GameMode->GField->TileMap.Contains(Pawn2dLocation3))
-	{
-
-		ETileOwner Owner1 = GameMode->GField->TileMap[Pawn2dLocation3]->GetOwner();
-
-		// Check if the diagonal tile is owned by white piece. If not it isn't a legal move for the pawn.
-		if (Owner1 == ETileOwner::WHITE) {
-
-			FVector2D Pawn2dLocation2Normalized;
-			Pawn2dLocation2Normalized.X = Pawn2dLocation3.X / 120;
-			Pawn2dLocation2Normalized.Y = Pawn2dLocation3.Y / 120;
-
-			// Check for safety
-			if (GameMode->GField->BasePieceMap.Contains(Pawn2dLocation2Normalized))
-			{
-				ABasePiece* IsKing = GameMode->GField->BasePieceMap[Pawn2dLocation2Normalized];
-
-				// Check if the the white actor is king. if not legal move
-				if (!(IsKing->IsA(AKing::StaticClass())))
-				{
-					PossibleBPawnMoves.Add(Pawn2dLocation3);
-					//TODO potrei inserire un counter per lo scacco nell'else di questi if
-				}
-			}
-		}
-	}
-}
-
-void ACHS_RandomPlayer::BRookPossibleMoves(FVector RookLocation)
-{
-	ACHS_GameMode* GameMode = Cast<ACHS_GameMode>(GetWorld()->GetAuthGameMode());
-
-	PossibleBRookMoves.Empty();
-
-	for (int32 i = 1; i <= 7; ++i)
-	{
-
-		FVector2D NextTileLocation(RookLocation.X, RookLocation.Y + (i * 120.0));
-
-		if (GameMode->GField->TileMap.Contains(NextTileLocation))
-		{
-
-			ATile* NextTile = GameMode->GField->TileMap[NextTileLocation];
-			ETileStatus Status = NextTile->GetTileStatus();
-
-			if (Status == ETileStatus::EMPTY)
-			{
-				PossibleBRookMoves.Add(NextTileLocation);
-			}
-			else if (Status == ETileStatus::OCCUPIED)
-			{
-				if (NextTile->GetOwner() == ETileOwner::WHITE)
-				{
-					FVector2D NextTileLocation2dNormalized;
-					NextTileLocation2dNormalized.X = NextTileLocation.X / 120;
-					NextTileLocation2dNormalized.Y = NextTileLocation.Y / 120;
-
-					if (GameMode->GField->BasePieceMap.Contains(NextTileLocation2dNormalized))
-					{
-						ABasePiece* IsKing = GameMode->GField->BasePieceMap[NextTileLocation2dNormalized];
-						if (!(IsKing->IsA(AKing::StaticClass())))
-						{
-							PossibleBRookMoves.Add(NextTileLocation);
-							//TODO potrei inserire un counter per lo scacco nell'else di questi if
-						}
-					}
-				}
-				break;
-			}
-			else {
-				break;
-			}
-		}
-	}
-
-
-	for (int32 i = 1; i <= 7; ++i)
-	{
-
-		FVector2D NextTileLocation(RookLocation.X, RookLocation.Y - (i * 120.0));
-
-		if (GameMode->GField->TileMap.Contains(NextTileLocation))
-		{
-
-			ATile* NextTile = GameMode->GField->TileMap[NextTileLocation];
-			ETileStatus Status = NextTile->GetTileStatus();
-
-			if (Status == ETileStatus::EMPTY)
-			{
-				PossibleBRookMoves.Add(NextTileLocation);
-			}
-			else if (Status == ETileStatus::OCCUPIED)
-			{
-				if (NextTile->GetOwner() == ETileOwner::WHITE)
-				{
-					FVector2D NextTileLocation2dNormalized;
-					NextTileLocation2dNormalized.X = NextTileLocation.X / 120;
-					NextTileLocation2dNormalized.Y = NextTileLocation.Y / 120;
-
-					if (GameMode->GField->BasePieceMap.Contains(NextTileLocation2dNormalized))
-					{
-						ABasePiece* IsKing = GameMode->GField->BasePieceMap[NextTileLocation2dNormalized];
-						if (!(IsKing->IsA(AKing::StaticClass())))
-						{
-							PossibleBRookMoves.Add(NextTileLocation);
-							//TODO potrei inserire un counter per lo scacco nell'else di questi if
-						}
-					}
-				}
-				break;
-			}
-			else {
-				break;
-			}
-		}
-	}
-
-
-	for (int32 i = 1; i <= 7; ++i) {
-
-		FVector2D NextTileLocation(RookLocation.X + (i * 120.0), RookLocation.Y);
-
-		if (GameMode->GField->TileMap.Contains(NextTileLocation))
-		{
-
-			ATile* NextTile = GameMode->GField->TileMap[NextTileLocation];
-			ETileStatus Status = NextTile->GetTileStatus();
-
-			if (Status == ETileStatus::EMPTY)
-			{
-				PossibleBRookMoves.Add(NextTileLocation);
-			}
-			else if (Status == ETileStatus::OCCUPIED)
-			{
-				if (NextTile->GetOwner() == ETileOwner::WHITE)
-				{
-					FVector2D NextTileLocation2dNormalized;
-					NextTileLocation2dNormalized.X = NextTileLocation.X / 120;
-					NextTileLocation2dNormalized.Y = NextTileLocation.Y / 120;
-
-					if (GameMode->GField->BasePieceMap.Contains(NextTileLocation2dNormalized))
-					{
-						ABasePiece* IsKing = GameMode->GField->BasePieceMap[NextTileLocation2dNormalized];
-						if (!(IsKing->IsA(AKing::StaticClass())))
-						{
-							PossibleBRookMoves.Add(NextTileLocation);
-							//TODO potrei inserire un counter per lo scacco nell'else di questi if
-						}
-					}
-				}
-				break;
-			}
-			else {
-				// Esc from cycle if a Tile is occupied by white piece
-				break;
-			}
-		}
-	}
-
-
-	for (int32 i = 1; i <= 7; ++i)
-	{
-
-		FVector2D NextTileLocation(RookLocation.X - (i * 120.0), RookLocation.Y);
-
-		if (GameMode->GField->TileMap.Contains(NextTileLocation))
-		{
-
-			ATile* NextTile = GameMode->GField->TileMap[NextTileLocation];
-			ETileStatus Status = NextTile->GetTileStatus();
-
-			if (Status == ETileStatus::EMPTY)
-			{
-				PossibleBRookMoves.Add(NextTileLocation);
-			}
-			else if (Status == ETileStatus::OCCUPIED)
-			{
-				if (NextTile->GetOwner() == ETileOwner::WHITE)
-				{
-					FVector2D NextTileLocation2dNormalized;
-					NextTileLocation2dNormalized.X = NextTileLocation.X / 120;
-					NextTileLocation2dNormalized.Y = NextTileLocation.Y / 120;
-
-					if (GameMode->GField->BasePieceMap.Contains(NextTileLocation2dNormalized))
-					{
-						ABasePiece* IsKing = GameMode->GField->BasePieceMap[NextTileLocation2dNormalized];
-						if (!(IsKing->IsA(AKing::StaticClass())))
-						{
-							PossibleBRookMoves.Add(NextTileLocation);
-							//TODO potrei inserire un counter per lo scacco nell'else di questi if
-						}
-					}
-				}
-				break;
-			}
-			else {
-				break;
-			}
-		}
-	}
-}
-
-void ACHS_RandomPlayer::BBishopPossibleMoves(FVector BishopLocation)
-{
-	ACHS_GameMode* GameMode = Cast<ACHS_GameMode>(GetWorld()->GetAuthGameMode());
-
-
-	PossibleBBishopMoves.Empty();
-
-
-	for (int32 i = 1; i <= 7; ++i)
-	{
-
-		FVector2D NextTileLocation(BishopLocation.X + (i * 120.0f), BishopLocation.Y + (i * 120.0f));
-
-		if (GameMode->GField->TileMap.Contains(NextTileLocation))
-		{
-
-			ATile* NextTile = GameMode->GField->TileMap[NextTileLocation];
-			ETileStatus Status = NextTile->GetTileStatus();
-
-			if (Status == ETileStatus::EMPTY)
-			{
-				PossibleBBishopMoves.Add(NextTileLocation);
-			}
-			else if (Status == ETileStatus::OCCUPIED)
-			{
-				if (NextTile->GetOwner() == ETileOwner::WHITE)
-				{
-					FVector2D NextTileLocation2dNormalized;
-					NextTileLocation2dNormalized.X = NextTileLocation.X / 120;
-					NextTileLocation2dNormalized.Y = NextTileLocation.Y / 120;
-
-					if (GameMode->GField->BasePieceMap.Contains(NextTileLocation2dNormalized))
-					{
-						ABasePiece* IsKing = GameMode->GField->BasePieceMap[NextTileLocation2dNormalized];
-						if (!(IsKing->IsA(AKing::StaticClass())))
-						{
-							PossibleBBishopMoves.Add(NextTileLocation);
-							//TODO potrei inserire un counter per lo scacco nell'else di questi if
-						}
-					}
-				}
-				break;
-			}
-			else {
-				break;
-			}
-		}
-	}
-
-
-	for (int32 i = 1; i <= 7; ++i)
-	{
-
-		FVector2D NextTileLocation(BishopLocation.X + (i * 120.0), BishopLocation.Y - (i * 120.0));
-
-		if (GameMode->GField->TileMap.Contains(NextTileLocation))
-		{
-
-			ATile* NextTile = GameMode->GField->TileMap[NextTileLocation];
-			ETileStatus Status = NextTile->GetTileStatus();
-
-			if (Status == ETileStatus::EMPTY)
-			{
-				PossibleBBishopMoves.Add(NextTileLocation);
-			}
-			else if (Status == ETileStatus::OCCUPIED)
-			{
-				if (NextTile->GetOwner() == ETileOwner::WHITE)
-				{
-					FVector2D NextTileLocation2dNormalized;
-					NextTileLocation2dNormalized.X = NextTileLocation.X / 120;
-					NextTileLocation2dNormalized.Y = NextTileLocation.Y / 120;
-
-					if (GameMode->GField->BasePieceMap.Contains(NextTileLocation2dNormalized))
-					{
-						ABasePiece* IsKing = GameMode->GField->BasePieceMap[NextTileLocation2dNormalized];
-						if (!(IsKing->IsA(AKing::StaticClass())))
-						{
-							PossibleBBishopMoves.Add(NextTileLocation);
-							//TODO potrei inserire un counter per lo scacco nell'else di questi if
-						}
-					}
-				}
-				break;
-			}
-			else {
-				break;
-			}
-		}
-	}
-
-
-	for (int32 i = 1; i <= 7; ++i)
-	{
-
-		FVector2D NextTileLocation(BishopLocation.X - (i * 120.0), BishopLocation.Y + (i * 120.0));
-
-		if (GameMode->GField->TileMap.Contains(NextTileLocation))
-		{
-
-			ATile* NextTile = GameMode->GField->TileMap[NextTileLocation];
-			ETileStatus Status = NextTile->GetTileStatus();
-
-			if (Status == ETileStatus::EMPTY)
-			{
-				PossibleBBishopMoves.Add(NextTileLocation);
-			}
-			else if (Status == ETileStatus::OCCUPIED)
-			{
-				if (NextTile->GetOwner() == ETileOwner::WHITE)
-				{
-					FVector2D NextTileLocation2dNormalized;
-					NextTileLocation2dNormalized.X = NextTileLocation.X / 120;
-					NextTileLocation2dNormalized.Y = NextTileLocation.Y / 120;
-
-					if (GameMode->GField->BasePieceMap.Contains(NextTileLocation2dNormalized))
-					{
-						ABasePiece* IsKing = GameMode->GField->BasePieceMap[NextTileLocation2dNormalized];
-						if (!(IsKing->IsA(AKing::StaticClass())))
-						{
-							PossibleBBishopMoves.Add(NextTileLocation);
-							//TODO potrei inserire un counter per lo scacco nell'else di questi if
-						}
-					}
-				}
-				break;
-			}
-			else {
-				break;
-			}
-		}
-	}
-
-
-	for (int32 i = 1; i <= 7; ++i)
-	{
-
-		FVector2D NextTileLocation(BishopLocation.X - (i * 120.0), BishopLocation.Y - (i * 120.0));
-
-		if (GameMode->GField->TileMap.Contains(NextTileLocation))
-		{
-
-			ATile* NextTile = GameMode->GField->TileMap[NextTileLocation];
-			ETileStatus Status = NextTile->GetTileStatus();
-
-			if (Status == ETileStatus::EMPTY)
-			{
-				PossibleBBishopMoves.Add(NextTileLocation);
-			}
-			else if (Status == ETileStatus::OCCUPIED)
-			{
-				if (NextTile->GetOwner() == ETileOwner::WHITE)
-				{
-					FVector2D NextTileLocation2dNormalized;
-					NextTileLocation2dNormalized.X = NextTileLocation.X / 120;
-					NextTileLocation2dNormalized.Y = NextTileLocation.Y / 120;
-
-					if (GameMode->GField->BasePieceMap.Contains(NextTileLocation2dNormalized))
-					{
-						ABasePiece* IsKing = GameMode->GField->BasePieceMap[NextTileLocation2dNormalized];
-						if (!(IsKing->IsA(AKing::StaticClass())))
-						{
-							PossibleBBishopMoves.Add(NextTileLocation);
-							//TODO potrei inserire un counter per lo scacco nell'else di questi if
-						}
-					}
-				}
-				break;
-			}
-			else {
-				break;
-			}
-		}
-	}
-}
-
-void ACHS_RandomPlayer::BQueenPossibleMoves(FVector QueenLocation)
-{
-
-	PossibleBQueenMoves.Empty();
-
-	// Calculate rook possible moves using queen position
-	BRookPossibleMoves(QueenLocation);
-
-	// Calculate bishop possible moves using queen position
-	BBishopPossibleMoves(QueenLocation);
-
-	// Copy at the end of possiblequeenmoves array the due possible move array -> queen has both legal moves
-	PossibleBQueenMoves.Append(PossibleBRookMoves);
-	PossibleBQueenMoves.Append(PossibleBBishopMoves);
 }

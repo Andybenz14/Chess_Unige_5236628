@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GenericPlayer.h"
 #include "GameFramework/Pawn.h"
 #include "Camera/CameraComponent.h"
-#include "CHS_PlayerInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "CHS_HumanPlayer.generated.h"
 
 UCLASS()
-class CHESS_UNIGE_5236628_API ACHS_HumanPlayer : public APawn, public ICHS_PlayerInterface
+class CHESS_UNIGE_5236628_API ACHS_HumanPlayer : public AGenericPlayer, public ICHS_PlayerInterface
 
 {
 	GENERATED_BODY()
@@ -30,7 +30,6 @@ protected:
 	// Keeps track of turn
 	bool IsMyTurn = true;
 
-	bool Check = false;
 
 	// Click counter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -62,38 +61,6 @@ public:
 	// Called when it's human turn
 	virtual void OnTurn();
 
-	// Possible moves array
-
-	UPROPERTY(EditDefaultsOnly)
-		TArray<FVector2D> PossibleKnightMoves;
-
-	UPROPERTY(EditDefaultsOnly)
-		TArray<FVector2D> PossibleKingMoves;
-
-	UPROPERTY(EditDefaultsOnly)
-		TArray<FVector2D> PossibleQueenMoves;
-
-	UPROPERTY(EditDefaultsOnly)
-		TArray<FVector2D> PossiblePawnMoves;
-
-	UPROPERTY(EditDefaultsOnly)
-		TArray<FVector2D> PossibleRookMoves;
-
-	UPROPERTY(EditDefaultsOnly)
-		TArray<FVector2D> PossibleBishopMoves;
-
-	UPROPERTY(EditDefaultsOnly)
-		TArray<FVector2D> AllWhitePossibleMoves;
-
-	
-
-	// Possible moves functions
-	void KnightPossibleMoves(FVector KnightLocation);
-	void KingPossibleMoves(FVector KingLocation);
-	void PawnPossibleMoves(FVector PawnLocation);
-	void RookPossibleMoves(FVector RookLocation);
-	void BishopPossibleMoves(FVector BishopLocation);
-	void QueenPossibleMoves(FVector QueenLocation);
 
 	// Check if the clicked tile/black actor position is a legit move
 	int32 IsPieceMoveValid(FVector2D Position, TArray<FVector2D> PossiblePieceMoves);
@@ -110,6 +77,5 @@ public:
 
 	void ApplyPossibleMovesMaterials(const TArray<FVector2D>& PossibleMoves);
 
-	void CheckBKing();
 	
 };

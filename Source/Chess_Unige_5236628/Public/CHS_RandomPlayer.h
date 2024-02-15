@@ -4,15 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "CHS_PlayerInterface.h"
-#include "CHS_GameInstance.h"
-#include "CHS_GameMode.h"
-#include "GameField.h"
+#include "GenericPlayer.h"
 #include "Kismet/GameplayStatics.h"
 #include "CHS_RandomPlayer.generated.h"
 
 UCLASS()
-class CHESS_UNIGE_5236628_API ACHS_RandomPlayer : public APawn
+class CHESS_UNIGE_5236628_API ACHS_RandomPlayer : public AGenericPlayer
 {
 	GENERATED_BODY()
 
@@ -46,51 +43,9 @@ public:
 
 	virtual void OnTurn();
 
-	// Array of the positions that can be occupied by the black knight
-	UPROPERTY(EditDefaultsOnly)
-		TArray<FVector2D> PossibleBKnightMoves;
-
-	// Array of the positions that can be occupied by the black king 
-	UPROPERTY(EditDefaultsOnly)
-		TArray<FVector2D> PossibleBKingMoves;
-
-	// Array of the positions that can be occupied by the black queen 
-	UPROPERTY(EditDefaultsOnly)
-		TArray<FVector2D> PossibleBQueenMoves;
-
-	// Array of the positions that can be occupied by the black pawn 
-	UPROPERTY(EditDefaultsOnly)
-		TArray<FVector2D> PossibleBPawnMoves;
-
-	// Array of the positions that can be occupied by the black rook 
-	UPROPERTY(EditDefaultsOnly)
-		TArray<FVector2D> PossibleBRookMoves;
-
-	// Array of the positions that can be occupied by the black bishop 
-	UPROPERTY(EditDefaultsOnly)
-		TArray<FVector2D> PossibleBBishopMoves;
-
 	// Array of the positions that can be occupied by the black  
 	UPROPERTY(EditDefaultsOnly)
 		TArray<ABasePiece*> BlackMovableActors;
-
-	// Calculate the positions that can be occupied by the black knight from his actual position
-	void BKnightPossibleMoves(FVector KnightLocation);
-
-	// Calculate the positions that can be occupied by the black king from his actual position
-	void BKingPossibleMoves(FVector KingLocation);
-	
-	// Calculate the positions that can be occupied by the black pawn from his actual position
-	void BPawnPossibleMoves(FVector PawnLocation);
-
-	// Calculate the positions that can be occupied by the black rook from his actual position
-	void BRookPossibleMoves(FVector RookLocation);
-
-	// Calculate the positions that can be occupied by the black bishop from his actual position
-	void BBishopPossibleMoves(FVector BishopLocation);
-
-	// Calculate the positions that can be occupied by the black queen from his actual position
-	void BQueenPossibleMoves(FVector QueenLocation);
 
 	// Move piece into a new position
 	void MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVector NewLocation);

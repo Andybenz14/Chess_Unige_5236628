@@ -5,7 +5,6 @@
 #include "CHS_HumanPlayer.h"
 #include "CHS_PlayerController.h"
 #include "CHS_RandomPlayer.h"
-#include "GameField.h"
 #include "EngineUtils.h"
 
 ACHS_GameMode::ACHS_GameMode()
