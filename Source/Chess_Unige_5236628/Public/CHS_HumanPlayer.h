@@ -61,6 +61,37 @@ public:
 	// Called when it's human turn
 	virtual void OnTurn();
 
+<<<<<<< HEAD
+=======
+	// Possible moves array
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleKnightMoves;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleKingMoves;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleQueenMoves;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossiblePawnMoves;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleRookMoves;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleBishopMoves;
+
+	// Possible moves functions
+	void KnightPossibleMoves(FVector KnightLocation);
+	void KingPossibleMoves(FVector KingLocation);
+	void PawnPossibleMoves(FVector PawnLocation);
+	void RookPossibleMoves(FVector RookLocation);
+	void BishopPossibleMoves(FVector BishopLocation);
+	void QueenPossibleMoves(FVector QueenLocation);
+
+>>>>>>> parent of 483c1e1 (Check starting implementatition)
 	// Check if the clicked tile/black actor position is a legit move
 	int32 IsPieceMoveValid(FVector2D Position, TArray<FVector2D> PossiblePieceMoves);
 
@@ -75,7 +106,10 @@ public:
 		void OnClick();
 
 	void ApplyPossibleMovesMaterials(const TArray<FVector2D>& PossibleMoves);
+<<<<<<< HEAD
 
 	
+=======
+>>>>>>> parent of 483c1e1 (Check starting implementatition)
 	
 };
