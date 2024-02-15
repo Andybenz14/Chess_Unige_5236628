@@ -52,7 +52,7 @@ public:
 		TArray<FVector2D> PossibleBishopMoves;
 
 	UPROPERTY(EditDefaultsOnly)
-		TArray<FVector2D> AllWhitePossibleMoves;
+		TArray<FVector2D> AllPossibleMoves;
 
 
 	bool Check = false;

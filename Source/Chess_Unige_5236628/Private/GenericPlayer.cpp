@@ -66,7 +66,7 @@ void AGenericPlayer::KnightPossibleMoves(FVector KnightLocation, ETileOwner Enem
 			if (Status == ETileStatus::EMPTY)
 			{
 				PossibleKnightMoves.Add(NextTileLocation);
-				AllWhitePossibleMoves.Add(NextTileLocation);
+				AllPossibleMoves.Add(NextTileLocation);
 			}
 
 			else if (Status == ETileStatus::OCCUPIED)
@@ -85,12 +85,12 @@ void AGenericPlayer::KnightPossibleMoves(FVector KnightLocation, ETileOwner Enem
 						if (!(IsKing->IsA(AKing::StaticClass())))
 						{
 							PossibleKnightMoves.Add(NextTileLocation);
-							AllWhitePossibleMoves.Add(NextTileLocation);
+							AllPossibleMoves.Add(NextTileLocation);
 						}
 						else
 						{
 							Check = true;
-							AllWhitePossibleMoves.Add(NextTileLocation);
+							AllPossibleMoves.Add(NextTileLocation);
 						}
 					}
 				}
@@ -134,7 +134,7 @@ void AGenericPlayer::KingPossibleMoves(FVector KingLocation, ETileOwner EnemyCol
 			if (Status == ETileStatus::EMPTY)
 			{
 				PossibleKingMoves.Add(NextTileLocation);
-				AllWhitePossibleMoves.Add(NextTileLocation);
+				AllPossibleMoves.Add(NextTileLocation);
 			}
 
 			else if (Status == ETileStatus::OCCUPIED)
@@ -153,12 +153,12 @@ void AGenericPlayer::KingPossibleMoves(FVector KingLocation, ETileOwner EnemyCol
 						if (!(IsKing->IsA(AKing::StaticClass())))
 						{
 							PossibleKingMoves.Add(NextTileLocation);
-							AllWhitePossibleMoves.Add(NextTileLocation);
+							AllPossibleMoves.Add(NextTileLocation);
 						}
 						else
 						{
 							Check = true;
-							AllWhitePossibleMoves.Add(NextTileLocation);
+							AllPossibleMoves.Add(NextTileLocation);
 						}
 					}
 				}
@@ -190,7 +190,7 @@ void AGenericPlayer::PawnPossibleMoves(FVector PawnLocation, ETileOwner EnemyCol
 			{
 
 				PossiblePawnMoves.Add(Pawn2dLocation0);
-				AllWhitePossibleMoves.Add(Pawn2dLocation0);
+				AllPossibleMoves.Add(Pawn2dLocation0);
 			}
 		}
 
@@ -206,7 +206,7 @@ void AGenericPlayer::PawnPossibleMoves(FVector PawnLocation, ETileOwner EnemyCol
 			{
 
 				PossiblePawnMoves.Add(Pawn2dLocation1);
-				AllWhitePossibleMoves.Add(Pawn2dLocation1);
+				AllPossibleMoves.Add(Pawn2dLocation1);
 			}
 		}
 
@@ -230,12 +230,12 @@ void AGenericPlayer::PawnPossibleMoves(FVector PawnLocation, ETileOwner EnemyCol
 					{
 						PossiblePawnMoves.Add(Pawn2dLocation2);
 						//TODO potrei inserire un counter per lo scacco nell'else di questi if
-						AllWhitePossibleMoves.Add(Pawn2dLocation2);
+						AllPossibleMoves.Add(Pawn2dLocation2);
 					}
 					else
 					{
 						Check = true;
-						AllWhitePossibleMoves.Add(Pawn2dLocation2);
+						AllPossibleMoves.Add(Pawn2dLocation2);
 					}
 				}
 			}
@@ -261,12 +261,12 @@ void AGenericPlayer::PawnPossibleMoves(FVector PawnLocation, ETileOwner EnemyCol
 					{
 						PossiblePawnMoves.Add(Pawn2dLocation3);
 						//TODO potrei inserire un counter per lo scacco nell'else di questi if
-						AllWhitePossibleMoves.Add(Pawn2dLocation3);
+						AllPossibleMoves.Add(Pawn2dLocation3);
 					}
 					else
 					{
 						Check = true;
-						AllWhitePossibleMoves.Add(Pawn2dLocation3);
+						AllPossibleMoves.Add(Pawn2dLocation3);
 					}
 				}
 			}
@@ -289,7 +289,7 @@ void AGenericPlayer::PawnPossibleMoves(FVector PawnLocation, ETileOwner EnemyCol
 			// Check if pawn frontal tile is empty
 			if (status0 == ETileStatus::EMPTY)
 			{
-
+				AllPossibleMoves.Add(Pawn2dLocation0);
 				PossiblePawnMoves.Add(Pawn2dLocation0);
 			}
 		}
@@ -307,7 +307,7 @@ void AGenericPlayer::PawnPossibleMoves(FVector PawnLocation, ETileOwner EnemyCol
 			// Check if the pawn is at starting position and if the 2 tiles located in row in front of the pawn are empty 
 			if (PawnLocation.X == 720.0 && status1 == ETileStatus::EMPTY && status2 == ETileStatus::EMPTY)
 			{
-
+				AllPossibleMoves.Add(Pawn2dLocation1);
 				PossiblePawnMoves.Add(Pawn2dLocation1);
 			}
 		}
@@ -335,6 +335,7 @@ void AGenericPlayer::PawnPossibleMoves(FVector PawnLocation, ETileOwner EnemyCol
 					// Check if the the white actor is king. if not legal move
 					if (!(IsKing->IsA(AKing::StaticClass())))
 					{
+						AllPossibleMoves.Add(Pawn2dLocation2);
 						PossiblePawnMoves.Add(Pawn2dLocation2);
 						//TODO potrei inserire un counter per lo scacco nell'else di questi if
 					}
@@ -365,6 +366,7 @@ void AGenericPlayer::PawnPossibleMoves(FVector PawnLocation, ETileOwner EnemyCol
 					// Check if the the white actor is king. if not legal move
 					if (!(IsKing->IsA(AKing::StaticClass())))
 					{
+						AllPossibleMoves.Add(Pawn2dLocation3);
 						PossiblePawnMoves.Add(Pawn2dLocation3);
 						//TODO potrei inserire un counter per lo scacco nell'else di questi if
 					}
@@ -396,7 +398,7 @@ void AGenericPlayer::RookPossibleMoves(FVector RookLocation, ETileOwner EnemyCol
 			if (Status == ETileStatus::EMPTY)
 			{
 				PossibleRookMoves.Add(NextTileLocation);
-				AllWhitePossibleMoves.Add(NextTileLocation);
+				AllPossibleMoves.Add(NextTileLocation);
 			}
 			else if (Status == ETileStatus::OCCUPIED)
 			{
@@ -413,12 +415,12 @@ void AGenericPlayer::RookPossibleMoves(FVector RookLocation, ETileOwner EnemyCol
 						{
 							PossibleRookMoves.Add(NextTileLocation);
 							//TODO potrei inserire un counter per lo scacco nell'else di questi if
-							AllWhitePossibleMoves.Add(NextTileLocation);
+							AllPossibleMoves.Add(NextTileLocation);
 						}
 						else
 						{
 							Check = true;
-							AllWhitePossibleMoves.Add(NextTileLocation);
+							AllPossibleMoves.Add(NextTileLocation);
 						}
 					}
 				}
@@ -445,7 +447,7 @@ void AGenericPlayer::RookPossibleMoves(FVector RookLocation, ETileOwner EnemyCol
 			if (Status == ETileStatus::EMPTY)
 			{
 				PossibleRookMoves.Add(NextTileLocation);
-				AllWhitePossibleMoves.Add(NextTileLocation);
+				AllPossibleMoves.Add(NextTileLocation);
 			}
 			else if (Status == ETileStatus::OCCUPIED)
 			{
@@ -462,12 +464,12 @@ void AGenericPlayer::RookPossibleMoves(FVector RookLocation, ETileOwner EnemyCol
 						{
 							PossibleRookMoves.Add(NextTileLocation);
 							//TODO potrei inserire un counter per lo scacco nell'else di questi if
-							AllWhitePossibleMoves.Add(NextTileLocation);
+							AllPossibleMoves.Add(NextTileLocation);
 						}
 						else
 						{
 							Check = true;
-							AllWhitePossibleMoves.Add(NextTileLocation);
+							AllPossibleMoves.Add(NextTileLocation);
 						}
 					}
 				}
@@ -493,7 +495,7 @@ void AGenericPlayer::RookPossibleMoves(FVector RookLocation, ETileOwner EnemyCol
 			if (Status == ETileStatus::EMPTY)
 			{
 				PossibleRookMoves.Add(NextTileLocation);
-				AllWhitePossibleMoves.Add(NextTileLocation);
+				AllPossibleMoves.Add(NextTileLocation);
 			}
 			else if (Status == ETileStatus::OCCUPIED)
 			{
@@ -510,12 +512,12 @@ void AGenericPlayer::RookPossibleMoves(FVector RookLocation, ETileOwner EnemyCol
 						{
 							PossibleRookMoves.Add(NextTileLocation);
 							//TODO potrei inserire un counter per lo scacco nell'else di questi if
-							AllWhitePossibleMoves.Add(NextTileLocation);
+							AllPossibleMoves.Add(NextTileLocation);
 						}
 						else
 						{
 							Check = true;
-							AllWhitePossibleMoves.Add(NextTileLocation);
+							AllPossibleMoves.Add(NextTileLocation);
 						}
 					}
 				}
@@ -543,7 +545,7 @@ void AGenericPlayer::RookPossibleMoves(FVector RookLocation, ETileOwner EnemyCol
 			if (Status == ETileStatus::EMPTY)
 			{
 				PossibleRookMoves.Add(NextTileLocation);
-				AllWhitePossibleMoves.Add(NextTileLocation);
+				AllPossibleMoves.Add(NextTileLocation);
 			}
 			else if (Status == ETileStatus::OCCUPIED)
 			{
@@ -560,12 +562,12 @@ void AGenericPlayer::RookPossibleMoves(FVector RookLocation, ETileOwner EnemyCol
 						{
 							PossibleRookMoves.Add(NextTileLocation);
 							//TODO potrei inserire un counter per lo scacco nell'else di questi if
-							AllWhitePossibleMoves.Add(NextTileLocation);
+							AllPossibleMoves.Add(NextTileLocation);
 						}
 						else
 						{
 							Check = true;
-							AllWhitePossibleMoves.Add(NextTileLocation);
+							AllPossibleMoves.Add(NextTileLocation);
 						}
 					}
 				}
@@ -601,7 +603,7 @@ void AGenericPlayer::BishopPossibleMoves(FVector BishopLocation, ETileOwner Enem
 			if (Status == ETileStatus::EMPTY)
 			{
 				PossibleBishopMoves.Add(NextTileLocation);
-				AllWhitePossibleMoves.Add(NextTileLocation);
+				AllPossibleMoves.Add(NextTileLocation);
 			}
 			else if (Status == ETileStatus::OCCUPIED)
 			{
@@ -618,12 +620,12 @@ void AGenericPlayer::BishopPossibleMoves(FVector BishopLocation, ETileOwner Enem
 						{
 							PossibleBishopMoves.Add(NextTileLocation);
 							//TODO potrei inserire un counter per lo scacco nell'else di questi if
-							AllWhitePossibleMoves.Add(NextTileLocation);
+							AllPossibleMoves.Add(NextTileLocation);
 						}
 						else
 						{
 							Check = true;
-							AllWhitePossibleMoves.Add(NextTileLocation);
+							AllPossibleMoves.Add(NextTileLocation);
 						}
 					}
 				}
@@ -650,7 +652,7 @@ void AGenericPlayer::BishopPossibleMoves(FVector BishopLocation, ETileOwner Enem
 			if (Status == ETileStatus::EMPTY)
 			{
 				PossibleBishopMoves.Add(NextTileLocation);
-				AllWhitePossibleMoves.Add(NextTileLocation);
+				AllPossibleMoves.Add(NextTileLocation);
 			}
 			else if (Status == ETileStatus::OCCUPIED)
 			{
@@ -666,13 +668,13 @@ void AGenericPlayer::BishopPossibleMoves(FVector BishopLocation, ETileOwner Enem
 						if (!(IsKing->IsA(AKing::StaticClass())))
 						{
 							PossibleBishopMoves.Add(NextTileLocation);
-							AllWhitePossibleMoves.Add(NextTileLocation);
+							AllPossibleMoves.Add(NextTileLocation);
 							//TODO potrei inserire un counter per lo scacco nell'else di questi if
 						}
 						else
 						{
 							Check = true;
-							AllWhitePossibleMoves.Add(NextTileLocation);
+							AllPossibleMoves.Add(NextTileLocation);
 						}
 					}
 				}
@@ -699,7 +701,7 @@ void AGenericPlayer::BishopPossibleMoves(FVector BishopLocation, ETileOwner Enem
 			if (Status == ETileStatus::EMPTY)
 			{
 				PossibleBishopMoves.Add(NextTileLocation);
-				AllWhitePossibleMoves.Add(NextTileLocation);
+				AllPossibleMoves.Add(NextTileLocation);
 			}
 			else if (Status == ETileStatus::OCCUPIED)
 			{
@@ -715,13 +717,13 @@ void AGenericPlayer::BishopPossibleMoves(FVector BishopLocation, ETileOwner Enem
 						if (!(IsKing->IsA(AKing::StaticClass())))
 						{
 							PossibleBishopMoves.Add(NextTileLocation);
-							AllWhitePossibleMoves.Add(NextTileLocation);
+							AllPossibleMoves.Add(NextTileLocation);
 							//TODO potrei inserire un counter per lo scacco nell'else di questi if
 						}
 						else
 						{
 							Check = true;
-							AllWhitePossibleMoves.Add(NextTileLocation);
+							AllPossibleMoves.Add(NextTileLocation);
 						}
 					}
 				}
@@ -748,7 +750,7 @@ void AGenericPlayer::BishopPossibleMoves(FVector BishopLocation, ETileOwner Enem
 			if (Status == ETileStatus::EMPTY)
 			{
 				PossibleBishopMoves.Add(NextTileLocation);
-				AllWhitePossibleMoves.Add(NextTileLocation);
+				AllPossibleMoves.Add(NextTileLocation);
 			}
 			else if (Status == ETileStatus::OCCUPIED)
 			{
@@ -765,12 +767,12 @@ void AGenericPlayer::BishopPossibleMoves(FVector BishopLocation, ETileOwner Enem
 						{
 							PossibleBishopMoves.Add(NextTileLocation);
 							//TODO potrei inserire un counter per lo scacco nell'else di questi if
-							AllWhitePossibleMoves.Add(NextTileLocation);
+							AllPossibleMoves.Add(NextTileLocation);
 						}
 						else
 						{
 							Check = true;
-							AllWhitePossibleMoves.Add(NextTileLocation);
+							AllPossibleMoves.Add(NextTileLocation);
 						}
 					}
 				}
@@ -802,20 +804,20 @@ void AGenericPlayer::CheckKing(ETileOwner EnemyColor, ETileOwner FriendColor)
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
 
 
-	AllWhitePossibleMoves.Empty();
+	AllPossibleMoves.Empty();
 	// Set to false because could be set to true with precedent calls of possible moves functions
 	Check = false;
 
-	TArray<ABasePiece*> WhiteActors;
+	TArray<ABasePiece*> Actors;
 
 	// Iterate on TileArray to find tiles owned by black pieces
-	for (const auto& WhiteTile : GameMode->GField->TileArray)
+	for (const auto& Tile : GameMode->GField->TileArray)
 	{
 		// Tile owner must be BLACK
-		if (WhiteTile->GetOwner() == FriendColor)
+		if (Tile->GetOwner() == FriendColor)
 		{
 			// Get tile location
-			FVector WhiteActorLocation = WhiteTile->GetActorLocation();
+			FVector WhiteActorLocation = Tile->GetActorLocation();
 
 			// 2D black piece location (same as the tile position)
 			FVector2D WhitePieceLocation2d(WhiteActorLocation);
@@ -831,15 +833,15 @@ void AGenericPlayer::CheckKing(ETileOwner EnemyColor, ETileOwner FriendColor)
 				ABasePiece* Actor = GameMode->GField->BasePieceMap[WhitePieceLocation2d];
 
 				//Add black piece to blackActors array
-				WhiteActors.Add(Actor);
+				Actors.Add(Actor);
 			}
 		}
 	}
 	// Check if there is at least one black piece
-	if (WhiteActors.Num() > 0)
+	if (Actors.Num() > 0)
 	{
 		// Iterate on BlackActors array
-		for (ABasePiece* PossiblePiece : WhiteActors)
+		for (ABasePiece* PossiblePiece : Actors)
 		{
 			// Get iterated black actor location
 			FVector ActorLocation = PossiblePiece->GetActorLocation();
