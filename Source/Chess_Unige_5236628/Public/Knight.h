@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BasePiece.h"
 #include "GameFramework/Actor.h"
 #include "Knight.generated.h"
 
@@ -25,5 +24,14 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleKnightMoves;
+
+
+	// Possible moves functions
+	void KnightPossibleMoves(FVector KnightLocation, ETileOwner Color);
+
 
 };

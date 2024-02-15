@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BasePiece.h"
 #include "GameFramework/Actor.h"
+#include "Tile.h"
 #include "Bishop.generated.h"
 
 
@@ -27,5 +27,10 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleBishopMoves;
+
+	void BishopPossibleMoves(FVector BishopLocation, ETileOwner Color);
 
 };

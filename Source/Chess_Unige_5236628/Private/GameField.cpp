@@ -199,7 +199,8 @@ void AGameField::GenerateField()
 // Spawn function for Bishop 
 void AGameField::SpawnBishop(int32 x, int32 y, FVector Location, float TileScale, int32 Color)
 {
-	ABishop* ChessPiece = GetWorld()->SpawnActor<ABishop>(BishopClass, FVector(Location.X, Location.Y, Location.Z + 10), FRotator::ZeroRotator);
+	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+	ABishop* ChessPiece = GetWorld()->SpawnActor<ABishop>(GameMode->BishopClass, FVector(Location.X, Location.Y, Location.Z + 10), FRotator::ZeroRotator);
 	ChessPiece->SetActorScale3D(FVector(TileScale, TileScale, 0.01));
 	ChessPiece->SetBasePieceGridPosition(x, y);
 	BasePieceArray.Add(ChessPiece);
@@ -212,7 +213,8 @@ void AGameField::SpawnBishop(int32 x, int32 y, FVector Location, float TileScale
 // Spawn function for Pawn
 void AGameField::SpawnPawn(int32 x, int32 y, FVector Location, float TileScale, int32 Color)
 {
-	APawnChess* ChessPiece = GetWorld()->SpawnActor<APawnChess>(PawnClass, FVector(Location.X, Location.Y, Location.Z + 10), FRotator::ZeroRotator);
+	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+	APawnChess* ChessPiece = GetWorld()->SpawnActor<APawnChess>(GameMode->PawnChessClass, FVector(Location.X, Location.Y, Location.Z + 10), FRotator::ZeroRotator);
 	ChessPiece->SetActorScale3D(FVector(TileScale, TileScale, 0.01));
 	ChessPiece->SetBasePieceGridPosition(x, y);
 	BasePieceArray.Add(ChessPiece);
@@ -224,7 +226,8 @@ void AGameField::SpawnPawn(int32 x, int32 y, FVector Location, float TileScale, 
 // Spawn function for Knight
 void AGameField::SpawnKnight(int32 x, int32 y, FVector Location, float TileScale, int32 Color)
 {
-	AKnight* ChessPiece = GetWorld()->SpawnActor<AKnight>(KnightClass, FVector(Location.X, Location.Y, Location.Z + 10), FRotator::ZeroRotator);
+	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+	AKnight* ChessPiece = GetWorld()->SpawnActor<AKnight>(GameMode->KnightClass, FVector(Location.X, Location.Y, Location.Z + 10), FRotator::ZeroRotator);
 	ChessPiece->SetActorScale3D(FVector(TileScale, TileScale, 0.01));
 	ChessPiece->SetBasePieceGridPosition(x, y);
 	BasePieceArray.Add(ChessPiece);
@@ -236,7 +239,8 @@ void AGameField::SpawnKnight(int32 x, int32 y, FVector Location, float TileScale
 // Spawn function for King
 void AGameField::SpawnKing(int32 x, int32 y, FVector Location, float TileScale, int32 Color)
 {
-	AKing* ChessPiece = GetWorld()->SpawnActor<AKing>(KingClass, FVector(Location.X, Location.Y, Location.Z + 10), FRotator::ZeroRotator);
+	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+	AKing* ChessPiece = GetWorld()->SpawnActor<AKing>(GameMode->KingClass, FVector(Location.X, Location.Y, Location.Z + 10), FRotator::ZeroRotator);
 	ChessPiece->SetActorScale3D(FVector(TileScale, TileScale, 0.01));
 	ChessPiece->SetBasePieceGridPosition(x, y);
 	BasePieceArray.Add(ChessPiece);
@@ -248,7 +252,8 @@ void AGameField::SpawnKing(int32 x, int32 y, FVector Location, float TileScale, 
 // Spawn function for Queen
 void AGameField::SpawnQueen(int32 x, int32 y, FVector Location, float TileScale, int32 Color)
 {
-	AQueen* ChessPiece = GetWorld()->SpawnActor<AQueen>(QueenClass, FVector(Location.X, Location.Y, Location.Z + 10), FRotator::ZeroRotator);
+	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+	AQueen* ChessPiece = GetWorld()->SpawnActor<AQueen>(GameMode->QueenClass, FVector(Location.X, Location.Y, Location.Z + 10), FRotator::ZeroRotator);
 	ChessPiece->SetActorScale3D(FVector(TileScale, TileScale, 0.01));
 	ChessPiece->SetBasePieceGridPosition(x, y);
 	BasePieceArray.Add(ChessPiece);
@@ -261,7 +266,8 @@ void AGameField::SpawnQueen(int32 x, int32 y, FVector Location, float TileScale,
 //Spawn function for Rook
 void AGameField::SpawnRook(int32 x, int32 y, FVector Location, float TileScale, int32 Color)
 {
-	ARook* ChessPiece = GetWorld()->SpawnActor<ARook>(RookClass, FVector(Location.X, Location.Y, Location.Z + 10), FRotator::ZeroRotator);
+	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+	ARook* ChessPiece = GetWorld()->SpawnActor<ARook>(GameMode->RookClass, FVector(Location.X, Location.Y, Location.Z + 10), FRotator::ZeroRotator);
 	ChessPiece->SetActorScale3D(FVector(TileScale, TileScale, 0.01));
 	ChessPiece->SetBasePieceGridPosition(x, y);
 	BasePieceArray.Add(ChessPiece);
@@ -363,4 +369,105 @@ FVector2D AGameField::GetXYPositionByRelativeLocation(const FVector& Location) c
 	return FVector2D(x, y);
 }
 
+void AGameField::CheckKing(ETileOwner FriendColor, ETileOwner EnemyColor)
+{
 
+	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+
+
+	AllPossibleMoves.Empty();
+	// Set to false because could be set to true with precedent calls of possible moves functions
+	Check = false;
+
+	TArray<ABasePiece*> Actors;
+
+	// Iterate on TileArray to find tiles owned by black pieces
+	for (const auto& Tile : GameMode->GField->TileArray)
+	{
+		// Tile owner must be BLACK
+		if (Tile->GetOwner() == FriendColor)
+		{
+			// Get tile location
+			FVector ActorLocation = Tile->GetActorLocation();
+
+			// 2D black piece location (same as the tile position)
+			FVector2D PieceLocation2d(ActorLocation);
+
+			// Normalize
+			PieceLocation2d.X = PieceLocation2d.X / 120;
+			PieceLocation2d.Y = PieceLocation2d.Y / 120;
+
+			// Check if BasePieceMap contains the black piece by his 2d location
+			if (GameMode->GField->BasePieceMap.Contains(PieceLocation2d))
+			{
+				// Initialize black piece actor
+				ABasePiece* Actor = GameMode->GField->BasePieceMap[PieceLocation2d];
+
+				//Add black piece to blackActors array
+				Actors.Add(Actor);
+			}
+		}
+	}
+	// Check if there is at least one black piece
+	if (Actors.Num() > 0)
+	{
+		// Iterate on BlackActors array
+		for (ABasePiece* PossiblePiece : Actors)
+		{
+			// Get iterated black actor location
+			FVector ActorLocation = PossiblePiece->GetActorLocation();
+
+			// Try to cast PossiblePice to AKing and check if cast is successful 
+			if (AKing* KingActor = Cast<AKing>(PossiblePiece))
+			{
+				// Calcolate King(PossiblePiece) possible moves
+				GameMode->King->KingPossibleMoves(ActorLocation, EnemyColor);
+
+			}
+
+			else if (APawnChess* PawnActor = Cast<APawnChess>(PossiblePiece))
+			{
+				GameMode->PawnChess->PawnPossibleMoves(ActorLocation, EnemyColor);
+
+			}
+
+			else if (AQueen* QueenActor = Cast<AQueen>(PossiblePiece))
+			{
+				GameMode->Queen->QueenPossibleMoves(ActorLocation, EnemyColor);
+
+			}
+			else if (ABishop* BishopActor = Cast<ABishop>(PossiblePiece))
+			{
+				GameMode->Bishop->BishopPossibleMoves(ActorLocation, EnemyColor);
+
+			}
+			else if (AKnight* KnightActor = Cast<AKnight>(PossiblePiece))
+			{
+				GameMode->Knight->KnightPossibleMoves(ActorLocation, EnemyColor);
+
+			}
+			else if (ARook* RookActor = Cast<ARook>(PossiblePiece))
+			{
+				GameMode->Rook->RookPossibleMoves(ActorLocation, EnemyColor);
+
+			}
+
+		}
+		if (Check == true)
+		{
+			// L'avversario è in scacco
+
+
+
+		}
+
+
+
+
+
+
+
+	}
+
+
+}

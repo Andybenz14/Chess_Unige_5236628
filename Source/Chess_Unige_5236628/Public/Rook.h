@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BasePiece.h"
 #include "GameFramework/Actor.h"
 #include "Rook.generated.h"
 
@@ -26,5 +25,10 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleRookMoves;
+
+	void RookPossibleMoves(FVector RookLocation, ETileOwner Color);
 
 };

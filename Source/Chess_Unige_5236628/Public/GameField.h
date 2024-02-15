@@ -91,6 +91,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		float TileSize;
 
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> AllPossibleMoves;
+
+	bool Check = false;
 
 	// Sets default values for this actor's properties
 	AGameField();
@@ -151,6 +155,8 @@ public:
 	// Change pawn actor with a new piece given a pawn, a color (1==WHITE, 2==BLACK) and the type of the new piece
 	UFUNCTION(BlueprintCallable)
 	void PawnPromotion(ABasePiece* Pawn, int32 Color, FString NewPiece);
+
+	void CheckKing(ETileOwner Color, ETileOwner EnemyColor);
 
 	//public:	
 	//	// Called every frame

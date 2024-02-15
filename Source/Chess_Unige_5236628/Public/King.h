@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BasePiece.h"
 #include "GameFramework/Actor.h"
 #include "King.generated.h"
 
@@ -23,5 +22,10 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleKingMoves;
+
+	void KingPossibleMoves(FVector KingLocation, ETileOwner Color);
 
 };

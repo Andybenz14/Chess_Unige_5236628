@@ -2,6 +2,7 @@
 
 
 #include "Queen.h"
+#include "CHS_GameMode.h"
 
 // Sets default values
 AQueen::AQueen()
@@ -25,3 +26,13 @@ void AQueen::Tick(float DeltaTime)
 
 }
 
+void AQueen::QueenPossibleMoves(FVector QueenLocation, ETileOwner Color)
+{
+	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+
+	PossibleQueenMoves.Empty();
+	GameMode->Rook->RookPossibleMoves(QueenLocation, Color);
+	GameMode->Bishop->BishopPossibleMoves(QueenLocation, Color);
+	PossibleQueenMoves.Append(GameMode->Rook->PossibleRookMoves);
+	PossibleQueenMoves.Append(GameMode->Bishop->PossibleBishopMoves);
+}
