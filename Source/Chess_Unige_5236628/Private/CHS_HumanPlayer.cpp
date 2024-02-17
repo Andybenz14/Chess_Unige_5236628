@@ -304,7 +304,9 @@ void ACHS_HumanPlayer::MoveBasePiece(ABasePiece*, FVector OldLocation, FVector N
 	}
 	else
 	{
+
 		CheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
+
 		GameMode->EndHumanTurn();
 
 	}

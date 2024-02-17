@@ -43,6 +43,37 @@ void ACHS_RandomPlayer::OnTurn()
 	// Set Timer
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&]()
 	{
+			for (const FVector2D& Vec : IllegalPawnMoveDueToCheck)
+			{
+				FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
+				GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Red, VecAsString);
+			}
+			for (const FVector2D& Vec : IllegalKingMoveDueToCheck)
+			{
+				FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
+				GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Yellow, VecAsString);
+			}
+			for (const FVector2D& Vec : IllegalKnightMoveDueToCheck)
+			{
+				FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
+				GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Green, VecAsString);
+			}
+
+			for (const FVector2D& Vec : IllegalRookMoveDueToCheck)
+			{
+				FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
+				GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Blue, VecAsString);
+			}
+			for (const FVector2D& Vec : IllegalBishopMoveDueToCheck)
+			{
+				FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
+				GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Purple, VecAsString);
+			}
+			for (const FVector2D& Vec : IllegalQueenMoveDueToCheck)
+			{
+				FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
+				GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Orange, VecAsString);
+			}
 		// Initialize an array of black pieces
 		TArray<ABasePiece*> BlackActors;
 
@@ -383,7 +414,7 @@ void ACHS_RandomPlayer::MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVe
 
 	}
 
-	CheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
+	//CheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
 	// End AI turn 
 	GameMode->EndAITurn();
 }
