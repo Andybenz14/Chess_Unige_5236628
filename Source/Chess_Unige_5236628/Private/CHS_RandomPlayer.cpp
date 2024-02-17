@@ -67,6 +67,7 @@ void ACHS_RandomPlayer::OnTurn()
 				// 2D black piece location (same as the tile position)
 				FVector2D BlackPieceLocation2d(BlackActorLocation);
 
+
 				// Normalize
 				BlackPieceLocation2d.X = BlackPieceLocation2d.X / 120;
 				BlackPieceLocation2d.Y = BlackPieceLocation2d.Y / 120;
@@ -382,7 +383,7 @@ void ACHS_RandomPlayer::MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVe
 
 	}
 
-
+	CheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
 	// End AI turn 
 	GameMode->EndAITurn();
 }

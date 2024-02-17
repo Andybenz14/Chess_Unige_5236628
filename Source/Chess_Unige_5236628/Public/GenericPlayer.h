@@ -52,7 +52,45 @@ public:
 		TArray<FVector2D> PossibleBishopMoves;
 
 	UPROPERTY(EditDefaultsOnly)
-		TArray<FVector2D> AllPossibleMoves;
+		TArray<FVector2D> PossibleBishopMovesForCheck;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleRookMovesForCheck;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleQueenMovesForCheck;
+
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossiblePawnMovesForCheck;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleKingMovesForCheck;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> PossibleKnightMovesForCheck;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> IllegalKingMoveDueToCheck;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> IllegalQueenMoveDueToCheck;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> IllegalKnightMoveDueToCheck;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> IllegalBishopMoveDueToCheck;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> IllegalPawnMoveDueToCheck;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FVector2D> IllegalRookMoveDueToCheck;
+	
+	UPROPERTY(EditDefaultsOnly)
+		TArray<ABasePiece*> Actors;
+
 
 
 	bool Check = false;
@@ -67,4 +105,7 @@ public:
 	void QueenPossibleMoves(FVector QueenLocation, ETileOwner EnemyColor);
 
 	void CheckKing(ETileOwner EnemyColor, ETileOwner FriendColor);
+	void SimulatePossibleMoves(ETileOwner EnemyColor, ETileOwner FriendColor);
+	void CalculatePossibleMoves(ETileOwner EnemyColor, ETileOwner FriendColor);
+	
 };
