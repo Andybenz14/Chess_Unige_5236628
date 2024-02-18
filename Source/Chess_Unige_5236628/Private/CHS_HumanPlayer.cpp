@@ -64,46 +64,50 @@ void ACHS_HumanPlayer::OnClick()
 			EPieceColor Color = CurrPiece->GetPieceColor();
 
 			// Check if the user clicked white piece. User can use only white pieces.
-			if (Color == EPieceColor::WHITE) 
+			if (Color == EPieceColor::WHITE)
 			{
-				
-				ClickCounter = ClickCounter + 1;
+				WaitFunction = true;
+				IsCheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
+				if (WaitFunction == false)
+				{
+					ClickCounter = ClickCounter + 1;
 
-				// Get clicked piece xyz location
-				ClickedActorLocation = CurrPiece->GetActorLocation();
+					// Get clicked piece xyz location
+					ClickedActorLocation = CurrPiece->GetActorLocation();
 
-				// Save the first clicked piece for the future if conditions
-				BasePieceActor = CurrPiece;
+					// Save the first clicked piece for the future if conditions
+					BasePieceActor = CurrPiece;
 
-				if (BasePieceActor->IsA(AKnight::StaticClass())) 
-				{
-					KnightPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
-					ApplyPossibleMovesMaterials(PossibleKnightMoves);
-				}
-				else if (BasePieceActor->IsA(AKing::StaticClass())) 
-				{
-					KingPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
-					ApplyPossibleMovesMaterials(PossibleKingMoves);
-				}
-				else if (BasePieceActor->IsA(APawnChess::StaticClass())) 
-				{
-					PawnPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
-					ApplyPossibleMovesMaterials(PossiblePawnMoves);
-				}
-				else if (BasePieceActor->IsA(ARook::StaticClass())) 
-				{
-					RookPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
-					ApplyPossibleMovesMaterials(PossibleRookMoves);
-				}
-				else if (BasePieceActor->IsA(ABishop::StaticClass())) 
-				{
-					BishopPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
-					ApplyPossibleMovesMaterials(PossibleBishopMoves);
-				}
-				else if (BasePieceActor->IsA(AQueen::StaticClass())) 
-				{
-					QueenPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
-					ApplyPossibleMovesMaterials(PossibleQueenMoves);
+					if (BasePieceActor->IsA(AKnight::StaticClass()))
+					{
+						KnightPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
+						ApplyPossibleMovesMaterials(PossibleKnightMoves);
+					}
+					else if (BasePieceActor->IsA(AKing::StaticClass()))
+					{
+						KingPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
+						ApplyPossibleMovesMaterials(PossibleKingMoves);
+					}
+					else if (BasePieceActor->IsA(APawnChess::StaticClass()))
+					{
+						PawnPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
+						ApplyPossibleMovesMaterials(PossiblePawnMoves);
+					}
+					else if (BasePieceActor->IsA(ARook::StaticClass()))
+					{
+						RookPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
+						ApplyPossibleMovesMaterials(PossibleRookMoves);
+					}
+					else if (BasePieceActor->IsA(ABishop::StaticClass()))
+					{
+						BishopPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
+						ApplyPossibleMovesMaterials(PossibleBishopMoves);
+					}
+					else if (BasePieceActor->IsA(AQueen::StaticClass()))
+					{
+						QueenPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
+						ApplyPossibleMovesMaterials(PossibleQueenMoves);
+					}
 				}
 			}
 		}
@@ -304,9 +308,6 @@ void ACHS_HumanPlayer::MoveBasePiece(ABasePiece*, FVector OldLocation, FVector N
 	}
 	else
 	{
-
-		CheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
-
 		GameMode->EndHumanTurn();
 
 	}

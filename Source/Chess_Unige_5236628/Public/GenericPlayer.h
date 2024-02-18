@@ -93,7 +93,7 @@ public:
 
 
 
-
+	bool Wait;
 	bool Check = false;
 
 

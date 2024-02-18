@@ -1551,7 +1551,7 @@ void AGenericPlayer::SimulatePossibleMoves(ETileOwner EnemyColor, ETileOwner Fri
 			}
 		
 	}
-
+	Wait = true;
 }
 
 

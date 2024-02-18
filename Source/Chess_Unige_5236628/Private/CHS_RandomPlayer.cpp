@@ -39,318 +39,324 @@ void ACHS_RandomPlayer::OnTurn()
 {
 	// Timer
 	FTimerHandle TimerHandle;
+	Wait = false;
+	CheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
 
-	// Set Timer
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&]()
+	if (Wait == true)
 	{
-			for (const FVector2D& Vec : IllegalPawnMoveDueToCheck)
+		// Set Timer
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&]()
 			{
-				FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
-				GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Red, VecAsString);
-			}
-			for (const FVector2D& Vec : IllegalKingMoveDueToCheck)
-			{
-				FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
-				GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Yellow, VecAsString);
-			}
-			for (const FVector2D& Vec : IllegalKnightMoveDueToCheck)
-			{
-				FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
-				GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Green, VecAsString);
-			}
-
-			for (const FVector2D& Vec : IllegalRookMoveDueToCheck)
-			{
-				FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
-				GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Blue, VecAsString);
-			}
-			for (const FVector2D& Vec : IllegalBishopMoveDueToCheck)
-			{
-				FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
-				GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Purple, VecAsString);
-			}
-			for (const FVector2D& Vec : IllegalQueenMoveDueToCheck)
-			{
-				FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
-				GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Orange, VecAsString);
-			}
-		// Initialize an array of black pieces
-		TArray<ABasePiece*> BlackActors;
-
-		// Empty the array of black pieces
-		BlackActors.Empty();
-
-		// Empty the array of black movable pieces
-		BlackMovableActors.Empty();
-
-		// GameMode pointer
-		ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
-	
-		// Iterate on TileArray to find tiles owned by black pieces
-		for (const auto& BlackTile : GameMode->GField->TileArray)
-		{
-			// Tile owner must be BLACK
-			if (BlackTile->GetOwner() == ETileOwner::BLACK)
-			{
-				// Get tile location
-				BlackActorLocation = BlackTile->GetActorLocation();
-
-				// 2D black piece location (same as the tile position)
-				FVector2D BlackPieceLocation2d(BlackActorLocation);
 
 
-				// Normalize
-				BlackPieceLocation2d.X = BlackPieceLocation2d.X / 120;
-				BlackPieceLocation2d.Y = BlackPieceLocation2d.Y / 120;
-			
-				// Check if BasePieceMap contains the black piece by his 2d location
-				if (GameMode->GField->BasePieceMap.Contains(BlackPieceLocation2d))
+				for (const FVector2D& Vec : IllegalPawnMoveDueToCheck)
 				{
-					// Initialize black piece actor
-					ABasePiece* Actor = GameMode->GField->BasePieceMap[BlackPieceLocation2d];
-
-					//Add black piece to blackActors array
-					BlackActors.Add(Actor);
+					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
+					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Red, VecAsString);
 				}
-			}
-		}	
-			// Check if there is at least one black piece
-			if (BlackActors.Num() > 0)
-			{	
-				// Iterate on BlackActors array
-				for (ABasePiece* PossiblePiece : BlackActors)
+				for (const FVector2D& Vec : IllegalKingMoveDueToCheck)
 				{
-					// Get iterated black actor location
-					FVector ActorLocation = PossiblePiece->GetActorLocation();
+					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
+					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Yellow, VecAsString);
+				}
+				for (const FVector2D& Vec : IllegalKnightMoveDueToCheck)
+				{
+					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
+					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Green, VecAsString);
+				}
 
-					// Try to cast PossiblePice to AKing and check if cast is successful 
-					if (AKing* KingActor = Cast<AKing>(PossiblePiece))
+				for (const FVector2D& Vec : IllegalRookMoveDueToCheck)
+				{
+					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
+					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Blue, VecAsString);
+				}
+				for (const FVector2D& Vec : IllegalBishopMoveDueToCheck)
+				{
+					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
+					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Purple, VecAsString);
+				}
+				for (const FVector2D& Vec : IllegalQueenMoveDueToCheck)
+				{
+					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
+					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Orange, VecAsString);
+				}
+				// Initialize an array of black pieces
+				TArray<ABasePiece*> BlackActors;
+
+				// Empty the array of black pieces
+				BlackActors.Empty();
+
+				// Empty the array of black movable pieces
+				BlackMovableActors.Empty();
+
+				// GameMode pointer
+				ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+
+				// Iterate on TileArray to find tiles owned by black pieces
+				for (const auto& BlackTile : GameMode->GField->TileArray)
+				{
+					// Tile owner must be BLACK
+					if (BlackTile->GetOwner() == ETileOwner::BLACK)
 					{
-						// Calcolate King(PossiblePiece) possible moves
-						KingPossibleMoves(ActorLocation, ETileOwner::WHITE);
+						// Get tile location
+						BlackActorLocation = BlackTile->GetActorLocation();
 
-						// Check if there is at least one possible move for the king
-						if(PossibleKingMoves.Num() > 0)
+						// 2D black piece location (same as the tile position)
+						FVector2D BlackPieceLocation2d(BlackActorLocation);
+
+
+						// Normalize
+						BlackPieceLocation2d.X = BlackPieceLocation2d.X / 120;
+						BlackPieceLocation2d.Y = BlackPieceLocation2d.Y / 120;
+
+						// Check if BasePieceMap contains the black piece by his 2d location
+						if (GameMode->GField->BasePieceMap.Contains(BlackPieceLocation2d))
 						{
-							// Add King(PossiblePiece) to an array of movable black pieces
-							BlackMovableActors.Add(PossiblePiece);
+							// Initialize black piece actor
+							ABasePiece* Actor = GameMode->GField->BasePieceMap[BlackPieceLocation2d];
+
+							//Add black piece to blackActors array
+							BlackActors.Add(Actor);
 						}
 					}
-
-					else if (APawnChess* PawnActor = Cast<APawnChess>(PossiblePiece))
+				}
+				// Check if there is at least one black piece
+				if (BlackActors.Num() > 0)
+				{
+					// Iterate on BlackActors array
+					for (ABasePiece* PossiblePiece : BlackActors)
 					{
-						PawnPossibleMoves(ActorLocation, ETileOwner::WHITE);
+						// Get iterated black actor location
+						FVector ActorLocation = PossiblePiece->GetActorLocation();
+
+						// Try to cast PossiblePice to AKing and check if cast is successful 
+						if (AKing* KingActor = Cast<AKing>(PossiblePiece))
+						{
+							// Calcolate King(PossiblePiece) possible moves
+							KingPossibleMoves(ActorLocation, ETileOwner::WHITE);
+
+							// Check if there is at least one possible move for the king
+							if (PossibleKingMoves.Num() > 0)
+							{
+								// Add King(PossiblePiece) to an array of movable black pieces
+								BlackMovableActors.Add(PossiblePiece);
+							}
+						}
+
+						else if (APawnChess* PawnActor = Cast<APawnChess>(PossiblePiece))
+						{
+							PawnPossibleMoves(ActorLocation, ETileOwner::WHITE);
+
+							if (PossiblePawnMoves.Num() > 0)
+							{
+								BlackMovableActors.Add(PossiblePiece);
+							}
+						}
+
+						else if (AQueen* QueenActor = Cast<AQueen>(PossiblePiece))
+						{
+							QueenPossibleMoves(ActorLocation, ETileOwner::WHITE);
+
+							if (PossibleQueenMoves.Num() > 0)
+							{
+								BlackMovableActors.Add(PossiblePiece);
+							}
+						}
+						else if (ABishop* BishopActor = Cast<ABishop>(PossiblePiece))
+						{
+							BishopPossibleMoves(ActorLocation, ETileOwner::WHITE);
+
+							if (PossibleBishopMoves.Num() > 0)
+							{
+								BlackMovableActors.Add(PossiblePiece);
+							}
+						}
+						else if (AKnight* KnightActor = Cast<AKnight>(PossiblePiece))
+						{
+							KnightPossibleMoves(ActorLocation, ETileOwner::WHITE);
+
+							if (PossibleKnightMoves.Num() > 0)
+							{
+								BlackMovableActors.Add(PossiblePiece);
+							}
+
+						}
+						else if (ARook* RookActor = Cast<ARook>(PossiblePiece))
+						{
+							RookPossibleMoves(ActorLocation, ETileOwner::WHITE);
+
+							if (PossibleRookMoves.Num() > 0)
+							{
+								BlackMovableActors.Add(PossiblePiece);
+							}
+						}
+
+					}
+				}
+
+				// Check if there is at least one movable black piece
+				if (BlackMovableActors.Num() > 0)
+				{
+					// Initialize Random index to choose randomly one movable black piece
+					int32 RandIdx = FMath::RandRange(0, BlackMovableActors.Num() - 1);
+
+					// Random movable black piece
+					RandomSelectedActor = BlackMovableActors[RandIdx];
+
+					// Get actor location
+					FVector RandomActorLocation = RandomSelectedActor->GetActorLocation();
+
+					// Try to cast PossiblePice to AKing and check if cast is successful 
+					if (AKing* KingActor = Cast<AKing>(RandomSelectedActor))
+					{
+						// Calcolate King(RandomSelectedActor) possible moves
+						KingPossibleMoves(RandomActorLocation, ETileOwner::WHITE);
+
+						// Check if there is at least one king possible move (just for safety)
+						if (PossibleKingMoves.Num() > 0)
+						{
+							// Initialize Random index to choose randomly one king move
+							int32 RandIdx1 = FMath::RandRange(0, PossibleKingMoves.Num() - 1);
+
+							// Get move 2d position
+							FVector2D RandomPosition = PossibleKingMoves[RandIdx1];
+
+							// 3d move position
+							FVector RandomPosition3d;
+							RandomPosition3d.X = RandomPosition.X;
+							RandomPosition3d.Y = RandomPosition.Y;
+
+							// All chess pieces are spawned at z=10
+							RandomPosition3d.Z = 10.00;
+
+							//Normalize
+							FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
+
+							// Check if BasePieceMap contains a piece in the move position. If yes it's a kill move.
+							if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
+							{
+								// Destroy the white actor in the move position
+								GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
+
+								// Remove from basepiecemap the white actor in the move position
+								GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
+							}
+
+							// Move black piece into his legal move position 
+							MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
+						}
+					}
+					else if (APawnChess* PawnActor = Cast<APawnChess>(RandomSelectedActor))
+					{
+						PawnPossibleMoves(RandomActorLocation, ETileOwner::WHITE);
 
 						if (PossiblePawnMoves.Num() > 0)
 						{
-							BlackMovableActors.Add(PossiblePiece);
+							int32 RandIdx1 = FMath::RandRange(0, PossiblePawnMoves.Num() - 1);
+							FVector2D RandomPosition = PossiblePawnMoves[RandIdx1];
+							FVector RandomPosition3d;
+							RandomPosition3d.X = RandomPosition.X;
+							RandomPosition3d.Y = RandomPosition.Y;
+							RandomPosition3d.Z = 10.00;
+
+							FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
+							if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
+							{
+								GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
+								GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
+							}
+							MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 						}
 					}
-
-					else if (AQueen* QueenActor = Cast<AQueen>(PossiblePiece))
+					else if (AQueen* QueenActor = Cast<AQueen>(RandomSelectedActor))
 					{
-						QueenPossibleMoves(ActorLocation, ETileOwner::WHITE);
+						QueenPossibleMoves(RandomActorLocation, ETileOwner::WHITE);
 
 						if (PossibleQueenMoves.Num() > 0)
 						{
-							BlackMovableActors.Add(PossiblePiece);
+							int32 RandIdx1 = FMath::RandRange(0, PossibleQueenMoves.Num() - 1);
+							FVector2D RandomPosition = PossibleQueenMoves[RandIdx1];
+							FVector RandomPosition3d;
+							RandomPosition3d.X = RandomPosition.X;
+							RandomPosition3d.Y = RandomPosition.Y;
+							RandomPosition3d.Z = 10.00;
+							FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
+							if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
+							{
+								GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
+								GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
+							}
+							MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 						}
 					}
-					else if (ABishop* BishopActor = Cast<ABishop>(PossiblePiece))
+					else if (ABishop* BishopActor = Cast<ABishop>(RandomSelectedActor))
 					{
-						BishopPossibleMoves(ActorLocation, ETileOwner::WHITE);
+						BishopPossibleMoves(RandomActorLocation, ETileOwner::WHITE);
 
 						if (PossibleBishopMoves.Num() > 0)
 						{
-							BlackMovableActors.Add(PossiblePiece);
+							int32 RandIdx1 = FMath::RandRange(0, PossibleBishopMoves.Num() - 1);
+							FVector2D RandomPosition = PossibleBishopMoves[RandIdx1];
+							FVector RandomPosition3d;
+							RandomPosition3d.X = RandomPosition.X;
+							RandomPosition3d.Y = RandomPosition.Y;
+							RandomPosition3d.Z = 10.00;
+							FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
+							if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
+							{
+								GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
+								GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
+							}
+							MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 						}
 					}
-					else if (AKnight* KnightActor = Cast<AKnight>(PossiblePiece))
+					else if (AKnight* KnightActor = Cast<AKnight>(RandomSelectedActor))
 					{
-						KnightPossibleMoves(ActorLocation, ETileOwner::WHITE);
+						KnightPossibleMoves(RandomActorLocation, ETileOwner::WHITE);
 
 						if (PossibleKnightMoves.Num() > 0)
 						{
-							BlackMovableActors.Add(PossiblePiece);
+							int32 RandIdx1 = FMath::RandRange(0, PossibleKnightMoves.Num() - 1);
+							FVector2D RandomPosition = PossibleKnightMoves[RandIdx1];
+							FVector RandomPosition3d;
+							RandomPosition3d.X = RandomPosition.X;
+							RandomPosition3d.Y = RandomPosition.Y;
+							RandomPosition3d.Z = 10.00;
+							FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
+							if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
+							{
+								GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
+								GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
+							}
+							MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 						}
-
 					}
-					else if (ARook* RookActor = Cast<ARook>(PossiblePiece))
+					else if (ARook* RookActor = Cast<ARook>(RandomSelectedActor))
 					{
-						RookPossibleMoves(ActorLocation, ETileOwner::WHITE);
+						RookPossibleMoves(RandomActorLocation, ETileOwner::WHITE);
 
 						if (PossibleRookMoves.Num() > 0)
 						{
-							BlackMovableActors.Add(PossiblePiece);
+							int32 RandIdx1 = FMath::RandRange(0, PossibleRookMoves.Num() - 1);
+							FVector2D RandomPosition = PossibleRookMoves[RandIdx1];
+							FVector RandomPosition3d;
+							RandomPosition3d.X = RandomPosition.X;
+							RandomPosition3d.Y = RandomPosition.Y;
+							RandomPosition3d.Z = 10.00;
+							FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
+							if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
+							{
+								GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
+								GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
+							}
+							MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 						}
-					}
-
-				}	
-			}
-
-			// Check if there is at least one movable black piece
-			if (BlackMovableActors.Num() > 0)
-			{
-				// Initialize Random index to choose randomly one movable black piece
-				int32 RandIdx = FMath::RandRange(0, BlackMovableActors.Num() - 1);
-
-				// Random movable black piece
-				RandomSelectedActor = BlackMovableActors[RandIdx];
-
-				// Get actor location
-				FVector RandomActorLocation = RandomSelectedActor->GetActorLocation();
-
-				// Try to cast PossiblePice to AKing and check if cast is successful 
-				if (AKing* KingActor = Cast<AKing>(RandomSelectedActor))
-				{
-					// Calcolate King(RandomSelectedActor) possible moves
-					KingPossibleMoves(RandomActorLocation, ETileOwner::WHITE);
-
-					// Check if there is at least one king possible move (just for safety)
-					if (PossibleKingMoves.Num() > 0)
-					{	
-						// Initialize Random index to choose randomly one king move
-						int32 RandIdx1 = FMath::RandRange(0, PossibleKingMoves.Num()-1);
-
-						// Get move 2d position
-						FVector2D RandomPosition= PossibleKingMoves[RandIdx1];
-
-						// 3d move position
-						FVector RandomPosition3d;
-						RandomPosition3d.X = RandomPosition.X;
-						RandomPosition3d.Y = RandomPosition.Y;
-
-						// All chess pieces are spawned at z=10
-						RandomPosition3d.Z = 10.00;
-
-						//Normalize
-						FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
-
-						// Check if BasePieceMap contains a piece in the move position. If yes it's a kill move.
-						if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
-						{
-							// Destroy the white actor in the move position
-							GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
-
-							// Remove from basepiecemap the white actor in the move position
-							GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
-						}
-
-						// Move black piece into his legal move position 
-						MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 					}
 				}
-				else if (APawnChess* PawnActor = Cast<APawnChess>(RandomSelectedActor))
-				{
-					PawnPossibleMoves(RandomActorLocation, ETileOwner::WHITE);
-
-					if (PossiblePawnMoves.Num() > 0)
-					{
-						int32 RandIdx1 = FMath::RandRange(0, PossiblePawnMoves.Num() - 1);
-						FVector2D RandomPosition = PossiblePawnMoves[RandIdx1];
-						FVector RandomPosition3d;
-						RandomPosition3d.X = RandomPosition.X;
-						RandomPosition3d.Y = RandomPosition.Y;
-						RandomPosition3d.Z = 10.00;
-
-						FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
-						if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
-						{
-							GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
-							GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
-						}
-						MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
-					}
-				}
-				else if (AQueen* QueenActor = Cast<AQueen>(RandomSelectedActor))
-				{
-					QueenPossibleMoves(RandomActorLocation, ETileOwner::WHITE);
-
-					if (PossibleQueenMoves.Num() > 0)
-					{
-						int32 RandIdx1 = FMath::RandRange(0, PossibleQueenMoves.Num() - 1);
-						FVector2D RandomPosition = PossibleQueenMoves[RandIdx1];
-						FVector RandomPosition3d;
-						RandomPosition3d.X = RandomPosition.X;
-						RandomPosition3d.Y = RandomPosition.Y;
-						RandomPosition3d.Z = 10.00;
-						FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
-						if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
-						{
-							GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
-							GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
-						}
-						MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
-					}
-				}
-				else if (ABishop* BishopActor = Cast<ABishop>(RandomSelectedActor))
-				{
-					BishopPossibleMoves(RandomActorLocation, ETileOwner::WHITE);
-
-					if (PossibleBishopMoves.Num() > 0)
-					{
-						int32 RandIdx1 = FMath::RandRange(0, PossibleBishopMoves.Num() - 1);
-						FVector2D RandomPosition = PossibleBishopMoves[RandIdx1];
-						FVector RandomPosition3d;
-						RandomPosition3d.X = RandomPosition.X;
-						RandomPosition3d.Y = RandomPosition.Y;
-						RandomPosition3d.Z = 10.00;
-						FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
-						if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
-						{
-							GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
-							GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
-						}
-						MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
-					}
-				}
-				else if (AKnight* KnightActor = Cast<AKnight>(RandomSelectedActor))
-				{
-					KnightPossibleMoves(RandomActorLocation, ETileOwner::WHITE);
-
-					if (PossibleKnightMoves.Num() > 0)
-					{
-						int32 RandIdx1 = FMath::RandRange(0, PossibleKnightMoves.Num() - 1);
-						FVector2D RandomPosition = PossibleKnightMoves[RandIdx1];
-						FVector RandomPosition3d;
-						RandomPosition3d.X = RandomPosition.X;
-						RandomPosition3d.Y = RandomPosition.Y;
-						RandomPosition3d.Z = 10.00;
-						FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
-						if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
-						{
-							GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
-							GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
-						}
-						MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
-					}
-				}
-				else if (ARook* RookActor = Cast<ARook>(RandomSelectedActor))
-				{
-					RookPossibleMoves(RandomActorLocation, ETileOwner::WHITE);
-
-					if (PossibleRookMoves.Num() > 0)
-					{
-						int32 RandIdx1 = FMath::RandRange(0, PossibleRookMoves.Num() - 1);
-						FVector2D RandomPosition = PossibleRookMoves[RandIdx1];
-						FVector RandomPosition3d;
-						RandomPosition3d.X = RandomPosition.X;
-						RandomPosition3d.Y = RandomPosition.Y;
-						RandomPosition3d.Z = 10.00;
-						FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
-						if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
-						{
-							GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
-							GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
-						}
-						MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
-					}
-				}
-			}
-	// 1 second timer
-	}, 1, false);
+				// 1 second timer
+			}, 1, false);
+	}
 }
-
 
 
 
@@ -414,7 +420,7 @@ void ACHS_RandomPlayer::MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVe
 
 	}
 
-	//CheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
+	
 	// End AI turn 
 	GameMode->EndAITurn();
 }
