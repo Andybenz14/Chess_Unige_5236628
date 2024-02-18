@@ -93,7 +93,7 @@ public:
 
 
 
-	bool Wait;
+	bool WaitFunction;
 	bool Check = false;
 
 
@@ -105,8 +105,11 @@ public:
 	void BishopPossibleMoves(FVector BishopLocation, ETileOwner EnemyColor);
 	void QueenPossibleMoves(FVector QueenLocation, ETileOwner EnemyColor);
 
-	void CheckKing(ETileOwner EnemyColor, ETileOwner FriendColor);
+	void IsCheckKing(ETileOwner EnemyColor, ETileOwner FriendColor);
 	void SimulatePossibleMoves(ETileOwner EnemyColor, ETileOwner FriendColor);
 	void CalculatePossibleMoves(ETileOwner EnemyColor, ETileOwner FriendColor);
-	
+
+	void CalculateBishopMoves(FVector BishopLocation, FVector2D Direction, ETileOwner EnemyColor);
+	void CalculateRookMoves(FVector RookLocation, FVector2D Direction, ETileOwner EnemyColor);
+	void CalculateQueenMoves(FVector QueenLocation, FVector2D Direction, ETileOwner EnemyColor);
 };

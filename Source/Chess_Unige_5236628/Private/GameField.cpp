@@ -327,10 +327,9 @@ void AGameField::PawnPromotion(ABasePiece* Pawn, int32 Color, FString NewPiece)
 	if (Color == 1)
 	{
 		ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
-		//ACHS_HumanPlayer* HumanPlayer = Cast<ACHS_HumanPlayer>(*TActorIterator<ACHS_HumanPlayer>(GetWorld()));
-		//HumanPlayer ->CheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
+		
 		GameMode->EndHumanTurn();
-	}//TODO Else per l'AI con il check
+	}
 
 }
 
