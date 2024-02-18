@@ -67,7 +67,9 @@ void ACHS_HumanPlayer::OnClick()
 			if (Color == EPieceColor::WHITE)
 			{
 				WaitFunction = true;
+
 				IsCheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
+
 				if (WaitFunction == false)
 				{
 					ClickCounter = ClickCounter + 1;
@@ -260,6 +262,7 @@ void ACHS_HumanPlayer::OnClick()
 			}
 		}
 	}
+
 }
 
 

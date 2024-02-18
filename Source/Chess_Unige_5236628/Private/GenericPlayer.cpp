@@ -945,6 +945,12 @@ void AGenericPlayer::CalculatePossibleMoves(ETileOwner EnemyColor, ETileOwner Fr
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
 
 	Actors.Empty();
+	PossiblePawnMoves.Empty();
+	PossibleBishopMoves.Empty();
+	PossibleRookMoves.Empty();
+	PossibleKingMoves.Empty();
+	PossibleQueenMoves.Empty();
+	PossibleKnightMoves.Empty();
 
 	// Iterate on TileArray to find tiles owned by black pieces
 	for (const auto& Tile : GameMode->GField->TileArray)
@@ -1022,3 +1028,24 @@ void AGenericPlayer::CalculatePossibleMoves(ETileOwner EnemyColor, ETileOwner Fr
 	}
 }
 
+bool AGenericPlayer::IsCheckMate(ETileOwner EnemyColor, ETileOwner FriendColor)
+{
+	CalculatePossibleMoves(EnemyColor, FriendColor);
+
+	if (PossiblePawnMoves.Num() == 0 &&
+		PossibleBishopMoves.Num() == 0 &&
+		PossibleRookMoves.Num() == 0 &&
+		PossibleKingMoves.Num() == 0 &&
+		PossibleQueenMoves.Num() == 0 &&
+		PossibleKnightMoves.Num() == 0
+		)
+	{
+		return true;
+
+	}
+	else
+	{
+		return false;
+	}
+
+}

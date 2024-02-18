@@ -41,7 +41,7 @@ void ACHS_RandomPlayer::OnTurn()
 	FTimerHandle TimerHandle;
 	WaitFunction = true;
 	IsCheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
-
+	
 	if (WaitFunction == false)
 	{
 		// Set Timer
@@ -322,6 +322,14 @@ void ACHS_RandomPlayer::OnTurn()
 				}
 				// 1 second timer
 			}, 1, false);
+
+			/*if ((IsCheckMate(ETileOwner::WHITE, ETileOwner::BLACK)) == true) {
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("White wins"));
+
+
+			}*/
+		
+
 	}
 	/*
 				for (const FVector2D& Vec : PossiblePawnMoves)

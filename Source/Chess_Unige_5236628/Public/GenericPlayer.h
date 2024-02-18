@@ -112,4 +112,6 @@ public:
 	void CalculateBishopMoves(FVector BishopLocation, FVector2D Direction, ETileOwner EnemyColor);
 	void CalculateRookMoves(FVector RookLocation, FVector2D Direction, ETileOwner EnemyColor);
 	void CalculateQueenMoves(FVector QueenLocation, FVector2D Direction, ETileOwner EnemyColor);
+
+	bool IsCheckMate(ETileOwner EnemyColor, ETileOwner FriendColor);
 };
