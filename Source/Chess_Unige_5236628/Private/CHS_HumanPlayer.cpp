@@ -7,6 +7,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/Actor.h"
 
+
 // Sets default values
 ACHS_HumanPlayer::ACHS_HumanPlayer()
 {
@@ -69,6 +70,38 @@ void ACHS_HumanPlayer::OnClick()
 				WaitFunction = true;
 
 				IsCheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
+
+				/*for (const FVector2D& Vec : IllegalPawnMoveDueToCheck)
+				{
+					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
+					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Red, VecAsString);
+				}
+				for (const FVector2D& Vec : IllegalKingMoveDueToCheck)
+				{
+					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
+					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Yellow, VecAsString);
+				}*/
+				for (const FVector2D& Vec : IllegalBishopMoveDueToCheck)
+				{
+					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
+					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Green, VecAsString);
+				}
+
+				for (const FVector2D& Vec : IllegalRookMoveDueToCheck)
+				{
+					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
+					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Blue, VecAsString);
+				}
+				/*for (const FVector2D& Vec : IllegalKnightMoveDueToCheck)
+				{
+					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
+					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Purple, VecAsString);
+				}*/
+				for (const FVector2D& Vec : IllegalQueenMoveDueToCheck)
+				{
+					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
+					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Orange, VecAsString);
+				}
 
 				if (WaitFunction == false)
 				{

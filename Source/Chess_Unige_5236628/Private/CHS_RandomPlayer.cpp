@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "CHS_RandomPlayer.h"
+#include "Async/Async.h"
 
 
 
@@ -40,8 +41,11 @@ void ACHS_RandomPlayer::OnTurn()
 	// Timer
 	FTimerHandle TimerHandle;
 	WaitFunction = true;
+
 	IsCheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
 	
+
+	//DA FIXARE IN CASO DI SCACCO, SE Piu non nella casella adiacente, la regina, il bisop e il rook non vedono la mossa kill come possibile(la mossa non è illegal)
 	if (WaitFunction == false)
 	{
 		// Set Timer
@@ -151,7 +155,7 @@ void ACHS_RandomPlayer::OnTurn()
 						else if (ARook* RookActor = Cast<ARook>(PossiblePiece))
 						{
 							RookPossibleMoves(ActorLocation, ETileOwner::WHITE);
-
+							
 							if (PossibleRookMoves.Num() > 0)
 							{
 								BlackMovableActors.Add(PossiblePiece);
@@ -323,46 +327,15 @@ void ACHS_RandomPlayer::OnTurn()
 				// 1 second timer
 			}, 1, false);
 
-			/*if ((IsCheckMate(ETileOwner::WHITE, ETileOwner::BLACK)) == true) {
+			if ((IsCheckMate(ETileOwner::WHITE, ETileOwner::BLACK)) == true) {
 				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("White wins"));
 
 
-			}*/
+			}
 		
 
 	}
-	/*
-				for (const FVector2D& Vec : PossiblePawnMoves)
-				{
-					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
-					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Red, VecAsString);
-				}
-				for (const FVector2D& Vec : PossibleKingMoves)
-				{
-					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
-					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Yellow, VecAsString);
-				}
-				for (const FVector2D& Vec : PossibleBishopMoves)
-				{
-					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
-					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Green, VecAsString);
-				}
-
-				for (const FVector2D& Vec : PossibleRookMoves)
-				{
-					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
-					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Blue, VecAsString);
-				}
-				for (const FVector2D& Vec : PossibleKnightMoves)
-				{
-					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
-					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Purple, VecAsString);
-				}
-				for (const FVector2D& Vec : PossibleQueenMoves)
-				{
-					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
-					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Orange, VecAsString);
-				}*/
+	
 }
 
 

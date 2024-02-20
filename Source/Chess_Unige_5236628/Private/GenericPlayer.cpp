@@ -437,6 +437,7 @@ void AGenericPlayer::CalculateRookMoves(FVector RookLocation, FVector2D Directio
 				ABasePiece* IsKing = GameMode->GField->BasePieceMap[NextTileLocation2dNormalized];
 				if (!(IsKing->IsA(AKing::StaticClass())))
 				{
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Il tuo messaggio di debug qui"));
 					PossibleRookMoves.Add(NextTileLocation);
 					PossibleRookMovesForCheck.Add(NextTileLocation);
 				}
@@ -897,6 +898,7 @@ void AGenericPlayer::SimulatePossibleMoves(ETileOwner EnemyColor, ETileOwner Fri
 						{
 							// Remove from basepiecemap the white actor in the move position
 							GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
+
 						}
 
 						FVector2D SelectedActorLocation2D(SelectedActorLocation);
@@ -945,12 +947,6 @@ void AGenericPlayer::CalculatePossibleMoves(ETileOwner EnemyColor, ETileOwner Fr
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
 
 	Actors.Empty();
-	PossiblePawnMoves.Empty();
-	PossibleBishopMoves.Empty();
-	PossibleRookMoves.Empty();
-	PossibleKingMoves.Empty();
-	PossibleQueenMoves.Empty();
-	PossibleKnightMoves.Empty();
 
 	// Iterate on TileArray to find tiles owned by black pieces
 	for (const auto& Tile : GameMode->GField->TileArray)
@@ -1048,4 +1044,4 @@ bool AGenericPlayer::IsCheckMate(ETileOwner EnemyColor, ETileOwner FriendColor)
 		return false;
 	}
 
-}
+}//Per REPLAY OGNi mossa salva la posizione della pedina con getactorlocation. poi una funzione prende in ingresso le coordinate e restituisce la string per il widget in base alla posizione. ad es : DF3
