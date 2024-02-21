@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameField.h"
+#include <Mutex>
 #include "BasePiece.h"
 #include "CHS_GameMode.h"
 #include "CHS_GameInstance.h"
@@ -92,10 +93,10 @@ public:
 		TArray<ABasePiece*> Actors;
 
 
-
+	
 	bool WaitFunction;
 	bool Check = false;
-
+	
 
 	// Possible moves functions
 	void KnightPossibleMoves(FVector KnightLocation, ETileOwner EnemyColor);
@@ -114,4 +115,5 @@ public:
 	void CalculateQueenMoves(FVector QueenLocation, FVector2D Direction, ETileOwner EnemyColor);
 
 	bool IsCheckMate(ETileOwner EnemyColor, ETileOwner FriendColor);
+	
 };

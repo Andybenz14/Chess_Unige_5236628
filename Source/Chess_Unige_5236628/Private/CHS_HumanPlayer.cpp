@@ -80,7 +80,7 @@ void ACHS_HumanPlayer::OnClick()
 				{
 					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
 					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Yellow, VecAsString);
-				}*/
+				}
 				for (const FVector2D& Vec : IllegalBishopMoveDueToCheck)
 				{
 					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
@@ -92,16 +92,16 @@ void ACHS_HumanPlayer::OnClick()
 					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
 					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Blue, VecAsString);
 				}
-				/*for (const FVector2D& Vec : IllegalKnightMoveDueToCheck)
+				for (const FVector2D& Vec : IllegalKnightMoveDueToCheck)
 				{
 					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
 					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Purple, VecAsString);
-				}*/
+				}
 				for (const FVector2D& Vec : IllegalQueenMoveDueToCheck)
 				{
 					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
 					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Orange, VecAsString);
-				}
+				}*/
 
 				if (WaitFunction == false)
 				{

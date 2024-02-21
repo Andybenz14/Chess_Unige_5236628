@@ -155,6 +155,11 @@ void ACHS_RandomPlayer::OnTurn()
 						else if (ARook* RookActor = Cast<ARook>(PossiblePiece))
 						{
 							RookPossibleMoves(ActorLocation, ETileOwner::WHITE);
+							for (const FVector2D& Vec : PossibleRookMoves)
+							{
+								FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
+								GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Green, VecAsString);
+							}
 							
 							if (PossibleRookMoves.Num() > 0)
 							{
@@ -324,6 +329,12 @@ void ACHS_RandomPlayer::OnTurn()
 						}
 					}
 				}
+				for (const FVector2D& Vec : IllegalRookMoveDueToCheck)
+				{
+					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
+					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Purple, VecAsString);
+				}
+				
 				// 1 second timer
 			}, 1, false);
 
