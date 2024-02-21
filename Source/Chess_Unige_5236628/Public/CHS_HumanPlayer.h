@@ -19,6 +19,8 @@ public:
 	// Sets default values for this pawn's properties
 	ACHS_HumanPlayer();
 
+	
+
 	// Camera component attacched to player pawn
 	UCameraComponent* Camera;
 

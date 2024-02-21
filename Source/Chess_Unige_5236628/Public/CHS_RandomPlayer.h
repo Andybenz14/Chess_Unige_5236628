@@ -17,6 +17,8 @@ public:
 	// Sets default values for this pawn's properties
 	ACHS_RandomPlayer();
 
+	
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

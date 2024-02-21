@@ -32,6 +32,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UCHS_GameInstance* GameInstance;
+
 	// Possible moves array
 
 	UPROPERTY(EditDefaultsOnly)
@@ -114,6 +116,6 @@ public:
 	void CalculateRookMoves(FVector RookLocation, FVector2D Direction, ETileOwner EnemyColor);
 	void CalculateQueenMoves(FVector QueenLocation, FVector2D Direction, ETileOwner EnemyColor);
 
-	bool IsCheckMate(ETileOwner EnemyColor, ETileOwner FriendColor);
+
 	
 };

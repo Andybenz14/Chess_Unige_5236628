@@ -20,6 +20,8 @@ ACHS_HumanPlayer::ACHS_HumanPlayer()
 	//set the camera as RootComponent
 	SetRootComponent(Camera);
 
+	GameInstance = Cast<UCHS_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+
 }
 
 // Called when the game starts or when spawned
@@ -70,6 +72,8 @@ void ACHS_HumanPlayer::OnClick()
 				WaitFunction = true;
 
 				IsCheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
+
+
 
 				/*for (const FVector2D& Vec : IllegalPawnMoveDueToCheck)
 				{
@@ -304,7 +308,7 @@ void ACHS_HumanPlayer::OnClick()
 void ACHS_HumanPlayer::OnTurn()
 {
 	IsMyTurn = true;
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Your Turn"));
+	GameInstance->SetTurnMessage(TEXT("Human Player Turn"));
 	
 }
 
@@ -321,7 +325,9 @@ void ACHS_HumanPlayer::MoveBasePiece(ABasePiece*, FVector OldLocation, FVector N
 	if (NewActorLocation == NewLocation)
 	{
 		GameMode->GField->TileMap[ClickedActorLocation2D]->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
+
 		GameMode->GField->TileMap[NewActorLocation2D]->SetTileStatus(ETileOwner::WHITE, ETileStatus::OCCUPIED);
+
 	}
 
 

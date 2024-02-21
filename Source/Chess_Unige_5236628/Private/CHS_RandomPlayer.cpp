@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "CHS_RandomPlayer.h"
-#include "Async/Async.h"
+
 
 
 
@@ -10,6 +10,7 @@ ACHS_RandomPlayer::ACHS_RandomPlayer()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	GameInstance = Cast<UCHS_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
 }
 
@@ -38,12 +39,14 @@ void ACHS_RandomPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 // Function called when human player turn ends 
 void ACHS_RandomPlayer::OnTurn()
 {
+	GameInstance->SetTurnMessage(TEXT("Random AI Player Turn"));
+
 	// Timer
 	FTimerHandle TimerHandle;
 	WaitFunction = true;
 
 	IsCheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
-	
+
 
 	//DA FIXARE IN CASO DI SCACCO, SE Piu non nella casella adiacente, la regina, il bisop e il rook non vedono la mossa kill come possibile(la mossa non è illegal)
 	if (WaitFunction == false)
@@ -155,11 +158,6 @@ void ACHS_RandomPlayer::OnTurn()
 						else if (ARook* RookActor = Cast<ARook>(PossiblePiece))
 						{
 							RookPossibleMoves(ActorLocation, ETileOwner::WHITE);
-							for (const FVector2D& Vec : PossibleRookMoves)
-							{
-								FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
-								GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Green, VecAsString);
-							}
 							
 							if (PossibleRookMoves.Num() > 0)
 							{
@@ -329,21 +327,9 @@ void ACHS_RandomPlayer::OnTurn()
 						}
 					}
 				}
-				for (const FVector2D& Vec : IllegalRookMoveDueToCheck)
-				{
-					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
-					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Purple, VecAsString);
-				}
 				
 				// 1 second timer
 			}, 1, false);
-
-			if ((IsCheckMate(ETileOwner::WHITE, ETileOwner::BLACK)) == true) {
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("White wins"));
-
-
-			}
-		
 
 	}
 	
@@ -410,7 +396,7 @@ void ACHS_RandomPlayer::MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVe
 		GameMode->GField->PawnPromotion(RandomSelectedActor, 2, Piece);
 
 	}
-
+	
 	
 	// End AI turn 
 	GameMode->EndAITurn();

@@ -8,7 +8,7 @@ AGenericPlayer::AGenericPlayer()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	GameInstance = Cast<UCHS_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 }
 
 // Called when the game starts or when spawned
@@ -473,14 +473,15 @@ void AGenericPlayer::CalculateRookMoves(FVector RookLocation, FVector2D Directio
 			Location.X = NextTileLocation.X;
 			Location.Y = NextTileLocation.Y;
 			Location.Z = 10;
+
 			if (!(IllegalRookMoveDueToCheck.Contains(NextTileLocation)))
 			{
 				PossibleRookMoves.Add(NextTileLocation);
-					PossibleRookMovesForCheck.Add(NextTileLocation);
+				PossibleRookMovesForCheck.Add(NextTileLocation);
 			}
+
 			CalculateRookMoves(Location, Direction, EnemyColor);
-			FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), NextTileLocation.X, NextTileLocation.Y);
-			GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Blue, VecAsString);
+			
 		}
 		else if (Status == ETileStatus::OCCUPIED && NextTile->GetOwner() == EnemyColor)
 		{
@@ -500,8 +501,7 @@ void AGenericPlayer::CalculateRookMoves(FVector RookLocation, FVector2D Directio
 						PossibleRookMoves.Add(NextTileLocation);
 						PossibleRookMovesForCheck.Add(NextTileLocation);
 					}
-					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), NextTileLocation.X, NextTileLocation.Y);
-					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Yellow, VecAsString);
+			
 				}
 				else
 				{
@@ -546,11 +546,13 @@ void AGenericPlayer::CalculateBishopMoves(FVector BishopLocation, FVector2D Dire
 			Location.X = NextTileLocation.X;
 			Location.Y = NextTileLocation.Y;
 			Location.Z = 10;
+
 			if (!(IllegalBishopMoveDueToCheck.Contains(NextTileLocation)))
 			{
 				PossibleBishopMoves.Add(NextTileLocation);
 				PossibleBishopMovesForCheck.Add(NextTileLocation);
 			}
+
 			CalculateBishopMoves(Location, Direction, EnemyColor); 
 		}
 		else if (Status == ETileStatus::OCCUPIED && NextTile->GetOwner() == EnemyColor)
@@ -619,6 +621,7 @@ void AGenericPlayer::CalculateQueenMoves(FVector QueenLocation, FVector2D Direct
 			Location.X = NextTileLocation.X;
 			Location.Y = NextTileLocation.Y;
 			Location.Z = 10;
+
 			if (!(IllegalQueenMoveDueToCheck.Contains(NextTileLocation)))
 			{
 				PossibleQueenMoves.Add(NextTileLocation);
@@ -1030,6 +1033,7 @@ void AGenericPlayer::CalculatePossibleMoves(ETileOwner EnemyColor, ETileOwner Fr
 
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
 
+	int CheckMateCounter = 0;
 	Actors.Empty();
 
 	// Iterate on TileArray to find tiles owned by black pieces
@@ -1075,60 +1079,85 @@ void AGenericPlayer::CalculatePossibleMoves(ETileOwner EnemyColor, ETileOwner Fr
 				// Calcolate King(PossiblePiece) possible moves
 				KingPossibleMoves(ActorLocation, EnemyColor);
 
+				if (PossibleKingMoves.Num() == 0)
+				{
+					CheckMateCounter = CheckMateCounter++;
+				}
+
 			}
 
 			else if (APawnChess* PawnActor = Cast<APawnChess>(PossiblePiece))
 			{
 				PawnPossibleMoves(ActorLocation, EnemyColor);
 
+
+				if (PossiblePawnMoves.Num() == 0)
+				{
+					CheckMateCounter = CheckMateCounter++;
+				}
 			}
 
 			else if (AQueen* QueenActor = Cast<AQueen>(PossiblePiece))
 			{
 				QueenPossibleMoves(ActorLocation, EnemyColor);
 
+
+				if (PossibleQueenMoves.Num() == 0)
+				{
+					CheckMateCounter = CheckMateCounter++;
+				}
 			}
 			else if (ABishop* BishopActor = Cast<ABishop>(PossiblePiece))
 			{
 				BishopPossibleMoves(ActorLocation, EnemyColor);
 
+
+				if (PossibleBishopMoves.Num() == 0)
+				{
+					CheckMateCounter = CheckMateCounter++;
+				}
 			}
 			else if (AKnight* KnightActor = Cast<AKnight>(PossiblePiece))
 			{
 				KnightPossibleMoves(ActorLocation, EnemyColor);
 
 
+				if (PossibleKnightMoves.Num() == 0)
+				{
+					CheckMateCounter = CheckMateCounter++;
+				}
+
 			}
 			else if (ARook* RookActor = Cast<ARook>(PossiblePiece))
 			{
 				RookPossibleMoves(ActorLocation, EnemyColor);
 
+
+				if (PossibleRookMoves.Num() == 0)
+				{
+					CheckMateCounter = CheckMateCounter++;
+				}
 			}
+		}
+	}
+	if (CheckMateCounter == Actors.Num()) 
+	{
+		if(FriendColor == ETileOwner::BLACK)
+		{
+			GameInstance->SetTurnMessage(TEXT("Scacco matto! IL BIANCO VINCE "));
+	    	
+
+		}
+		else
+		{
+			GameInstance->SetTurnMessage(TEXT("Scacco matto! IL NERO VINCE "));
+
 		}
 	}
 }
 
-bool AGenericPlayer::IsCheckMate(ETileOwner EnemyColor, ETileOwner FriendColor)
-{
-	CalculatePossibleMoves(EnemyColor, FriendColor);
 
-	if (PossiblePawnMoves.Num() == 0 &&
-		PossibleBishopMoves.Num() == 0 &&
-		PossibleRookMoves.Num() == 0 &&
-		PossibleKingMoves.Num() == 0 &&
-		PossibleQueenMoves.Num() == 0 &&
-		PossibleKnightMoves.Num() == 0
-		)
-	{
-		return true;
-
-	}
-	else
-	{
-		return false;
-	}
-
-}//Per REPLAYOGNi mossa salva la posizione della pedina con getactorlocation. poi una funzione prende in ingresso le coordinate e restituisce la string per il widget in base alla posizione. ad es : DF3
+//Per REPLAYOGNi mossa salva la posizione della pedina con getactorlocation. poi una funzione prende in ingresso le coordinate e restituisce la string per il widget in base alla posizione. ad es : DF3
 
 
 
