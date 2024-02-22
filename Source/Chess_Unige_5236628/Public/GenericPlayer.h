@@ -9,7 +9,6 @@
 #include "CHS_GameMode.h"
 #include "CHS_GameInstance.h"
 #include "CHS_PlayerInterface.h"
-#include "Blueprint/UserWidget.h"
 #include "GameFramework/Pawn.h"
 #include "GenericPlayer.generated.h"
 

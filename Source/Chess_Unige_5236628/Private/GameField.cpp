@@ -43,18 +43,34 @@ void AGameField::BeginPlay()
 
 void AGameField::ResetField()
 {
-	for (ATile* Obj : TileArray)
+	ACHS_GameMode* GameMode = Cast<ACHS_GameMode>(GetWorld()->GetAuthGameMode());
+	GameMode->IsMyTurn = 1;
+
+	for (auto& Pair : TileMap)
 	{
-		Obj->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
+		ATile* Tile = Pair.Value;
+		Tile->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
+		Tile->Destroy();
 	}
-	//TODO RESET ANCHE PER PEDINE
-	// send broadcast event to registered objects 
+
+	for (auto& Pair : BasePieceMap)
+	{
+		ABasePiece* Piece = Pair.Value;
+		Piece->Destroy();
+	}
+
+	BasePieceMap.Empty();
+	TileMap.Empty();
+	BasePieceArray.Empty();
+	TileArray.Empty();
+	
+	// Genera nuovamente il campo e le pedine
+	GenerateField();
+
+	// Invia l'evento di reset a tutti gli oggetti registrati
 	OnResetEvent.Broadcast();
 
-	//ACHS_GameMode* GameMode = Cast<ACHS_GameMode>(GetWorld()->GetAuthGameMode());
-	//GameMode->IsGameOver = false;
-	//GameMode->MoveCounter = 0;
-	//GameMode->ChoosePlayerAndStartGame();
+	
 }
 
 void AGameField::GenerateField()

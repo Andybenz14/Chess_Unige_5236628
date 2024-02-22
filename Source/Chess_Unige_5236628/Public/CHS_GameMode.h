@@ -36,7 +36,7 @@ public:
 	// Reference to a GameField object
 	UPROPERTY(VisibleAnywhere)
 		AGameField* GField;
-	
+
 	// End human turn
 	void EndHumanTurn();
 
