@@ -27,5 +27,18 @@ public:
 	// set the turn message
 	UFUNCTION(BlueprintCallable)
 		void SetTurnMessage(FString Message);
+
+	// message to show every turn
+	UPROPERTY(EditAnywhere)
+		FString WinMessage = "";
+
+	// get the current turn message
+	UFUNCTION(BlueprintCallable)
+		FString GetWinMessage();
+
+	// set the turn message
+	UFUNCTION(BlueprintCallable)
+		void SetWinMessage(FString Message);
+
 	
 };

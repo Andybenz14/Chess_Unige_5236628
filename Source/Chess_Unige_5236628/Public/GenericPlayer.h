@@ -9,6 +9,7 @@
 #include "CHS_GameMode.h"
 #include "CHS_GameInstance.h"
 #include "CHS_PlayerInterface.h"
+#include "Blueprint/UserWidget.h"
 #include "GameFramework/Pawn.h"
 #include "GenericPlayer.generated.h"
 
@@ -94,9 +95,8 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		TArray<ABasePiece*> Actors;
 
-
 	
-	bool WaitFunction;
+	
 	bool Check = false;
 	
 
@@ -108,14 +108,21 @@ public:
 	void BishopPossibleMoves(FVector BishopLocation, ETileOwner EnemyColor);
 	void QueenPossibleMoves(FVector QueenLocation, ETileOwner EnemyColor);
 
-	void IsCheckKing(ETileOwner EnemyColor, ETileOwner FriendColor);
-	void SimulatePossibleMoves(ETileOwner EnemyColor, ETileOwner FriendColor);
-	void CalculatePossibleMoves(ETileOwner EnemyColor, ETileOwner FriendColor);
+	void IsCheckKing(ETileOwner FriendColor, ETileOwner EnemyColor);
+	void SimulatePossibleMoves(ETileOwner FriendColor, ETileOwner EnemyColor);
+	void CalculatePossibleMoves(ETileOwner FriendColor, ETileOwner EnemyColor);
 
 	void CalculateBishopMoves(FVector BishopLocation, FVector2D Direction, ETileOwner EnemyColor);
 	void CalculateRookMoves(FVector RookLocation, FVector2D Direction, ETileOwner EnemyColor);
 	void CalculateQueenMoves(FVector QueenLocation, FVector2D Direction, ETileOwner EnemyColor);
 
+	void IsCheckMate(ETileOwner FriendColor, ETileOwner EnemyColor);
 
 	
+	int PawnIsInGame = 0;
+	int QueenIsInGame = 0;
+	int BishopIsInGame = 0;
+	int KnightIsInGame = 0;
+	int RookIsInGame = 0;
+
 };

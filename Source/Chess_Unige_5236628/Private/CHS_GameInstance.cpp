@@ -12,3 +12,13 @@ void UCHS_GameInstance::SetTurnMessage(FString Message)
 {
 	CurrentTurnMessage = Message;
 }
+
+FString UCHS_GameInstance::GetWinMessage()
+{
+	return WinMessage;
+}
+
+void UCHS_GameInstance::SetWinMessage(FString Message)
+{
+	WinMessage = Message;
+}

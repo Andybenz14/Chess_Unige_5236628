@@ -43,14 +43,15 @@ void ACHS_RandomPlayer::OnTurn()
 
 	// Timer
 	FTimerHandle TimerHandle;
-	WaitFunction = true;
-
+	
+	
 	IsCheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
+	IsCheckMate(ETileOwner::BLACK, ETileOwner::WHITE);
 
 
 	//DA FIXARE IN CASO DI SCACCO, SE Piu non nella casella adiacente, la regina, il bisop e il rook non vedono la mossa kill come possibile(la mossa non è illegal)
-	if (WaitFunction == false)
-	{
+	
+	
 		// Set Timer
 		GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&]()
 			{
@@ -328,10 +329,11 @@ void ACHS_RandomPlayer::OnTurn()
 					}
 				}
 				
+				
 				// 1 second timer
 			}, 1, false);
 
-	}
+	
 	
 }
 

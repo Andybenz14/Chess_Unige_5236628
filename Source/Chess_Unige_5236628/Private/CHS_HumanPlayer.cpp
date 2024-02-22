@@ -34,6 +34,7 @@ void ACHS_HumanPlayer::BeginPlay()
 // Called every frame
 void ACHS_HumanPlayer::Tick(float DeltaTime)
 {
+
 	Super::Tick(DeltaTime);
 
 }
@@ -52,6 +53,7 @@ void ACHS_HumanPlayer::OnClick()
 	//Structure containing information about one hit of a trace, such as point of impact and surface normal at that point
 	FHitResult Hit = FHitResult(ForceInit);
 
+
 	SetOriginalTileMaterial();
 
 	// GetHitResultUnderCursor function sends a ray from the mouse position and gives the corresponding hit results
@@ -69,10 +71,10 @@ void ACHS_HumanPlayer::OnClick()
 			// Check if the user clicked white piece. User can use only white pieces.
 			if (Color == EPieceColor::WHITE)
 			{
-				WaitFunction = true;
+				
 
 				IsCheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
-
+				IsCheckMate(ETileOwner::WHITE, ETileOwner::BLACK);
 
 
 				/*for (const FVector2D& Vec : IllegalPawnMoveDueToCheck)
@@ -107,8 +109,8 @@ void ACHS_HumanPlayer::OnClick()
 					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Orange, VecAsString);
 				}*/
 
-				if (WaitFunction == false)
-				{
+				
+				
 					ClickCounter = ClickCounter + 1;
 
 					// Get clicked piece xyz location
@@ -147,7 +149,7 @@ void ACHS_HumanPlayer::OnClick()
 						QueenPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
 						ApplyPossibleMovesMaterials(PossibleQueenMoves);
 					}
-				}
+				
 			}
 		}
 	}
