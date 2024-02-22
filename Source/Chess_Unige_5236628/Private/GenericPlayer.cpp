@@ -711,53 +711,8 @@ void AGenericPlayer::SimulatePossibleMoves(ETileOwner FriendColor, ETileOwner En
 				
 					for (FVector2D SelectedMovePosition : PossibleKingMovesForCheckCopy)
 					{
-						
-						Check = false;
-						//Normalize
-						FVector2D NormalizedPosition(SelectedMovePosition.X / 120, SelectedMovePosition.Y / 120);
-
-						// Check if BasePieceMap contains a piece in the move position. If yes it's a kill move.
-						if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
-						{
-							// Remove from basepiecemap the white actor in the move position
-							GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
-						}
-
-						FVector2D SelectedActorLocation2D(SelectedActorLocation);
-						// Set tile located at old piece position as empty and without owner
-						ETileStatus Status0 = GameMode->GField->TileMap[SelectedActorLocation2D]->GetTileStatus();
-						ETileOwner Owner0 = GameMode->GField->TileMap[SelectedActorLocation2D]->GetOwner();
-						GameMode->GField->TileMap[SelectedActorLocation2D]->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
-
-						// Set tile located at new black piece position as occupied and with black owner
-						ETileStatus Status1 = GameMode->GField->TileMap[SelectedMovePosition]->GetTileStatus();
-						ETileOwner Owner1 = GameMode->GField->TileMap[SelectedMovePosition]->GetOwner();
-						GameMode->GField->TileMap[SelectedMovePosition]->SetTileStatus(FriendColor, ETileStatus::OCCUPIED);
-
-						// Normalize
-						FVector2D SelectedActorLocation2DNormalized;
-						SelectedActorLocation2DNormalized.X = SelectedActorLocation2D.X / 120;
-						SelectedActorLocation2DNormalized.Y = SelectedActorLocation2D.Y / 120;
-						
-
-						// Change piece key from his old location to his new location
-						GameMode->GField->BasePieceMap.Remove(SelectedActorLocation2DNormalized);
-						GameMode->GField->BasePieceMap.Add(NormalizedPosition, SelectedActor);
-
-						CalculatePossibleMoves(EnemyColor, FriendColor);
-
-						if (Check == true) {
-							IllegalKingMoveDueToCheck.Add(SelectedMovePosition);
-						
-						}
-						Check = false;
-
-						GameMode->GField->TileMap[SelectedActorLocation2D]->SetTileStatus(Owner0, Status0);
-						GameMode->GField->TileMap[SelectedMovePosition]->SetTileStatus(Owner1, Status1);
-
+						MoveSimulation(SelectedActorLocation, SelectedMovePosition, FriendColor, EnemyColor, SelectedActor);
 						GameMode->GField->BasePieceMap = BackupBasePieceMap;
-						
-
 					}
 				
 			}
@@ -768,47 +723,8 @@ void AGenericPlayer::SimulatePossibleMoves(ETileOwner FriendColor, ETileOwner En
 				Check = false;
 				for (FVector2D SelectedMovePosition : PossiblePawnMovesForCheckCopy)
 				{
-					
-						//Normalize
-						FVector2D NormalizedPosition(SelectedMovePosition.X / 120, SelectedMovePosition.Y / 120);
-
-						// Check if BasePieceMap contains a piece in the move position. If yes it's a kill move.
-						if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
-						{
-							// Remove from basepiecemap the white actor in the move position
-							GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
-						}
-
-						FVector2D SelectedActorLocation2D(SelectedActorLocation);
-						// Set tile located at old piece position as empty and without owner
-						ETileStatus Status0 = GameMode->GField->TileMap[SelectedActorLocation2D]->GetTileStatus();
-						ETileOwner Owner0 = GameMode->GField->TileMap[SelectedActorLocation2D]->GetOwner();
-						GameMode->GField->TileMap[SelectedActorLocation2D]->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
-
-						// Set tile located at new black piece position as occupied and with black owner
-						ETileStatus Status1 = GameMode->GField->TileMap[SelectedMovePosition]->GetTileStatus();
-						ETileOwner Owner1 = GameMode->GField->TileMap[SelectedMovePosition]->GetOwner();
-						GameMode->GField->TileMap[SelectedMovePosition]->SetTileStatus(FriendColor, ETileStatus::OCCUPIED);
-
-						// Normalize
-						FVector2D SelectedActorLocation2DNormalized;
-						SelectedActorLocation2DNormalized.X = SelectedActorLocation2D.X / 120;
-						SelectedActorLocation2DNormalized.Y = SelectedActorLocation2D.Y / 120;
-
-
-						// Change piece key from his old location to his new location
-						GameMode->GField->BasePieceMap.Remove(SelectedActorLocation2DNormalized);
-						GameMode->GField->BasePieceMap.Add(NormalizedPosition, SelectedActor);
-
-						CalculatePossibleMoves(EnemyColor, FriendColor);
-						if (Check == true) {
-							IllegalPawnMoveDueToCheck.Add(SelectedMovePosition);
-						}
-						Check = false;
-						GameMode->GField->TileMap[SelectedActorLocation2D]->SetTileStatus(Owner0, Status0);
-						GameMode->GField->TileMap[SelectedMovePosition]->SetTileStatus(Owner1, Status1);
-						GameMode->GField->BasePieceMap = BackupBasePieceMap;
-						
+					MoveSimulation(SelectedActorLocation, SelectedMovePosition, FriendColor, EnemyColor, SelectedActor);
+					GameMode->GField->BasePieceMap = BackupBasePieceMap;
 				}
 				
 			}
@@ -820,46 +736,8 @@ void AGenericPlayer::SimulatePossibleMoves(ETileOwner FriendColor, ETileOwner En
 			
 					for (FVector2D SelectedMovePosition : PossibleQueenMovesForCheckCopy)
 					{
-						//Normalize
-						FVector2D NormalizedPosition(SelectedMovePosition.X / 120, SelectedMovePosition.Y / 120);
-
-						// Check if BasePieceMap contains a piece in the move position. If yes it's a kill move.
-						if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
-						{
-							// Remove from basepiecemap the white actor in the move position
-							GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
-						}
-
-						FVector2D SelectedActorLocation2D(SelectedActorLocation);
-						// Set tile located at old piece position as empty and without owner
-						ETileStatus Status0 = GameMode->GField->TileMap[SelectedActorLocation2D]->GetTileStatus();
-						ETileOwner Owner0 = GameMode->GField->TileMap[SelectedActorLocation2D]->GetOwner();
-						GameMode->GField->TileMap[SelectedActorLocation2D]->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
-
-						// Set tile located at new black piece position as occupied and with black owner
-						ETileStatus Status1 = GameMode->GField->TileMap[SelectedMovePosition]->GetTileStatus();
-						ETileOwner Owner1 = GameMode->GField->TileMap[SelectedMovePosition]->GetOwner();
-						GameMode->GField->TileMap[SelectedMovePosition]->SetTileStatus(FriendColor, ETileStatus::OCCUPIED);
-
-						// Normalize
-						FVector2D SelectedActorLocation2DNormalized;
-						SelectedActorLocation2DNormalized.X = SelectedActorLocation2D.X / 120;
-						SelectedActorLocation2DNormalized.Y = SelectedActorLocation2D.Y / 120;
-
-
-						// Change piece key from his old location to his new location
-						GameMode->GField->BasePieceMap.Remove(SelectedActorLocation2DNormalized);
-						GameMode->GField->BasePieceMap.Add(NormalizedPosition, SelectedActor);
-
-						CalculatePossibleMoves(EnemyColor, FriendColor);
-						if (Check == true) {
-							IllegalQueenMoveDueToCheck.Add(SelectedMovePosition);
-						}
-						Check = false;
-						GameMode->GField->TileMap[SelectedActorLocation2D]->SetTileStatus(Owner0, Status0);
-						GameMode->GField->TileMap[SelectedMovePosition]->SetTileStatus(Owner1, Status1);
+						MoveSimulation(SelectedActorLocation, SelectedMovePosition, FriendColor, EnemyColor, SelectedActor);
 						GameMode->GField->BasePieceMap = BackupBasePieceMap;
-					
 					}
 				
 			}
@@ -871,48 +749,8 @@ void AGenericPlayer::SimulatePossibleMoves(ETileOwner FriendColor, ETileOwner En
 				
 				for (FVector2D SelectedMovePosition : PossibleBishopMovesForCheckCopy)
 				{
-						//Normalize
-						FVector2D NormalizedPosition(SelectedMovePosition.X / 120, SelectedMovePosition.Y / 120);
-
-						// Check if BasePieceMap contains a piece in the move position. If yes it's a kill move.
-						if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
-						{
-							// Remove from basepiecemap the white actor in the move position
-							GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
-						}
-
-						FVector2D SelectedActorLocation2D(SelectedActorLocation);
-						// Set tile located at old piece position as empty and without owner
-						// Set tile located at old piece position as empty and without owner
-						ETileStatus Status0 = GameMode->GField->TileMap[SelectedActorLocation2D]->GetTileStatus();
-						ETileOwner Owner0 = GameMode->GField->TileMap[SelectedActorLocation2D]->GetOwner();
-						GameMode->GField->TileMap[SelectedActorLocation2D]->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
-
-						// Set tile located at new black piece position as occupied and with black owner
-						ETileStatus Status1 = GameMode->GField->TileMap[SelectedMovePosition]->GetTileStatus();
-						ETileOwner Owner1 = GameMode->GField->TileMap[SelectedMovePosition]->GetOwner();
-						GameMode->GField->TileMap[SelectedMovePosition]->SetTileStatus(FriendColor, ETileStatus::OCCUPIED);
-
-						// Normalize
-						FVector2D SelectedActorLocation2DNormalized;
-						SelectedActorLocation2DNormalized.X = SelectedActorLocation2D.X / 120;
-						SelectedActorLocation2DNormalized.Y = SelectedActorLocation2D.Y / 120;
-
-
-						// Change piece key from his old location to his new location
-						GameMode->GField->BasePieceMap.Remove(SelectedActorLocation2DNormalized);
-						GameMode->GField->BasePieceMap.Add(NormalizedPosition, SelectedActor);
-						CalculatePossibleMoves(EnemyColor, FriendColor);
-						if (Check == true) {
-							IllegalBishopMoveDueToCheck.Add(SelectedMovePosition);
-						}
-						Check = false;
-
-						GameMode->GField->TileMap[SelectedActorLocation2D]->SetTileStatus(Owner0, Status0);
-						GameMode->GField->TileMap[SelectedMovePosition]->SetTileStatus(Owner1, Status1);
-						GameMode->GField->BasePieceMap = BackupBasePieceMap;
-						
-					
+					MoveSimulation(SelectedActorLocation, SelectedMovePosition, FriendColor, EnemyColor, SelectedActor);
+					GameMode->GField->BasePieceMap = BackupBasePieceMap;
 				}
 			}
 			else if (AKnight* KnightActor = Cast<AKnight>(SelectedActor))
@@ -923,49 +761,8 @@ void AGenericPlayer::SimulatePossibleMoves(ETileOwner FriendColor, ETileOwner En
 				
 				for (FVector2D SelectedMovePosition : PossibleKnightMovesForCheckCopy)
 				{
-					
-						//Normalize
-						FVector2D NormalizedPosition(SelectedMovePosition.X / 120, SelectedMovePosition.Y / 120);
-
-						// Check if BasePieceMap contains a piece in the move position. If yes it's a kill move.
-						if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
-						{
-							// Remove from basepiecemap the white actor in the move position
-							GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
-						}
-
-						FVector2D SelectedActorLocation2D(SelectedActorLocation);
-						// Set tile located at old piece position as empty and without owner
-						// Set tile located at old piece position as empty and without owner
-						ETileStatus Status0 = GameMode->GField->TileMap[SelectedActorLocation2D]->GetTileStatus();
-						ETileOwner Owner0 = GameMode->GField->TileMap[SelectedActorLocation2D]->GetOwner();
-						GameMode->GField->TileMap[SelectedActorLocation2D]->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
-
-						// Set tile located at new black piece position as occupied and with black owner
-						ETileStatus Status1 = GameMode->GField->TileMap[SelectedMovePosition]->GetTileStatus();
-						ETileOwner Owner1 = GameMode->GField->TileMap[SelectedMovePosition]->GetOwner();
-						GameMode->GField->TileMap[SelectedMovePosition]->SetTileStatus(FriendColor, ETileStatus::OCCUPIED);
-
-						// Normalize
-						FVector2D SelectedActorLocation2DNormalized;
-						SelectedActorLocation2DNormalized.X = SelectedActorLocation2D.X / 120;
-						SelectedActorLocation2DNormalized.Y = SelectedActorLocation2D.Y / 120;
-
-
-						// Change piece key from his old location to his new location
-						GameMode->GField->BasePieceMap.Remove(SelectedActorLocation2DNormalized);
-						GameMode->GField->BasePieceMap.Add(NormalizedPosition, SelectedActor);
-						CalculatePossibleMoves(EnemyColor, FriendColor);
-						if (Check == true) {
-							IllegalKnightMoveDueToCheck.Add(SelectedMovePosition);
-							
-						}
-						Check = false;
-						GameMode->GField->TileMap[SelectedActorLocation2D]->SetTileStatus(Owner0, Status0);
-						GameMode->GField->TileMap[SelectedMovePosition]->SetTileStatus(Owner1, Status1);
-						GameMode->GField->BasePieceMap = BackupBasePieceMap;
-					
-					
+					MoveSimulation(SelectedActorLocation, SelectedMovePosition, FriendColor, EnemyColor, SelectedActor);
+					GameMode->GField->BasePieceMap = BackupBasePieceMap;
 				}
 			}
 			else if (ARook* RookActor = Cast<ARook>(SelectedActor))
@@ -975,49 +772,9 @@ void AGenericPlayer::SimulatePossibleMoves(ETileOwner FriendColor, ETileOwner En
 				Check = false;
 			
 				for (FVector2D SelectedMovePosition : PossibleRookMovesForCheckCopy)
-				{
-				
-						//Normalize
-						FVector2D NormalizedPosition(SelectedMovePosition.X / 120, SelectedMovePosition.Y / 120);
-
-						// Check if BasePieceMap contains a piece in the move position. If yes it's a kill move.
-						if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
-						{
-							// Remove from basepiecemap the white actor in the move position
-							GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
-
-						}
-
-						FVector2D SelectedActorLocation2D(SelectedActorLocation);
-						// Set tile located at old piece position as empty and without owner
-						// Set tile located at old piece position as empty and without owner
-						ETileStatus Status0 = GameMode->GField->TileMap[SelectedActorLocation2D]->GetTileStatus();
-						ETileOwner Owner0 = GameMode->GField->TileMap[SelectedActorLocation2D]->GetOwner();
-						GameMode->GField->TileMap[SelectedActorLocation2D]->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
-
-						// Set tile located at new black piece position as occupied and with black owner
-						ETileStatus Status1 = GameMode->GField->TileMap[SelectedMovePosition]->GetTileStatus();
-						ETileOwner Owner1 = GameMode->GField->TileMap[SelectedMovePosition]->GetOwner();
-						GameMode->GField->TileMap[SelectedMovePosition]->SetTileStatus(FriendColor, ETileStatus::OCCUPIED);
-
-						// Normalize
-						FVector2D SelectedActorLocation2DNormalized;
-						SelectedActorLocation2DNormalized.X = SelectedActorLocation2D.X / 120;
-						SelectedActorLocation2DNormalized.Y = SelectedActorLocation2D.Y / 120;
-
-
-						// Change piece key from his old location to his new location
-						GameMode->GField->BasePieceMap.Remove(SelectedActorLocation2DNormalized);
-						GameMode->GField->BasePieceMap.Add(NormalizedPosition, SelectedActor);
-						CalculatePossibleMoves(EnemyColor, FriendColor);
-						if (Check == true) {
-							IllegalRookMoveDueToCheck.Add(SelectedMovePosition);
-						}
-						Check = false;
-						GameMode->GField->TileMap[SelectedActorLocation2D]->SetTileStatus(Owner0, Status0);
-						GameMode->GField->TileMap[SelectedMovePosition]->SetTileStatus(Owner1, Status1);
+				{ 
+						MoveSimulation(SelectedActorLocation, SelectedMovePosition, FriendColor, EnemyColor, SelectedActor);				
 						GameMode->GField->BasePieceMap = BackupBasePieceMap;
-					
 					
 				}
 			}
@@ -1118,11 +875,7 @@ void AGenericPlayer::CalculatePossibleMoves(ETileOwner FriendColor, ETileOwner E
 
 }
 
-
 //Per REPLAYOGNi mossa salva la posizione della pedina con getactorlocation. poi una funzione prende in ingresso le coordinate e restituisce la string per il widget in base alla posizione. ad es : DF3
-
-
-
 void AGenericPlayer::IsCheckMate(ETileOwner FriendColor, ETileOwner EnemyColor)
 {
 	CalculatePossibleMoves(FriendColor, EnemyColor);
@@ -1142,5 +895,87 @@ void AGenericPlayer::IsCheckMate(ETileOwner FriendColor, ETileOwner EnemyColor)
 	}
 	
 
+
+}
+
+void AGenericPlayer::MoveSimulation(FVector SelectedActorLocation, FVector2D SelectedMovePosition, ETileOwner FriendColor, ETileOwner EnemyColor, ABasePiece* SelectedActor)
+{
+	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+	//Normalize
+	FVector2D NormalizedPosition(SelectedMovePosition.X / 120, SelectedMovePosition.Y / 120);
+
+	// Check if BasePieceMap contains a piece in the move position. If yes it's a kill move.
+	if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
+	{
+		// Remove from basepiecemap the white actor in the move position
+		GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
+
+	}
+
+	FVector2D SelectedActorLocation2D(SelectedActorLocation);
+	// Set tile located at old piece position as empty and without owner
+	// Set tile located at old piece position as empty and without owner
+	ETileStatus Status0 = GameMode->GField->TileMap[SelectedActorLocation2D]->GetTileStatus();
+	ETileOwner Owner0 = GameMode->GField->TileMap[SelectedActorLocation2D]->GetOwner();
+	GameMode->GField->TileMap[SelectedActorLocation2D]->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
+
+	// Set tile located at new black piece position as occupied and with black owner
+	ETileStatus Status1 = GameMode->GField->TileMap[SelectedMovePosition]->GetTileStatus();
+	ETileOwner Owner1 = GameMode->GField->TileMap[SelectedMovePosition]->GetOwner();
+	GameMode->GField->TileMap[SelectedMovePosition]->SetTileStatus(FriendColor, ETileStatus::OCCUPIED);
+
+	// Normalize
+	FVector2D SelectedActorLocation2DNormalized;
+	SelectedActorLocation2DNormalized.X = SelectedActorLocation2D.X / 120;
+	SelectedActorLocation2DNormalized.Y = SelectedActorLocation2D.Y / 120;
+
+
+	// Change piece key from his old location to his new location
+	GameMode->GField->BasePieceMap.Remove(SelectedActorLocation2DNormalized);
+	GameMode->GField->BasePieceMap.Add(NormalizedPosition, SelectedActor);
+
+	CalculatePossibleMoves(EnemyColor, FriendColor);
+
+	if (SelectedActor->IsA(AKnight::StaticClass()))
+	{
+		if (Check == true) {
+			IllegalKnightMoveDueToCheck.Add(SelectedMovePosition);
+		}
+	}
+	else if (SelectedActor->IsA(AKing::StaticClass()))
+	{
+		if (Check == true) {
+			IllegalKingMoveDueToCheck.Add(SelectedMovePosition);
+		}
+	}
+	else if (SelectedActor->IsA(APawnChess::StaticClass()))
+	{
+		if (Check == true) {
+			IllegalPawnMoveDueToCheck.Add(SelectedMovePosition);
+		}
+	}
+	else if (SelectedActor->IsA(ARook::StaticClass()))
+	{
+		if (Check == true) {
+			IllegalRookMoveDueToCheck.Add(SelectedMovePosition);
+		}
+	}
+	else if (SelectedActor->IsA(ABishop::StaticClass()))
+	{
+		if (Check == true) {
+			IllegalBishopMoveDueToCheck.Add(SelectedMovePosition);
+		}
+	}
+	else if (SelectedActor->IsA(AQueen::StaticClass()))
+	{
+		if (Check == true) {
+			IllegalQueenMoveDueToCheck.Add(SelectedMovePosition);
+		}
+	}
+
+	Check = false;
+	GameMode->GField->TileMap[SelectedActorLocation2D]->SetTileStatus(Owner0, Status0);
+	GameMode->GField->TileMap[SelectedMovePosition]->SetTileStatus(Owner1, Status1);
+	
 
 }

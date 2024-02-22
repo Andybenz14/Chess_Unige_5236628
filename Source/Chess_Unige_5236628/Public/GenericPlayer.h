@@ -110,6 +110,7 @@ public:
 	void IsCheckKing(ETileOwner FriendColor, ETileOwner EnemyColor);
 	void SimulatePossibleMoves(ETileOwner FriendColor, ETileOwner EnemyColor);
 	void CalculatePossibleMoves(ETileOwner FriendColor, ETileOwner EnemyColor);
+	void MoveSimulation(FVector SelectedActorLocation, FVector2D SelectedMovePosition, ETileOwner FriendColor, ETileOwner EnemyColor, ABasePiece* SelectedActor);
 
 	void CalculateBishopMoves(FVector BishopLocation, FVector2D Direction, ETileOwner EnemyColor);
 	void CalculateRookMoves(FVector RookLocation, FVector2D Direction, ETileOwner EnemyColor);
