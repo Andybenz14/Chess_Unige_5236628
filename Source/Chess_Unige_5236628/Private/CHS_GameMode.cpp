@@ -38,7 +38,7 @@ void ACHS_GameMode::BeginPlay()
 	}
 
 	float CameraPosX = ((GField->TileSize * (FieldSize + ((FieldSize - 1) * GField->NormalizedCellPadding) - (FieldSize - 1))) / 2) - (GField->TileSize / 2);
-	FVector CameraPos(CameraPosX, CameraPosX, 1000.0f);
+	FVector CameraPos(CameraPosX, CameraPosX, 1200.0f);
 	HumanPlayer->SetActorLocationAndRotation(CameraPos, FRotationMatrix::MakeFromX(FVector(0, 0, -1)).Rotator());
 
 	// Random Player
