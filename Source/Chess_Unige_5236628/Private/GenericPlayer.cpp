@@ -890,7 +890,8 @@ void AGenericPlayer::IsCheckMate(ETileOwner FriendColor, ETileOwner EnemyColor)
 		)
 	{
 		GameInstance->SetTurnMessage(TEXT("WIN"));
-
+		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+		PlayerController->EnableInput(PlayerController);
 		
 	}
 	
