@@ -372,6 +372,9 @@ void ACHS_RandomPlayer::MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVe
 	NewActorLocation2D.X = NewActorLocation2D.X / 120;
 	NewActorLocation2D.Y = NewActorLocation2D.Y / 120;
 
+
+	RegisterMoveConverter(FVector2D(NewActorLocation2D.X + 1, NewActorLocation2D.Y + 1), RandomSelectedActor);
+
 	// Change piece key from his old location to his new location
 	GameMode->GField->BasePieceMap.Remove(OldBlackActorLocation2D);
 	GameMode->GField->BasePieceMap.Add(NewActorLocation2D, RandomSelectedActor);

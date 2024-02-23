@@ -22,3 +22,20 @@ void UCHS_GameInstance::SetWinMessage(FString Message)
 {
 	WinMessage = Message;
 }
+
+FString UCHS_GameInstance::GetRegisterMove()
+{
+	return RegisterMove;
+}
+
+void UCHS_GameInstance::SetRegisterMove(FString Message)
+{
+	NewText = true;
+	RegisterMove = Message;
+	NewText = false;
+}
+
+bool UCHS_GameInstance::GetNewText()
+{
+	return NewText;
+}

@@ -66,7 +66,7 @@ void AGameField::ResetField()
 	
 	// Genera nuovamente il campo e le pedine
 	GenerateField();
-
+	
 	// Invia l'evento di reset a tutti gli oggetti registrati
 	OnResetEvent.Broadcast();
 

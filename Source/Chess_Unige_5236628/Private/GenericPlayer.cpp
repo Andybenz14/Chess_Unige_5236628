@@ -784,7 +784,6 @@ void AGenericPlayer::SimulatePossibleMoves(ETileOwner FriendColor, ETileOwner En
 }
 
 
-
 void AGenericPlayer::CalculatePossibleMoves(ETileOwner FriendColor, ETileOwner EnemyColor)
 {
 
@@ -794,7 +793,7 @@ void AGenericPlayer::CalculatePossibleMoves(ETileOwner FriendColor, ETileOwner E
 	BishopIsInGame = 0;
 	KnightIsInGame = 0;
 	RookIsInGame = 0;
-	
+
 	Actors.Empty();
 
 	// Iterate on TileArray to find tiles owned by black pieces
@@ -839,7 +838,7 @@ void AGenericPlayer::CalculatePossibleMoves(ETileOwner FriendColor, ETileOwner E
 			{
 				// Calcolate King(PossiblePiece) possible moves
 				KingPossibleMoves(ActorLocation, EnemyColor);
-				
+
 
 			}
 
@@ -862,7 +861,7 @@ void AGenericPlayer::CalculatePossibleMoves(ETileOwner FriendColor, ETileOwner E
 			else if (AKnight* KnightActor = Cast<AKnight>(PossiblePiece))
 			{
 				KnightPossibleMoves(ActorLocation, EnemyColor);
-			    KnightIsInGame = 1;
+				KnightIsInGame = 1;
 
 			}
 			else if (ARook* RookActor = Cast<ARook>(PossiblePiece))
@@ -872,30 +871,6 @@ void AGenericPlayer::CalculatePossibleMoves(ETileOwner FriendColor, ETileOwner E
 			}
 		}
 	}
-
-}
-
-//Per REPLAYOGNi mossa salva la posizione della pedina con getactorlocation. poi una funzione prende in ingresso le coordinate e restituisce la string per il widget in base alla posizione. ad es : DF3
-void AGenericPlayer::IsCheckMate(ETileOwner FriendColor, ETileOwner EnemyColor)
-{
-	CalculatePossibleMoves(FriendColor, EnemyColor);
-	if (
-		((PossibleBishopMoves.Num() == 0 && BishopIsInGame == 1) || (BishopIsInGame == 0)) &&
-		(PossibleKingMoves.Num() == 0 ) && 
-		((PossibleQueenMoves.Num() == 0 && QueenIsInGame == 1) || (QueenIsInGame == 0)) &&
-		((PossibleRookMoves.Num() == 0 && RookIsInGame == 1) || (RookIsInGame == 0)) &&
-		((PossiblePawnMoves.Num() == 0 && PawnIsInGame == 1) || (PawnIsInGame == 0)) &&
-		((PossibleKnightMoves.Num() == 0 && KnightIsInGame == 1) || (KnightIsInGame == 0))
-
-		)
-	{
-		GameInstance->SetTurnMessage(TEXT("WIN"));
-		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
-		PlayerController->EnableInput(PlayerController);
-		
-	}
-	
-
 
 }
 
@@ -941,6 +916,7 @@ void AGenericPlayer::MoveSimulation(FVector SelectedActorLocation, FVector2D Sel
 	{
 		if (Check == true) {
 			IllegalKnightMoveDueToCheck.Add(SelectedMovePosition);
+
 		}
 	}
 	else if (SelectedActor->IsA(AKing::StaticClass()))
@@ -977,6 +953,95 @@ void AGenericPlayer::MoveSimulation(FVector SelectedActorLocation, FVector2D Sel
 	Check = false;
 	GameMode->GField->TileMap[SelectedActorLocation2D]->SetTileStatus(Owner0, Status0);
 	GameMode->GField->TileMap[SelectedMovePosition]->SetTileStatus(Owner1, Status1);
+
+
+}
+
+//Per REPLAYOGNi mossa salva la posizione della pedina con getactorlocation. poi una funzione prende in ingresso le coordinate e restituisce la string per il widget in base alla posizione. ad es : DF3
+void AGenericPlayer::IsCheckMate(ETileOwner FriendColor, ETileOwner EnemyColor)
+{
+	CalculatePossibleMoves(FriendColor, EnemyColor);
+	if (
+		((PossibleBishopMoves.Num() == 0 && BishopIsInGame == 1) || (BishopIsInGame == 0)) &&
+		(PossibleKingMoves.Num() == 0 ) && 
+		((PossibleQueenMoves.Num() == 0 && QueenIsInGame == 1) || (QueenIsInGame == 0)) &&
+		((PossibleRookMoves.Num() == 0 && RookIsInGame == 1) || (RookIsInGame == 0)) &&
+		((PossiblePawnMoves.Num() == 0 && PawnIsInGame == 1) || (PawnIsInGame == 0)) &&
+		((PossibleKnightMoves.Num() == 0 && KnightIsInGame == 1) || (KnightIsInGame == 0))
+		)
+	{
+		GameInstance->SetTurnMessage(TEXT("WIN"));
+		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+		PlayerController->EnableInput(PlayerController);
+		
+	}
 	
 
+
+}
+
+void AGenericPlayer::RegisterMoveConverter(FVector2D MovePosition, ABasePiece* BasePieceActor)
+{
+	FString Message;
+	FString YChar = NumberToCharConverter(MovePosition);
+	int XPosition = FMath::RoundToInt(MovePosition.X);
+	FString XChar = FString::Printf(TEXT("%d"), XPosition);
+
+	if (BasePieceActor->IsA(AKnight::StaticClass()))
+	{
+		Message = TEXT("N") + YChar + XChar;
+	}
+	else if (BasePieceActor->IsA(AKing::StaticClass()))
+	{
+		Message = TEXT("K") + YChar + XChar;
+	}
+	else if (BasePieceActor->IsA(APawnChess::StaticClass()))
+	{
+		Message = YChar + XChar;
+	}
+	else if (BasePieceActor->IsA(ARook::StaticClass()))
+	{
+		Message = TEXT("R") + YChar + XChar;
+	}
+	else if (BasePieceActor->IsA(ABishop::StaticClass()))
+	{
+		Message = TEXT("B") + YChar + XChar;
+	}
+	else if (BasePieceActor->IsA(AQueen::StaticClass()))
+	{
+		Message = TEXT("Q") + YChar + XChar;
+	}
+	GameInstance->SetRegisterMove(Message);
+}
+
+FString AGenericPlayer::NumberToCharConverter(FVector2D MovePosition)
+{
+	FString PieceLetter;
+
+	if (MovePosition.Y == 1) {
+		PieceLetter = "a";
+	}
+	else if (MovePosition.Y == 2) {
+		PieceLetter = "b";
+	}
+	else if (MovePosition.Y == 3) {
+		PieceLetter = "c";
+	}
+	else if (MovePosition.Y == 4) {
+	    PieceLetter = "d";
+	}
+	else if (MovePosition.Y == 5) {
+		PieceLetter = "e";
+	}
+	else if (MovePosition.Y == 6) {
+		PieceLetter = "f";
+	}
+	else if (MovePosition.Y == 7) {
+		PieceLetter = "g";
+	}
+	else if (MovePosition.Y == 8) {
+		PieceLetter = "h";
+	}
+	
+	return PieceLetter;
 }

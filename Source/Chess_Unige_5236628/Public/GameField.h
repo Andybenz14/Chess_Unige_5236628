@@ -11,6 +11,7 @@
 #include "King.h"
 #include "Bishop.h"
 #include "Rook.h"
+#include "CHS_GameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Actor.h"
 #include "GameField.generated.h"
@@ -91,6 +92,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		float TileSize;
 
+	UCHS_GameInstance* GameInstance;
 
 	// Sets default values for this actor's properties
 	AGameField();

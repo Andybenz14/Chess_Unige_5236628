@@ -340,6 +340,10 @@ void ACHS_HumanPlayer::MoveBasePiece(ABasePiece*, FVector OldLocation, FVector N
 	ClickedActorLocation2D.Y = ClickedActorLocation2D.Y / 120;
 	NewActorLocation2D.X = NewActorLocation2D.X / 120;
 	NewActorLocation2D.Y = NewActorLocation2D.Y / 120;
+
+
+	RegisterMoveConverter(FVector2D(NewActorLocation2D.X + 1, NewActorLocation2D.Y + 1), BasePieceActor);
+
 	GameMode->GField->BasePieceMap.Remove(ClickedActorLocation2D);
 	GameMode->GField->BasePieceMap.Add(NewActorLocation2D, BasePieceActor);
 	

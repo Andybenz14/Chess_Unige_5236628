@@ -118,7 +118,9 @@ public:
 
 	void IsCheckMate(ETileOwner FriendColor, ETileOwner EnemyColor);
 
-	
+	void RegisterMoveConverter(FVector2D MovePosition, ABasePiece* BasePieceActor);
+	FString NumberToCharConverter(FVector2D MovePosition);
+
 	int PawnIsInGame = 0;
 	int QueenIsInGame = 0;
 	int BishopIsInGame = 0;
