@@ -117,12 +117,15 @@ public:
 
 	void IsCheckMate(ETileOwner FriendColor, ETileOwner EnemyColor);
 
-	void RegisterMoveConverter(FVector2D MovePosition, ABasePiece* BasePieceActor);
+	void RegisterMoveConverter(FVector2D MovePosition, FVector2D OldPosition, ABasePiece* BasePieceActor, ETileOwner EnemyColor);
 	FString NumberToCharConverter(FVector2D MovePosition);
+
+	void CalculateCheckForRegister(FVector2D MovePosition, ETileOwner EnemyColor, ABasePiece* PossiblePiece);
 
 	UPROPERTY(EditDefaultsOnly)
 	FString Message;
 
+	bool IsKillMove = false;
 	int PawnIsInGame = 0;
 	int QueenIsInGame = 0;
 	int BishopIsInGame = 0;

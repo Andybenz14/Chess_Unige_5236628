@@ -71,7 +71,9 @@ void AGameField::ResetField()
 	BasePieceArray.Empty();
 	TileArray.Empty();
 	
-	//TODO RESET REGISTRO
+	FString reset = TEXT(" ");
+	GameInstance->SetRegisterMove(reset);
+
 	GameInstance->Moves.Empty();
 	// Genera nuovamente il campo e le pedine
 	GenerateField();

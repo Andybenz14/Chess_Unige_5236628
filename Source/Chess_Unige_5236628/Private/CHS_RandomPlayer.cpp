@@ -64,6 +64,8 @@ void ACHS_RandomPlayer::OnTurn()
 				// Empty the array of black movable pieces
 				BlackMovableActors.Empty();
 
+				IsKillMove = false;
+
 				// GameMode pointer
 				ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
 
@@ -210,6 +212,8 @@ void ACHS_RandomPlayer::OnTurn()
 							// Check if BasePieceMap contains a piece in the move position. If yes it's a kill move.
 							if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
 							{
+								IsKillMove = true;
+
 								// Destroy the white actor in the move position
 								GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
 
@@ -237,6 +241,7 @@ void ACHS_RandomPlayer::OnTurn()
 							FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
 							if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
 							{
+								IsKillMove = true;
 								GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
 								GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
 							}
@@ -258,6 +263,7 @@ void ACHS_RandomPlayer::OnTurn()
 							FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
 							if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
 							{
+								IsKillMove = true;
 								GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
 								GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
 							}
@@ -279,6 +285,7 @@ void ACHS_RandomPlayer::OnTurn()
 							FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
 							if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
 							{
+								IsKillMove = true;
 								GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
 								GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
 							}
@@ -300,6 +307,7 @@ void ACHS_RandomPlayer::OnTurn()
 							FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
 							if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
 							{
+								IsKillMove = true;
 								GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
 								GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
 							}
@@ -321,6 +329,7 @@ void ACHS_RandomPlayer::OnTurn()
 							FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
 							if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
 							{
+								IsKillMove = true;
 								GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
 								GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
 							}
@@ -376,7 +385,7 @@ void ACHS_RandomPlayer::MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVe
 	{
 		RegisterMovesCounter = 0;
 	}
-	RegisterMoveConverter(FVector2D(NewActorLocation2D.X + 1, NewActorLocation2D.Y + 1), RandomSelectedActor);
+	RegisterMoveConverter(FVector2D(NewActorLocation2D.X + 1, NewActorLocation2D.Y + 1), FVector2D(OldBlackActorLocation2D.X + 1, OldBlackActorLocation2D.Y + 1), RandomSelectedActor, ETileOwner::WHITE);
 
 	// Change piece key from his old location to his new location
 	GameMode->GField->BasePieceMap.Remove(OldBlackActorLocation2D);

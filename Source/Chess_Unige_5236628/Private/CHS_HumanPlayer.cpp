@@ -52,7 +52,8 @@ void ACHS_HumanPlayer::OnClick()
 
 	//Structure containing information about one hit of a trace, such as point of impact and surface normal at that point
 	FHitResult Hit = FHitResult(ForceInit);
-
+	
+	IsKillMove = false;
 
 	SetOriginalTileMaterial();
 
@@ -232,6 +233,7 @@ void ACHS_HumanPlayer::OnClick()
 
 				FVector BlackActorLocation = ClickedPiece->GetActorLocation();
 				FVector2D Position (BlackActorLocation);
+				IsKillMove = true;
 
 				if (BasePieceActor->IsA(APawnChess::StaticClass())) 
 				{
@@ -345,7 +347,7 @@ void ACHS_HumanPlayer::MoveBasePiece(ABasePiece*, FVector OldLocation, FVector N
 	{
 		RegisterMovesCounter = 0;
 	}
-	RegisterMoveConverter(FVector2D(NewActorLocation2D.X + 1, NewActorLocation2D.Y + 1), BasePieceActor);
+	RegisterMoveConverter(FVector2D(NewActorLocation2D.X + 1, NewActorLocation2D.Y + 1), FVector2D(ClickedActorLocation2D.X + 1, ClickedActorLocation2D.Y + 1), BasePieceActor, ETileOwner::BLACK);
 
 	GameMode->GField->BasePieceMap.Remove(ClickedActorLocation2D);
 	GameMode->GField->BasePieceMap.Add(NewActorLocation2D, BasePieceActor);

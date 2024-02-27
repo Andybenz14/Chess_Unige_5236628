@@ -980,7 +980,7 @@ void AGenericPlayer::IsCheckMate(ETileOwner FriendColor, ETileOwner EnemyColor)
 
 }
 
-void AGenericPlayer::RegisterMoveConverter(FVector2D MovePosition, ABasePiece* BasePieceActor)
+void AGenericPlayer::RegisterMoveConverter(FVector2D MovePosition, FVector2D OldPosition, ABasePiece* BasePieceActor, ETileOwner EnemyColor)
 {
 	RegisterMovesCounter++;
 
@@ -988,32 +988,79 @@ void AGenericPlayer::RegisterMoveConverter(FVector2D MovePosition, ABasePiece* B
 	int XPosition = FMath::RoundToInt(MovePosition.X);
 	FString XChar = FString::Printf(TEXT("%d"), XPosition);
 	FString CounterString = FString::Printf(TEXT("%d"), RegisterMovesCounter);
-
+	CalculateCheckForRegister(MovePosition, EnemyColor, BasePieceActor);
+	
 	if (BasePieceActor->IsA(AKnight::StaticClass()))
 	{
-		Message = CounterString + TEXT(": N") + YChar + XChar;
+		if (IsKillMove == false) 
+		{
+			Message = CounterString + TEXT(": N") + YChar + XChar;
+		}
+		else
+		{
+			Message = CounterString + TEXT(": Nx") + YChar + XChar;
+		}
 	}
 	else if (BasePieceActor->IsA(AKing::StaticClass()))
 	{
-		Message = CounterString + TEXT(": K") + YChar + XChar;
+		if (IsKillMove == false)
+		{
+			Message = CounterString + TEXT(": K") + YChar + XChar;
+		}
+		else
+		{
+			Message = CounterString + TEXT(": Kx") + YChar + XChar;
+		}
 	}
 	else if (BasePieceActor->IsA(APawnChess::StaticClass()))
 	{
-		Message = CounterString +TEXT(": ") + YChar + XChar;
+		if (IsKillMove == false)
+		{
+			Message = CounterString + TEXT(": ") + YChar + XChar;
+		}
+		else
+		{
+			Message = CounterString + TEXT(": ") + NumberToCharConverter(OldPosition) + TEXT("x") + YChar + XChar;
+		}
 	} 
 	else if (BasePieceActor->IsA(ARook::StaticClass()))
 	{
-		Message = CounterString + TEXT(": R") + YChar + XChar;
+		if (IsKillMove == false)
+		{
+			Message = CounterString + TEXT(": R") + YChar + XChar;
+		}
+		else
+		{
+			Message = CounterString + TEXT(": Rx") + YChar + XChar;
+		}
 	}
 	else if (BasePieceActor->IsA(ABishop::StaticClass()))
 	{
-		Message = CounterString + TEXT(": B") + YChar + XChar;
+		if (IsKillMove == false)
+		{
+			Message = CounterString + TEXT(": B") + YChar + XChar;
+		}
+		else
+		{
+			Message = CounterString + TEXT(": Bx") + YChar + XChar;
+		}
 	}
 	else if (BasePieceActor->IsA(AQueen::StaticClass()))
 	{
-		Message = CounterString + TEXT(": Q") + YChar + XChar;
+		if (IsKillMove == false)
+		{
+			Message = CounterString + TEXT(": Q") + YChar + XChar;	
+		}
+		else
+		{
+			Message = CounterString + TEXT(": Qx") + YChar + XChar;
+		}
 	}
 
+	if (Check == true) {
+
+		Message = Message + TEXT("+");
+	}
 	
 	GameInstance->SetRegisterMove(Message);
 
@@ -1050,4 +1097,47 @@ FString AGenericPlayer::NumberToCharConverter(FVector2D MovePosition)
 	
 	return PieceLetter;
 }
+
+void AGenericPlayer::CalculateCheckForRegister(FVector2D MovePosition, ETileOwner EnemyColor, ABasePiece* PossiblePiece)
+{
+	FVector ActorLocation((MovePosition.X - 1) * 120, (MovePosition.Y - 1) * 120, 10);
+	// Try to cast PossiblePice to AKing and check if cast is successful 
+	if (AKing* KingActor = Cast<AKing>(PossiblePiece))
+	{
+		// Calcolate King(PossiblePiece) possible moves
+		KingPossibleMoves(ActorLocation, EnemyColor);
+
+	}
+
+	else if (APawnChess* PawnActor = Cast<APawnChess>(PossiblePiece))
+	{
+		PawnPossibleMoves(ActorLocation, EnemyColor);
+		
+	}
+
+	else if (AQueen* QueenActor = Cast<AQueen>(PossiblePiece))
+	{
+		QueenPossibleMoves(ActorLocation, EnemyColor);
+		
+	}
+	else if (ABishop* BishopActor = Cast<ABishop>(PossiblePiece))
+	{
+		BishopPossibleMoves(ActorLocation, EnemyColor);
+	
+	}
+	else if (AKnight* KnightActor = Cast<AKnight>(PossiblePiece))
+	{
+		KnightPossibleMoves(ActorLocation, EnemyColor);
+	
+
+	}
+	else if (ARook* RookActor = Cast<ARook>(PossiblePiece))
+	{
+		RookPossibleMoves(ActorLocation, EnemyColor);
+	
+	}
+
+}
+
+
 

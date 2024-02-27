@@ -32,7 +32,6 @@ protected:
 	// Keeps track of turn
 	bool IsMyTurn = true;
 
-
 	// Click counter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int32 ClickCounter = 0;
