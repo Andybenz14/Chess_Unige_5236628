@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameField.h"
-#include <Mutex>
 #include "BasePiece.h"
 #include "CHS_GameMode.h"
 #include "CHS_GameInstance.h"
@@ -121,10 +120,14 @@ public:
 	void RegisterMoveConverter(FVector2D MovePosition, ABasePiece* BasePieceActor);
 	FString NumberToCharConverter(FVector2D MovePosition);
 
+	UPROPERTY(EditDefaultsOnly)
+	FString Message;
+
 	int PawnIsInGame = 0;
 	int QueenIsInGame = 0;
 	int BishopIsInGame = 0;
 	int KnightIsInGame = 0;
 	int RookIsInGame = 0;
-
+	int RegisterMovesCounter = 0;
+	
 };

@@ -982,36 +982,41 @@ void AGenericPlayer::IsCheckMate(ETileOwner FriendColor, ETileOwner EnemyColor)
 
 void AGenericPlayer::RegisterMoveConverter(FVector2D MovePosition, ABasePiece* BasePieceActor)
 {
-	FString Message;
+	RegisterMovesCounter++;
+
 	FString YChar = NumberToCharConverter(MovePosition);
 	int XPosition = FMath::RoundToInt(MovePosition.X);
 	FString XChar = FString::Printf(TEXT("%d"), XPosition);
+	FString CounterString = FString::Printf(TEXT("%d"), RegisterMovesCounter);
 
 	if (BasePieceActor->IsA(AKnight::StaticClass()))
 	{
-		Message = TEXT("N") + YChar + XChar;
+		Message = CounterString + TEXT(": N") + YChar + XChar;
 	}
 	else if (BasePieceActor->IsA(AKing::StaticClass()))
 	{
-		Message = TEXT("K") + YChar + XChar;
+		Message = CounterString + TEXT(": K") + YChar + XChar;
 	}
 	else if (BasePieceActor->IsA(APawnChess::StaticClass()))
 	{
-		Message = YChar + XChar;
-	}
+		Message = CounterString +TEXT(": ") + YChar + XChar;
+	} 
 	else if (BasePieceActor->IsA(ARook::StaticClass()))
 	{
-		Message = TEXT("R") + YChar + XChar;
+		Message = CounterString + TEXT(": R") + YChar + XChar;
 	}
 	else if (BasePieceActor->IsA(ABishop::StaticClass()))
 	{
-		Message = TEXT("B") + YChar + XChar;
+		Message = CounterString + TEXT(": B") + YChar + XChar;
 	}
 	else if (BasePieceActor->IsA(AQueen::StaticClass()))
 	{
-		Message = TEXT("Q") + YChar + XChar;
+		Message = CounterString + TEXT(": Q") + YChar + XChar;
 	}
+
+	
 	GameInstance->SetRegisterMove(Message);
+
 }
 
 FString AGenericPlayer::NumberToCharConverter(FVector2D MovePosition)
@@ -1045,3 +1050,4 @@ FString AGenericPlayer::NumberToCharConverter(FVector2D MovePosition)
 	
 	return PieceLetter;
 }
+

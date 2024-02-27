@@ -21,6 +21,8 @@ AGameField::AGameField()
 	// tile padding dimension
 	CellPadding = 20;
 
+	GameInstance = Cast<UCHS_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+
 
 }
 
@@ -43,6 +45,11 @@ void AGameField::BeginPlay()
 
 void AGameField::ResetField()
 {
+	//TODO NIENTE TIMER 
+	FTimerHandle TimerHandle;
+
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&]()
+		{
 	ACHS_GameMode* GameMode = Cast<ACHS_GameMode>(GetWorld()->GetAuthGameMode());
 	GameMode->IsMyTurn = 1;
 
@@ -64,12 +71,15 @@ void AGameField::ResetField()
 	BasePieceArray.Empty();
 	TileArray.Empty();
 	
+	//TODO RESET REGISTRO
+	GameInstance->Moves.Empty();
 	// Genera nuovamente il campo e le pedine
 	GenerateField();
 	
 	// Invia l'evento di reset a tutti gli oggetti registrati
 	OnResetEvent.Broadcast();
 
+		}, 1, false);
 	
 }
 

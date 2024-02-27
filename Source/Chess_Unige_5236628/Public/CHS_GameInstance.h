@@ -57,4 +57,11 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		bool NewText = false;
+
+	UFUNCTION(BlueprintCallable)
+		TArray<FString> GetMovesArray() const;
+
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FString> Moves;
+
 };

@@ -33,9 +33,16 @@ void UCHS_GameInstance::SetRegisterMove(FString Message)
 	NewText = true;
 	RegisterMove = Message;
 	NewText = false;
+	Moves.Add(Message);
 }
 
 bool UCHS_GameInstance::GetNewText()
 {
 	return NewText;
+}
+
+TArray<FString> UCHS_GameInstance::GetMovesArray() const
+{
+
+	return Moves;
 }
