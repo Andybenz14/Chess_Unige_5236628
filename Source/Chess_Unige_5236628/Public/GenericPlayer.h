@@ -33,6 +33,7 @@ public:
 
 	UCHS_GameInstance* GameInstance;
 
+
 	// Possible moves array
 
 	UPROPERTY(EditDefaultsOnly)
@@ -53,6 +54,8 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		TArray<FVector2D> PossibleBishopMoves;
 
+
+
 	UPROPERTY(EditDefaultsOnly)
 		TArray<FVector2D> PossibleBishopMovesForCheck;
 
@@ -62,7 +65,6 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		TArray<FVector2D> PossibleQueenMovesForCheck;
 
-
 	UPROPERTY(EditDefaultsOnly)
 		TArray<FVector2D> PossiblePawnMovesForCheck;
 
@@ -71,6 +73,8 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 		TArray<FVector2D> PossibleKnightMovesForCheck;
+
+
 
 	UPROPERTY(EditDefaultsOnly)
 		TArray<FVector2D> IllegalKingMoveDueToCheck;
@@ -90,13 +94,10 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		TArray<FVector2D> IllegalRookMoveDueToCheck;
 	
+
 	UPROPERTY(EditDefaultsOnly)
 		TArray<ABasePiece*> Actors;
 
-	
-	
-	bool Check = false;
-	
 
 	// Possible moves functions
 	void KnightPossibleMoves(FVector KnightLocation, ETileOwner EnemyColor);
@@ -105,26 +106,26 @@ public:
 	void RookPossibleMoves(FVector RookLocation, ETileOwner EnemyColor);
 	void BishopPossibleMoves(FVector BishopLocation, ETileOwner EnemyColor);
 	void QueenPossibleMoves(FVector QueenLocation, ETileOwner EnemyColor);
+	void CalculateBishopMoves(FVector BishopLocation, FVector2D Direction, ETileOwner EnemyColor);
+	void CalculateRookMoves(FVector RookLocation, FVector2D Direction, ETileOwner EnemyColor);
+	void CalculateQueenMoves(FVector QueenLocation, FVector2D Direction, ETileOwner EnemyColor);
+
 
 	void IsCheckKing(ETileOwner FriendColor, ETileOwner EnemyColor);
 	void SimulatePossibleMoves(ETileOwner FriendColor, ETileOwner EnemyColor);
 	void CalculatePossibleMoves(ETileOwner FriendColor, ETileOwner EnemyColor);
 	void MoveSimulation(FVector SelectedActorLocation, FVector2D SelectedMovePosition, ETileOwner FriendColor, ETileOwner EnemyColor, ABasePiece* SelectedActor);
-
-	void CalculateBishopMoves(FVector BishopLocation, FVector2D Direction, ETileOwner EnemyColor);
-	void CalculateRookMoves(FVector RookLocation, FVector2D Direction, ETileOwner EnemyColor);
-	void CalculateQueenMoves(FVector QueenLocation, FVector2D Direction, ETileOwner EnemyColor);
-
 	void IsCheckMate(ETileOwner FriendColor, ETileOwner EnemyColor);
+
 
 	void RegisterMoveConverter(FVector2D MovePosition, FVector2D OldPosition, ABasePiece* BasePieceActor, ETileOwner EnemyColor);
 	FString NumberToCharConverter(FVector2D MovePosition);
-
 	void CalculateCheckForRegister(FVector2D MovePosition, ETileOwner EnemyColor, ABasePiece* PossiblePiece);
 
 	UPROPERTY(EditDefaultsOnly)
 	FString Message;
 
+	bool Check = false;
 	bool IsKillMove = false;
 	int PawnIsInGame = 0;
 	int QueenIsInGame = 0;

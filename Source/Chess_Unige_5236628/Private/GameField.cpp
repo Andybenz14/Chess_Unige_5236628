@@ -73,7 +73,7 @@ void AGameField::ResetField()
 	
 	FString reset = TEXT(" ");
 	GameInstance->SetRegisterMove(reset);
-
+	GameInstance->SetTurnMessage(reset);
 	GameInstance->Moves.Empty();
 	// Genera nuovamente il campo e le pedine
 	GenerateField();

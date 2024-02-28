@@ -1059,9 +1059,18 @@ void AGenericPlayer::RegisterMoveConverter(FVector2D MovePosition, FVector2D Old
 
 	if (Check == true) {
 
-		Message = Message + TEXT("+");
+		Message = Message + TEXT("+");		
 	}
-	
+
+	if (EnemyColor == ETileOwner::WHITE)
+	{
+		Message = TEXT("(Black) ") + Message;
+	}
+	else
+	{
+		Message = TEXT("(White) ") + Message;
+	}
+
 	GameInstance->SetRegisterMove(Message);
 
 }

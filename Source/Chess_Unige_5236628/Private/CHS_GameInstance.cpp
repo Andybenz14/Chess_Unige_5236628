@@ -2,6 +2,9 @@
 
 
 #include "CHS_GameInstance.h"
+#include <iostream>
+#include <string>
+#include <sstream>
 
 FString UCHS_GameInstance::GetTurnMessage()
 {
@@ -45,4 +48,23 @@ TArray<FString> UCHS_GameInstance::GetMovesArray() const
 {
 
 	return Moves;
+}
+
+void UCHS_GameInstance::Replay(FString SelectedMove)
+{
+	std::string InputMove = TCHAR_TO_UTF8(*SelectedMove);
+	std::istringstream Token(InputMove);
+	std::string Color;
+	int Number;
+
+	Token >> Color >> Number;
+
+	if (Color == "(Black)") 
+	{
+		Number = Number + 1;
+	}
+
+	FString NumberString = FString::Printf(TEXT("Il valore di Number è: %d"), Number);
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, NumberString);
+
 }

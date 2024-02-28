@@ -64,4 +64,7 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		TArray<FString> Moves;
 
+	UFUNCTION(BlueprintCallable)
+		void Replay(FString SelectedMove);
+
 };
