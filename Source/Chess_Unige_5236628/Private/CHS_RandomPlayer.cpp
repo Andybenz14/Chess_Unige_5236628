@@ -363,6 +363,9 @@ void ACHS_RandomPlayer::MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVe
 	// Get new piece location after the move
 	FVector NewActorLocation = RandomSelectedActor->GetActorLocation();
 
+	GameInstance->MovesForReplay.Add(NewActorLocation);
+	GameInstance->PiecesForReplay.Add(RandomSelectedActor);
+
 	// New 2d location
 	FVector2D NewActorLocation2D(NewActorLocation);
 

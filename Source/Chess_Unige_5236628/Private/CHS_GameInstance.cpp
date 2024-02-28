@@ -2,8 +2,12 @@
 
 
 #include "CHS_GameInstance.h"
+#include "BasePiece.h"
+#include "CHS_HumanPlayer.h"
 #include <iostream>
+#include "EngineUtils.h"
 #include <string>
+#include "Kismet/GameplayStatics.h"
 #include <sstream>
 
 FString UCHS_GameInstance::GetTurnMessage()
@@ -50,21 +54,64 @@ TArray<FString> UCHS_GameInstance::GetMovesArray() const
 	return Moves;
 }
 
-void UCHS_GameInstance::Replay(FString SelectedMove)
+void UCHS_GameInstance::MoveInterpreterForReplay(FString SelectedMove)
 {
-	std::string InputMove = TCHAR_TO_UTF8(*SelectedMove);
-	std::istringstream Token(InputMove);
-	std::string Color;
-	int Number;
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
 
-	Token >> Color >> Number;
+	PlayerController->DisableInput(PlayerController);
 
-	if (Color == "(Black)") 
+	ACHS_HumanPlayer* HumanPlayer = Cast<ACHS_HumanPlayer>(*TActorIterator<ACHS_HumanPlayer>(GetWorld()));
+	HumanPlayer->SetOriginalTileMaterial();
+
+		std::string InputMove = TCHAR_TO_UTF8(*SelectedMove);
+		std::istringstream Token(InputMove);
+		std::string Color;
+
+		Token >> Color >> Number;
+
+		if (Color == "(Black)")
+		{
+			Number = 2 * Number;
+		}
+		else if (Color == "(White)")
+		{
+			Number = 2 * Number - 1;
+		}
+
+		
+
+		for (const auto& Entry : PiecesStartingPosition)
+		{
+			FVector2D Position = Entry.Key;
+			ABasePiece* Piece = Entry.Value;	
+			Piece->SetActorLocation(FVector(Position.X * 120, Position.Y * 120, 10));
+				
+		}
+
+
+		for (int i = 0; i <= Number - 1; i++)
+		{
+			FVector ActorLocation = MovesForReplay[i];
+			ABasePiece* Actor = PiecesForReplay[i];
+			Actor->SetActorLocation(ActorLocation);
+
+		}
+			
+	
+}
+
+void UCHS_GameInstance::ReturnToGameAfterReplay()
+{
+	for (int i = Number ; i <= MovesForReplay.Num() - 1; i++)
 	{
-		Number = Number + 1;
+		FVector ActorLocation = MovesForReplay[i];
+	    ABasePiece* Actor = PiecesForReplay[i];
+		Actor->SetActorLocation(ActorLocation);
+
+
 	}
 
-	FString NumberString = FString::Printf(TEXT("Il valore di Number è: %d"), Number);
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, NumberString);
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
 
+	PlayerController->EnableInput(PlayerController);
 }

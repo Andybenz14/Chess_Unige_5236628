@@ -323,6 +323,10 @@ void ACHS_HumanPlayer::MoveBasePiece(ABasePiece*, FVector OldLocation, FVector N
 	BasePieceActor->SetActorLocation(NewLocation);
 	FVector2D ClickedActorLocation2D(OldLocation);
 	FVector NewActorLocation = BasePieceActor->GetActorLocation();
+
+	GameInstance->MovesForReplay.Add(NewActorLocation);
+	GameInstance->PiecesForReplay.Add(BasePieceActor);
+
 	FVector2D NewActorLocation2D(NewActorLocation);
 
 	// Check if actor moved 

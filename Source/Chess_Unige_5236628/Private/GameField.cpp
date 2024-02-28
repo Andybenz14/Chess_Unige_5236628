@@ -75,11 +75,17 @@ void AGameField::ResetField()
 	GameInstance->SetRegisterMove(reset);
 	GameInstance->SetTurnMessage(reset);
 	GameInstance->Moves.Empty();
+	GameInstance->MovesForReplay.Empty();
+	GameInstance->PiecesForReplay.Empty();
 	// Genera nuovamente il campo e le pedine
 	GenerateField();
 	
 	// Invia l'evento di reset a tutti gli oggetti registrati
 	OnResetEvent.Broadcast();
+
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+
+	PlayerController->EnableInput(PlayerController);
 
 		}, 1, false);
 	
@@ -223,6 +229,7 @@ void AGameField::GenerateField()
 		
 	}
 	
+	GameInstance->PiecesStartingPosition = BasePieceMap;
 }
 
 

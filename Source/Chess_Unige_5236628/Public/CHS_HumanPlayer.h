@@ -69,6 +69,7 @@ public:
 	// Move actor into new location
 	void MoveBasePiece(ABasePiece*, FVector OldLocation, FVector NewLocation);
 
+	UFUNCTION(BlueprintCallable)
 	// Set spawn tile materials
 	void SetOriginalTileMaterial();
 

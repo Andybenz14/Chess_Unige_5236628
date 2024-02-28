@@ -65,6 +65,19 @@ public:
 		TArray<FString> Moves;
 
 	UFUNCTION(BlueprintCallable)
-		void Replay(FString SelectedMove);
+		void MoveInterpreterForReplay(FString SelectedMove);
 
+	UFUNCTION(BlueprintCallable)
+		void ReturnToGameAfterReplay();
+
+	UPROPERTY(Transient)
+		TArray<FVector> MovesForReplay;
+
+	UPROPERTY(Transient)
+		TArray<ABasePiece*> PiecesForReplay;
+
+	UPROPERTY(Transient)
+		TMap<FVector2D, ABasePiece*> PiecesStartingPosition;
+
+	int Number = 1;
 };
