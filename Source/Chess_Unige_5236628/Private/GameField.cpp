@@ -45,6 +45,10 @@ void AGameField::BeginPlay()
 
 void AGameField::ResetField()
 {
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+
+	PlayerController->DisableInput(PlayerController);
+
 	//TODO NIENTE TIMER 
 	FTimerHandle TimerHandle;
 
