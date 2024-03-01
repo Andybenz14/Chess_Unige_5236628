@@ -133,5 +133,7 @@ public:
 	int KnightIsInGame = 0;
 	int RookIsInGame = 0;
 	int RegisterMovesCounter = 0;
+
+	
 	
 };

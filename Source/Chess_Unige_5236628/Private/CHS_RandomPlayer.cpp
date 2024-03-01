@@ -214,11 +214,16 @@ void ACHS_RandomPlayer::OnTurn()
 							{
 								IsKillMove = true;
 
+								ABasePiece* KilledActor = GameMode->GField->BasePieceMap[NormalizedPosition];
 								// Destroy the white actor in the move position
-								GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
+								KilledActor->SetActorHiddenInGame(true);
+								KilledActor->SetActorEnableCollision(false);
 
 								// Remove from basepiecemap the white actor in the move position
 								GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
+								GameInstance->DestroiedPiecesPositionsForReplay.Add(NormalizedPosition);
+							
+								GameInstance->DestroiedPiecesForReplay.Add(KilledActor);
 							}
 
 							// Move black piece into his legal move position 
@@ -242,8 +247,17 @@ void ACHS_RandomPlayer::OnTurn()
 							if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
 							{
 								IsKillMove = true;
-								GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
+
+								ABasePiece* KilledActor = GameMode->GField->BasePieceMap[NormalizedPosition];
+								// Destroy the white actor in the move position
+								KilledActor->SetActorHiddenInGame(true);
+								KilledActor->SetActorEnableCollision(false);
+
+								// Remove from basepiecemap the white actor in the move position
 								GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
+								GameInstance->DestroiedPiecesPositionsForReplay.Add(NormalizedPosition);
+
+								GameInstance->DestroiedPiecesForReplay.Add(KilledActor);
 							}
 							MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 						}
@@ -264,8 +278,17 @@ void ACHS_RandomPlayer::OnTurn()
 							if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
 							{
 								IsKillMove = true;
-								GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
+
+								ABasePiece* KilledActor = GameMode->GField->BasePieceMap[NormalizedPosition];
+								// Destroy the white actor in the move position
+								KilledActor->SetActorHiddenInGame(true);
+								KilledActor->SetActorEnableCollision(false);
+
+								// Remove from basepiecemap the white actor in the move position
 								GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
+								GameInstance->DestroiedPiecesPositionsForReplay.Add(NormalizedPosition);
+
+								GameInstance->DestroiedPiecesForReplay.Add(KilledActor);
 							}
 							MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 						}
@@ -286,8 +309,16 @@ void ACHS_RandomPlayer::OnTurn()
 							if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
 							{
 								IsKillMove = true;
-								GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
+
+								ABasePiece* KilledActor = GameMode->GField->BasePieceMap[NormalizedPosition];
+								// Destroy the white actor in the move position
+								KilledActor->SetActorHiddenInGame(true);
+								KilledActor->SetActorEnableCollision(false);
+
+								// Remove from basepiecemap the white actor in the move position
 								GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
+								GameInstance->DestroiedPiecesPositionsForReplay.Add(NormalizedPosition);
+								GameInstance->DestroiedPiecesForReplay.Add(KilledActor);
 							}
 							MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 						}
@@ -308,8 +339,17 @@ void ACHS_RandomPlayer::OnTurn()
 							if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
 							{
 								IsKillMove = true;
-								GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
+
+								ABasePiece* KilledActor = GameMode->GField->BasePieceMap[NormalizedPosition];
+								// Destroy the white actor in the move position
+								KilledActor->SetActorHiddenInGame(true);
+								KilledActor->SetActorEnableCollision(false);
+
+								// Remove from basepiecemap the white actor in the move position
 								GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
+
+								GameInstance->DestroiedPiecesForReplay.Add(KilledActor);
+								GameInstance->DestroiedPiecesPositionsForReplay.Add(NormalizedPosition);
 							}
 							MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 						}
@@ -330,8 +370,17 @@ void ACHS_RandomPlayer::OnTurn()
 							if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
 							{
 								IsKillMove = true;
-								GameMode->GField->BasePieceMap[NormalizedPosition]->Destroy();
+
+								ABasePiece* KilledActor = GameMode->GField->BasePieceMap[NormalizedPosition];
+								// Destroy the white actor in the move position
+								KilledActor->SetActorHiddenInGame(true);
+								KilledActor->SetActorEnableCollision(false);
+
+								// Remove from basepiecemap the white actor in the move position
 								GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
+
+								GameInstance->DestroiedPiecesForReplay.Add(KilledActor);
+								GameInstance->DestroiedPiecesPositionsForReplay.Add(NormalizedPosition);
 							}
 							MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 						}
@@ -340,7 +389,7 @@ void ACHS_RandomPlayer::OnTurn()
 				
 				
 				// 1 second timer
-			}, 1, false);
+			}, 0.5, false);
 
 	
 	

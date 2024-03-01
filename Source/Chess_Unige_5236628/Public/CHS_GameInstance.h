@@ -75,9 +75,22 @@ public:
 
 	UPROPERTY(Transient)
 		TArray<ABasePiece*> PiecesForReplay;
+	
+	UPROPERTY(Transient)
+		TArray<ABasePiece*> DestroiedPiecesForReplay;
+	
+	UPROPERTY(Transient)
+		TArray<FVector2D> DestroiedPiecesPositionsForReplay;
+
+	UPROPERTY(Transient)
+		TArray<ABasePiece*> PromotedPiecesForReplay;
+
+	UPROPERTY(Transient)
+		TArray<FVector2D> PromotedPiecesPositionsForReplay;
 
 	UPROPERTY(Transient)
 		TMap<FVector2D, ABasePiece*> PiecesStartingPosition;
 
 	int Number = 1;
+
 };

@@ -66,24 +66,34 @@ void UCHS_GameInstance::MoveInterpreterForReplay(FString SelectedMove)
 		std::string InputMove = TCHAR_TO_UTF8(*SelectedMove);
 		std::istringstream Token(InputMove);
 		std::string Color;
-
+	
 		Token >> Color >> Number;
 
 		if (Color == "(Black)")
 		{
 			Number = 2 * Number;
+
 		}
 		else if (Color == "(White)")
 		{
 			Number = 2 * Number - 1;
+
 		}
+
+		
 
 		
 
 		for (const auto& Entry : PiecesStartingPosition)
 		{
+			
 			FVector2D Position = Entry.Key;
 			ABasePiece* Piece = Entry.Value;	
+			if (Piece->IsHidden() == true)
+			{
+				Piece->SetActorHiddenInGame(false);
+
+			}
 			Piece->SetActorLocation(FVector(Position.X * 120, Position.Y * 120, 10));
 				
 		}
@@ -92,21 +102,92 @@ void UCHS_GameInstance::MoveInterpreterForReplay(FString SelectedMove)
 		for (int i = 0; i <= Number - 1; i++)
 		{
 			FVector ActorLocation = MovesForReplay[i];
+			FVector2D Normalized;
+			Normalized.X = ActorLocation.X / 120;
+			Normalized.Y = ActorLocation.Y / 120;
 			ABasePiece* Actor = PiecesForReplay[i];
+
 			Actor->SetActorLocation(ActorLocation);
 
-		}
+			//INDEX NON CHIARI ci sono più mosse
+			int index = DestroiedPiecesPositionsForReplay.Find(Normalized);
+			int index1 = PromotedPiecesPositionsForReplay.Find(Normalized);
+
+			if (Moves[i].Contains("x"))
+			{
+				FString Message = FString::Printf(TEXT("Moves[%d]: %s"), i, *Moves[i]);
+
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, Message);
+
+
+				if (DestroiedPiecesPositionsForReplay.Contains(Normalized))
+				{
+
+					DestroiedPiecesForReplay[index]->SetActorHiddenInGame(true);
+
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Il tuo messaggio in-game qui"));
+				}
+				else
+				{
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("ELSE MESSAGE"));
+				}
+			}
+
+			if (PromotedPiecesPositionsForReplay.Contains(Normalized))
+			{
+
+				//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Il tuo messaggio in-game qui"));
+
+				PromotedPiecesForReplay[index1]->SetActorHiddenInGame(true);
+				
+			}
+
 			
-	
+		}
+
+		
 }
+
 
 void UCHS_GameInstance::ReturnToGameAfterReplay()
 {
 	for (int i = Number ; i <= MovesForReplay.Num() - 1; i++)
 	{
 		FVector ActorLocation = MovesForReplay[i];
-	    ABasePiece* Actor = PiecesForReplay[i];
+		FVector2D Normalized;
+		Normalized.X = ActorLocation.X / 120;
+		Normalized.Y = ActorLocation.Y / 120;
+		ABasePiece* Actor = PiecesForReplay[i];
+
 		Actor->SetActorLocation(ActorLocation);
+
+		int index = DestroiedPiecesPositionsForReplay.Find(Normalized);
+		int index1 = PromotedPiecesPositionsForReplay.Find(Normalized);
+
+		if (Moves[i].Contains("x"))
+		{
+			FString Message = FString::Printf(TEXT("Moves[%d]: %s"), i, *Moves[i]);
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, Message);
+
+			if (DestroiedPiecesPositionsForReplay.Contains(Normalized))
+			{
+
+				//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Il tuo messaggio in-game qui"));
+
+				DestroiedPiecesForReplay[index]->SetActorHiddenInGame(true);
+
+
+			}
+		}
+
+		if (PromotedPiecesPositionsForReplay.Contains(Normalized))
+		{
+
+			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Il tuo messaggio in-game qui"));
+
+			PromotedPiecesForReplay[index1]->SetActorHiddenInGame(true);
+
+		}
 
 
 	}

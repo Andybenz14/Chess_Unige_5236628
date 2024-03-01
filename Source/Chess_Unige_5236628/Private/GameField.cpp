@@ -69,6 +69,19 @@ void AGameField::ResetField()
 		ABasePiece* Piece = Pair.Value;
 		Piece->Destroy();
 	}
+	for (ABasePiece* Piece : GameInstance->PiecesForReplay)
+	{
+		Piece->Destroy();
+	}
+
+	for (ABasePiece* DestroyedPiece : GameInstance->DestroiedPiecesForReplay)
+	{
+		DestroyedPiece->Destroy();
+	}
+	for (ABasePiece* Piece : GameInstance->PromotedPiecesForReplay)
+	{
+		Piece->Destroy();
+	}
 
 	BasePieceMap.Empty();
 	TileMap.Empty();
@@ -81,6 +94,12 @@ void AGameField::ResetField()
 	GameInstance->Moves.Empty();
 	GameInstance->MovesForReplay.Empty();
 	GameInstance->PiecesForReplay.Empty();
+	GameInstance->DestroiedPiecesForReplay.Empty();
+	GameInstance->DestroiedPiecesPositionsForReplay.Empty();
+	GameInstance->PromotedPiecesForReplay.Empty();
+	GameInstance->PromotedPiecesPositionsForReplay.Empty();
+	
+
 	// Genera nuovamente il campo e le pedine
 	GenerateField();
 	
@@ -91,7 +110,7 @@ void AGameField::ResetField()
 
 	PlayerController->EnableInput(PlayerController);
 
-		}, 1, false);
+		}, 0.5, false);
 	
 }
 
@@ -342,7 +361,11 @@ void AGameField::PawnPromotion(ABasePiece* Pawn, int32 Color, FString NewPiece)
 	PawnPositionNormalized.X = (PawnPosition.X/120);
 	PawnPositionNormalized.Y = (PawnPosition.Y/120 );
 	FVector2D PawnPosition2d(PawnPosition);
-	Pawn->Destroy();
+	Pawn->SetActorHiddenInGame(true);
+	Pawn->SetActorEnableCollision(false);
+	GameInstance->PromotedPiecesForReplay.Add(Pawn);
+	GameInstance->PromotedPiecesPositionsForReplay.Add(PawnPositionNormalized);
+	Pawn->SetActorLocation(FVector(1700, 1700, 1700));
 	BasePieceMap.Remove(PawnPositionNormalized);
 
 	if (NewPiece == "Queen")
