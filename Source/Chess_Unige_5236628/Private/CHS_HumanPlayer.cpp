@@ -248,8 +248,8 @@ void ACHS_HumanPlayer::OnClick()
 						FDestroyedPiece NewDestroyedPiece;
 						NewDestroyedPiece.Piece = ClickedPiece;
 						NewDestroyedPiece.Position = Position;
-						GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
-						GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
+						NewDestroyedPiece.TurnCounter = GameInstance->DestroyedPieceArrayIndexCounter;
+						GameInstance->DestroyedPieceArray.Add(NewDestroyedPiece);
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}
@@ -268,8 +268,8 @@ void ACHS_HumanPlayer::OnClick()
 						FDestroyedPiece NewDestroyedPiece;
 						NewDestroyedPiece.Piece = ClickedPiece;
 						NewDestroyedPiece.Position = Position;
-						GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
-						GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
+						NewDestroyedPiece.TurnCounter = GameInstance->DestroyedPieceArrayIndexCounter;
+						GameInstance->DestroyedPieceArray.Add(NewDestroyedPiece);
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}
@@ -288,8 +288,8 @@ void ACHS_HumanPlayer::OnClick()
 						FDestroyedPiece NewDestroyedPiece;
 						NewDestroyedPiece.Piece = ClickedPiece;
 						NewDestroyedPiece.Position = Position;
-						GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
-						GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
+						NewDestroyedPiece.TurnCounter = GameInstance->DestroyedPieceArrayIndexCounter;
+						GameInstance->DestroyedPieceArray.Add(NewDestroyedPiece);
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}
@@ -308,8 +308,8 @@ void ACHS_HumanPlayer::OnClick()
 						FDestroyedPiece NewDestroyedPiece;
 						NewDestroyedPiece.Piece = ClickedPiece;
 						NewDestroyedPiece.Position = Position;
-						GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
-						GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
+						NewDestroyedPiece.TurnCounter = GameInstance->DestroyedPieceArrayIndexCounter;
+						GameInstance->DestroyedPieceArray.Add(NewDestroyedPiece);
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}
@@ -328,8 +328,8 @@ void ACHS_HumanPlayer::OnClick()
 						FDestroyedPiece NewDestroyedPiece;
 						NewDestroyedPiece.Piece = ClickedPiece;
 						NewDestroyedPiece.Position = Position;
-						GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
-						GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
+						NewDestroyedPiece.TurnCounter = GameInstance->DestroyedPieceArrayIndexCounter;
+						GameInstance->DestroyedPieceArray.Add(NewDestroyedPiece);
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}
@@ -348,8 +348,8 @@ void ACHS_HumanPlayer::OnClick()
 						FDestroyedPiece NewDestroyedPiece;
 						NewDestroyedPiece.Piece = ClickedPiece;
 						NewDestroyedPiece.Position = Position;
-						GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
-						GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
+						NewDestroyedPiece.TurnCounter = GameInstance->DestroyedPieceArrayIndexCounter;
+						GameInstance->DestroyedPieceArray.Add(NewDestroyedPiece);
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}

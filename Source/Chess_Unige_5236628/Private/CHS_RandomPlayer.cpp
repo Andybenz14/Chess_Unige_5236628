@@ -224,8 +224,8 @@ void ACHS_RandomPlayer::OnTurn()
 								FDestroyedPiece NewDestroyedPiece;
 								NewDestroyedPiece.Piece = KilledActor;
 								NewDestroyedPiece.Position = NormalizedPosition;
-								GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
-								GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
+								NewDestroyedPiece.TurnCounter = GameInstance->DestroyedPieceArrayIndexCounter;
+								GameInstance->DestroyedPieceArray.Add(NewDestroyedPiece);
 							}
 
 							// Move black piece into his legal move position 
@@ -261,8 +261,8 @@ void ACHS_RandomPlayer::OnTurn()
 								FDestroyedPiece NewDestroyedPiece;
 								NewDestroyedPiece.Piece = KilledActor;
 								NewDestroyedPiece.Position = NormalizedPosition;	
-								GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
-								GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
+								NewDestroyedPiece.TurnCounter = GameInstance->DestroyedPieceArrayIndexCounter;
+								GameInstance->DestroyedPieceArray.Add(NewDestroyedPiece);
 							}
 							MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 						}
@@ -294,8 +294,8 @@ void ACHS_RandomPlayer::OnTurn()
 								FDestroyedPiece NewDestroyedPiece;
 								NewDestroyedPiece.Piece = KilledActor;
 								NewDestroyedPiece.Position = NormalizedPosition;
-								GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
-								GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
+								NewDestroyedPiece.TurnCounter = GameInstance->DestroyedPieceArrayIndexCounter;
+								GameInstance->DestroyedPieceArray.Add(NewDestroyedPiece);
 							}
 							MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 						}
@@ -327,8 +327,8 @@ void ACHS_RandomPlayer::OnTurn()
 								FDestroyedPiece NewDestroyedPiece;
 								NewDestroyedPiece.Piece = KilledActor;
 								NewDestroyedPiece.Position = NormalizedPosition;
-								GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
-								GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
+								NewDestroyedPiece.TurnCounter = GameInstance->DestroyedPieceArrayIndexCounter;
+								GameInstance->DestroyedPieceArray.Add(NewDestroyedPiece);
 							}
 							MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 						}
@@ -361,8 +361,8 @@ void ACHS_RandomPlayer::OnTurn()
 								FDestroyedPiece NewDestroyedPiece;
 								NewDestroyedPiece.Piece = KilledActor;
 								NewDestroyedPiece.Position = NormalizedPosition;
-								GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
-								GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
+								NewDestroyedPiece.TurnCounter = GameInstance->DestroyedPieceArrayIndexCounter;
+								GameInstance->DestroyedPieceArray.Add(NewDestroyedPiece);
 							}
 							MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 						}
@@ -395,8 +395,8 @@ void ACHS_RandomPlayer::OnTurn()
 								FDestroyedPiece NewDestroyedPiece;
 								NewDestroyedPiece.Piece = KilledActor;
 								NewDestroyedPiece.Position = NormalizedPosition;
-								GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
-								GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
+								NewDestroyedPiece.TurnCounter = GameInstance->DestroyedPieceArrayIndexCounter;
+								GameInstance->DestroyedPieceArray.Add(NewDestroyedPiece);
 							}
 							MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 						}

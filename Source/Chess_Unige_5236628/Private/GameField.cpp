@@ -258,8 +258,7 @@ void AGameField::SpawnBishop(int32 x, int32 y, FVector Location, float TileScale
 
 	if (IsAPromotedPiece == 1)
 	{
-		GameInstance->PieceAfterPromo.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
-		GameInstance->PieceAfterPromo[GameInstance->DestroyedPieceArrayIndexCounter] = ChessPiece;
+		GameInstance->PieceAfterPromo.Add(ChessPiece);
 	}
 	
 }
@@ -276,8 +275,7 @@ void AGameField::SpawnPawn(int32 x, int32 y, FVector Location, float TileScale, 
 
 	if (IsAPromotedPiece == 1)
 	{
-		GameInstance->PieceAfterPromo.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
-		GameInstance->PieceAfterPromo[GameInstance->DestroyedPieceArrayIndexCounter] = ChessPiece;
+		GameInstance->PieceAfterPromo.Add(ChessPiece);
 	}
 
 }
@@ -294,8 +292,7 @@ void AGameField::SpawnKnight(int32 x, int32 y, FVector Location, float TileScale
 
 	if (IsAPromotedPiece == 1)
 	{
-		GameInstance->PieceAfterPromo.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
-		GameInstance->PieceAfterPromo[GameInstance->DestroyedPieceArrayIndexCounter] = ChessPiece;
+		GameInstance->PieceAfterPromo.Add(ChessPiece);
 	}
 
 }
@@ -312,8 +309,7 @@ void AGameField::SpawnKing(int32 x, int32 y, FVector Location, float TileScale, 
 
 	if (IsAPromotedPiece == 1)
 	{
-		GameInstance->PieceAfterPromo.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
-		GameInstance->PieceAfterPromo[GameInstance->DestroyedPieceArrayIndexCounter] = ChessPiece;
+		GameInstance->PieceAfterPromo.Add(ChessPiece);
 	}
 
 }
@@ -330,8 +326,7 @@ void AGameField::SpawnQueen(int32 x, int32 y, FVector Location, float TileScale,
 
 	if (IsAPromotedPiece == 1)
 	{
-		GameInstance->PieceAfterPromo.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
-		GameInstance->PieceAfterPromo[GameInstance->DestroyedPieceArrayIndexCounter] = ChessPiece;
+		GameInstance->PieceAfterPromo.Add(ChessPiece);
 	}
 	
 
@@ -349,8 +344,7 @@ void AGameField::SpawnRook(int32 x, int32 y, FVector Location, float TileScale, 
 
 	if (IsAPromotedPiece == 1)
 	{
-		GameInstance->PieceAfterPromo.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
-		GameInstance->PieceAfterPromo[GameInstance->DestroyedPieceArrayIndexCounter] = ChessPiece;
+		GameInstance->PieceAfterPromo.Add(ChessPiece);
 	}
 
 }
@@ -392,8 +386,8 @@ void AGameField::PawnPromotion(ABasePiece* Pawn, int32 Color, FString NewPiece)
 	FPromotedPiece NewPromotedPiece;
 	NewPromotedPiece.Piece = Pawn;
 	NewPromotedPiece.Position = PawnPositionNormalized;
-	GameInstance->PromotedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter + 1);
-	GameInstance->PromotedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewPromotedPiece;
+	NewPromotedPiece.TurnCounter = GameInstance->DestroyedPieceArrayIndexCounter;
+	GameInstance->PromotedPieceArray.Add(NewPromotedPiece);
 	
 	
 	Pawn->SetActorLocation(FVector(1700, 1700, 1700));

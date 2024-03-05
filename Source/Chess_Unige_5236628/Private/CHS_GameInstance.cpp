@@ -97,10 +97,7 @@ void UCHS_GameInstance::MoveInterpreterForReplay(FString SelectedMove)
 
 	for (int32 z = 0; z < PieceAfterPromo.Num(); z++)
 	{
-		if (PieceAfterPromo[z] != nullptr) 
-		{
-			PieceAfterPromo[z]->SetActorHiddenInGame(true);
-		}
+		PieceAfterPromo[z]->SetActorHiddenInGame(true);
 	}
 
 	for (int i = 0; i <= Number - 1; i++)
@@ -117,17 +114,22 @@ void UCHS_GameInstance::MoveInterpreterForReplay(FString SelectedMove)
 
 		if (Moves[i].Contains("x"))
 		{
-			DestroyedPieceArray[i].Piece->SetActorHiddenInGame(true);
+			for (int j=0; j < DestroyedPieceArray.Num(); j++)
+			{
+				if (DestroyedPieceArray[j].TurnCounter == i)
+				{
+					DestroyedPieceArray[j].Piece->SetActorHiddenInGame(true);
+				}
+			}
+	
 		}
 
-		if (PromotedPieceArray.IsValidIndex(i) && PromotedPieceArray[i].Piece != nullptr)
+		for (int j = 0; j < PromotedPieceArray.Num(); j++)
 		{
-			if (PromotedPieceArray[i].Position == Normalized && PromotedPieceArray[i].Piece == Actor)
+			if (PromotedPieceArray[j].TurnCounter == i)
 			{
-				PromotedPieceArray[i].Piece->SetActorHiddenInGame(true);
-
-				PieceAfterPromo[i]->SetActorHiddenInGame(false);
-		
+				PromotedPieceArray[j].Piece->SetActorHiddenInGame(true);
+				PieceAfterPromo[j]->SetActorHiddenInGame(false);
 			}
 		}
 	}	
@@ -135,7 +137,7 @@ void UCHS_GameInstance::MoveInterpreterForReplay(FString SelectedMove)
 
 void UCHS_GameInstance::ReturnToGameAfterReplay()
 {
-	for (int i = Number ; i <= MovesForReplay.Num() - 1; i++)
+	for (int i = Number; i <= MovesForReplay.Num() - 1; i++)
 	{
 		FVector ActorLocation = MovesForReplay[i];
 		FVector2D Normalized;
@@ -148,19 +150,29 @@ void UCHS_GameInstance::ReturnToGameAfterReplay()
 
 		if (Moves[i].Contains("x"))
 		{
-			DestroyedPieceArray[i].Piece->SetActorHiddenInGame(true);
+			for (int j = 0; j < DestroyedPieceArray.Num(); j++)
+			{
+				if (DestroyedPieceArray[j].TurnCounter == i)
+				{
+					DestroyedPieceArray[j].Piece->SetActorHiddenInGame(true);
+				}
+			}
+
 		}
 
-		if (PromotedPieceArray.IsValidIndex(i) && PromotedPieceArray[i].Piece != nullptr)
+		for (int j = 0; j < PromotedPieceArray.Num(); j++)
 		{
-			if (PromotedPieceArray[i].Position == Normalized && PromotedPieceArray[i].Piece == Actor)
+			if (PromotedPieceArray[j].TurnCounter == i)
 			{
-				PromotedPieceArray[i].Piece->SetActorHiddenInGame(true);
-
-				PieceAfterPromo[i]->SetActorHiddenInGame(false);
+				PromotedPieceArray[j].Piece->SetActorHiddenInGame(true);
+				PieceAfterPromo[j]->SetActorHiddenInGame(false);
 			}
 		}
+
+
+		
 	}
+
 
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
 	PlayerController->EnableInput(PlayerController);

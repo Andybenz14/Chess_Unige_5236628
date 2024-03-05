@@ -17,6 +17,9 @@ USTRUCT() struct FDestroyedPiece
 
 	UPROPERTY(Transient)
 		FVector2D Position;
+
+	UPROPERTY(Transient)
+		int32 TurnCounter;
 };
 
 USTRUCT() struct FPromotedPiece
@@ -28,6 +31,9 @@ USTRUCT() struct FPromotedPiece
 
 	UPROPERTY(Transient)
 		FVector2D Position;
+
+	UPROPERTY(Transient)
+		int32 TurnCounter;
 };
 
 
