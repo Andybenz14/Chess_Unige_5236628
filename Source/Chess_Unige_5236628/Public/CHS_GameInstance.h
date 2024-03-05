@@ -6,9 +6,34 @@
 #include "Engine/GameInstance.h"
 #include "CHS_GameInstance.generated.h"
 
-/**
- * 
- */
+
+
+USTRUCT() struct FDestroyedPiece
+{
+	GENERATED_BODY()
+
+	UPROPERTY(Transient)
+		ABasePiece* Piece;
+
+	UPROPERTY(Transient)
+		FVector2D Position;
+};
+
+USTRUCT() struct FPromotedPiece
+{
+	GENERATED_BODY()
+
+		UPROPERTY(Transient)
+		ABasePiece* Piece;
+
+	UPROPERTY(Transient)
+		FVector2D Position;
+};
+
+
+
+
+
 UCLASS()
 class CHESS_UNIGE_5236628_API UCHS_GameInstance : public UGameInstance
 {
@@ -77,19 +102,19 @@ public:
 		TArray<ABasePiece*> PiecesForReplay;
 	
 	UPROPERTY(Transient)
-		TArray<ABasePiece*> DestroiedPiecesForReplay;
-	
-	UPROPERTY(Transient)
-		TArray<FVector2D> DestroiedPiecesPositionsForReplay;
-
-	UPROPERTY(Transient)
-		TArray<ABasePiece*> PromotedPiecesForReplay;
-
-	UPROPERTY(Transient)
-		TArray<FVector2D> PromotedPiecesPositionsForReplay;
-
-	UPROPERTY(Transient)
 		TMap<FVector2D, ABasePiece*> PiecesStartingPosition;
+
+	UPROPERTY(Transient)
+		TArray<FDestroyedPiece> DestroyedPieceArray;
+
+	UPROPERTY(Transient)
+		TArray<FPromotedPiece> PromotedPieceArray;
+
+	UPROPERTY(Transient)
+		TArray<ABasePiece*> PieceAfterPromo;
+
+	UPROPERTY(Transient)
+		int32 DestroyedPieceArrayIndexCounter = 0;
 
 	int Number = 1;
 

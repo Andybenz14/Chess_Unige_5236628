@@ -129,22 +129,22 @@ public:
 	FVector2D GetXYPositionByRelativeLocation(const FVector& Location) const;
 
 	// Spawn bishop given position, a scale and a color
-	void SpawnBishop(int32 x, int32 y, FVector Location, float TileScale, int32 Color);
+	void SpawnBishop(int32 x, int32 y, FVector Location, float TileScale, int32 Color, int32 IsAPromotedPiece);
 
 	// Spawn pawn given position, a scale and a color
-	void SpawnPawn(int32 x, int32 y, FVector Location, float TileScale, int32 Color);
+	void SpawnPawn(int32 x, int32 y, FVector Location, float TileScale, int32 Color, int32 IsAPromotedPiece);
 
 	// Spawn rook given position, a scale and a color
-	void SpawnRook(int32 x, int32 y, FVector Location, float TileScale, int32 Color);
+	void SpawnRook(int32 x, int32 y, FVector Location, float TileScale, int32 Color, int32 IsAPromotedPiece);
 
 	// Spawn king given position, a scale and a color
-	void SpawnKing(int32 x, int32 y, FVector Location, float TileScale, int32 Color);
+	void SpawnKing(int32 x, int32 y, FVector Location, float TileScale, int32 Color, int32 IsAPromotedPiece);
 	
 	// Spawn queen given position, a scale and a color
-	void SpawnQueen(int32 x, int32 y, FVector Location, float TileScale, int32 Color);
+	void SpawnQueen(int32 x, int32 y, FVector Location, float TileScale, int32 Color, int32 IsAPromotedPiece);
 	
 	// Spawn knight given position, a scale and a color
-	void SpawnKnight(int32 x, int32 y, FVector Location, float TileScale, int32 Color);
+	void SpawnKnight(int32 x, int32 y, FVector Location, float TileScale, int32 Color, int32 IsAPromotedPiece);
 
 	// Set chess pieces materials (called at spawn)
 	template <typename T>

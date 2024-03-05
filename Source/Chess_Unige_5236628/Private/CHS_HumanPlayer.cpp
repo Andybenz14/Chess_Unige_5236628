@@ -245,8 +245,11 @@ void ACHS_HumanPlayer::OnClick()
 						ClickedPiece->SetActorHiddenInGame(true);
 						ClickedPiece->SetActorEnableCollision(false);
 						GameMode->GField->BasePieceMap.Remove(Position);
-						GameInstance->DestroiedPiecesForReplay.Add(ClickedPiece);
-						GameInstance->DestroiedPiecesPositionsForReplay.Add(Position);
+						FDestroyedPiece NewDestroyedPiece;
+						NewDestroyedPiece.Piece = ClickedPiece;
+						NewDestroyedPiece.Position = Position;
+						GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
+						GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}
@@ -262,8 +265,11 @@ void ACHS_HumanPlayer::OnClick()
 						ClickedPiece->SetActorHiddenInGame(true);
 						ClickedPiece->SetActorEnableCollision(false);
 						GameMode->GField->BasePieceMap.Remove(Position);
-						GameInstance->DestroiedPiecesForReplay.Add(ClickedPiece);
-						GameInstance->DestroiedPiecesPositionsForReplay.Add(Position);
+						FDestroyedPiece NewDestroyedPiece;
+						NewDestroyedPiece.Piece = ClickedPiece;
+						NewDestroyedPiece.Position = Position;
+						GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
+						GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}
@@ -279,8 +285,11 @@ void ACHS_HumanPlayer::OnClick()
 						ClickedPiece->SetActorHiddenInGame(true);
 						ClickedPiece->SetActorEnableCollision(false);
 						GameMode->GField->BasePieceMap.Remove(Position);
-						GameInstance->DestroiedPiecesForReplay.Add(ClickedPiece);
-						GameInstance->DestroiedPiecesPositionsForReplay.Add(Position);
+						FDestroyedPiece NewDestroyedPiece;
+						NewDestroyedPiece.Piece = ClickedPiece;
+						NewDestroyedPiece.Position = Position;
+						GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
+						GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}
@@ -296,8 +305,11 @@ void ACHS_HumanPlayer::OnClick()
 						ClickedPiece->SetActorHiddenInGame(true);
 						ClickedPiece->SetActorEnableCollision(false);
 						GameMode->GField->BasePieceMap.Remove(Position);
-						GameInstance->DestroiedPiecesForReplay.Add(ClickedPiece);
-						GameInstance->DestroiedPiecesPositionsForReplay.Add(Position);
+						FDestroyedPiece NewDestroyedPiece;
+						NewDestroyedPiece.Piece = ClickedPiece;
+						NewDestroyedPiece.Position = Position;
+						GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
+						GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}
@@ -313,8 +325,11 @@ void ACHS_HumanPlayer::OnClick()
 						ClickedPiece->SetActorHiddenInGame(true);
 						ClickedPiece->SetActorEnableCollision(false);
 						GameMode->GField->BasePieceMap.Remove(Position);
-						GameInstance->DestroiedPiecesForReplay.Add(ClickedPiece);
-						GameInstance->DestroiedPiecesPositionsForReplay.Add(Position);
+						FDestroyedPiece NewDestroyedPiece;
+						NewDestroyedPiece.Piece = ClickedPiece;
+						NewDestroyedPiece.Position = Position;
+						GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
+						GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}
@@ -330,8 +345,11 @@ void ACHS_HumanPlayer::OnClick()
 						ClickedPiece->SetActorHiddenInGame(true);
 						ClickedPiece->SetActorEnableCollision(false);
 						GameMode->GField->BasePieceMap.Remove(Position);
-						GameInstance->DestroiedPiecesForReplay.Add(ClickedPiece);
-						GameInstance->DestroiedPiecesPositionsForReplay.Add(Position);
+						FDestroyedPiece NewDestroyedPiece;
+						NewDestroyedPiece.Piece = ClickedPiece;
+						NewDestroyedPiece.Position = Position;
+						GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
+						GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}
@@ -387,6 +405,8 @@ void ACHS_HumanPlayer::MoveBasePiece(ABasePiece*, FVector OldLocation, FVector N
 		RegisterMovesCounter = 0;
 	}
 	RegisterMoveConverter(FVector2D(NewActorLocation2D.X + 1, NewActorLocation2D.Y + 1), FVector2D(ClickedActorLocation2D.X + 1, ClickedActorLocation2D.Y + 1), BasePieceActor, ETileOwner::BLACK);
+	
+	
 
 	GameMode->GField->BasePieceMap.Remove(ClickedActorLocation2D);
 	GameMode->GField->BasePieceMap.Add(NewActorLocation2D, BasePieceActor);
@@ -400,8 +420,8 @@ void ACHS_HumanPlayer::MoveBasePiece(ABasePiece*, FVector OldLocation, FVector N
 	}
 	else
 	{
+		GameInstance->DestroyedPieceArrayIndexCounter++;
 		GameMode->EndHumanTurn();
-
 	}
 	
 }

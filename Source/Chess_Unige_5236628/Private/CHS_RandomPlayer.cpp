@@ -221,9 +221,11 @@ void ACHS_RandomPlayer::OnTurn()
 
 								// Remove from basepiecemap the white actor in the move position
 								GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
-								GameInstance->DestroiedPiecesPositionsForReplay.Add(NormalizedPosition);
-							
-								GameInstance->DestroiedPiecesForReplay.Add(KilledActor);
+								FDestroyedPiece NewDestroyedPiece;
+								NewDestroyedPiece.Piece = KilledActor;
+								NewDestroyedPiece.Position = NormalizedPosition;
+								GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
+								GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
 							}
 
 							// Move black piece into his legal move position 
@@ -255,9 +257,12 @@ void ACHS_RandomPlayer::OnTurn()
 
 								// Remove from basepiecemap the white actor in the move position
 								GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
-								GameInstance->DestroiedPiecesPositionsForReplay.Add(NormalizedPosition);
-
-								GameInstance->DestroiedPiecesForReplay.Add(KilledActor);
+								
+								FDestroyedPiece NewDestroyedPiece;
+								NewDestroyedPiece.Piece = KilledActor;
+								NewDestroyedPiece.Position = NormalizedPosition;	
+								GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
+								GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
 							}
 							MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 						}
@@ -286,9 +291,11 @@ void ACHS_RandomPlayer::OnTurn()
 
 								// Remove from basepiecemap the white actor in the move position
 								GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
-								GameInstance->DestroiedPiecesPositionsForReplay.Add(NormalizedPosition);
-
-								GameInstance->DestroiedPiecesForReplay.Add(KilledActor);
+								FDestroyedPiece NewDestroyedPiece;
+								NewDestroyedPiece.Piece = KilledActor;
+								NewDestroyedPiece.Position = NormalizedPosition;
+								GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
+								GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
 							}
 							MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 						}
@@ -317,8 +324,11 @@ void ACHS_RandomPlayer::OnTurn()
 
 								// Remove from basepiecemap the white actor in the move position
 								GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
-								GameInstance->DestroiedPiecesPositionsForReplay.Add(NormalizedPosition);
-								GameInstance->DestroiedPiecesForReplay.Add(KilledActor);
+								FDestroyedPiece NewDestroyedPiece;
+								NewDestroyedPiece.Piece = KilledActor;
+								NewDestroyedPiece.Position = NormalizedPosition;
+								GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
+								GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
 							}
 							MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 						}
@@ -348,8 +358,11 @@ void ACHS_RandomPlayer::OnTurn()
 								// Remove from basepiecemap the white actor in the move position
 								GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
 
-								GameInstance->DestroiedPiecesForReplay.Add(KilledActor);
-								GameInstance->DestroiedPiecesPositionsForReplay.Add(NormalizedPosition);
+								FDestroyedPiece NewDestroyedPiece;
+								NewDestroyedPiece.Piece = KilledActor;
+								NewDestroyedPiece.Position = NormalizedPosition;
+								GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
+								GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
 							}
 							MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 						}
@@ -379,8 +392,11 @@ void ACHS_RandomPlayer::OnTurn()
 								// Remove from basepiecemap the white actor in the move position
 								GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
 
-								GameInstance->DestroiedPiecesForReplay.Add(KilledActor);
-								GameInstance->DestroiedPiecesPositionsForReplay.Add(NormalizedPosition);
+								FDestroyedPiece NewDestroyedPiece;
+								NewDestroyedPiece.Piece = KilledActor;
+								NewDestroyedPiece.Position = NormalizedPosition;
+								GameInstance->DestroyedPieceArray.SetNum(GameInstance->DestroyedPieceArrayIndexCounter+1);
+								GameInstance->DestroyedPieceArray[GameInstance->DestroyedPieceArrayIndexCounter] = NewDestroyedPiece;
 							}
 							MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 						}
@@ -438,6 +454,7 @@ void ACHS_RandomPlayer::MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVe
 		RegisterMovesCounter = 0;
 	}
 	RegisterMoveConverter(FVector2D(NewActorLocation2D.X + 1, NewActorLocation2D.Y + 1), FVector2D(OldBlackActorLocation2D.X + 1, OldBlackActorLocation2D.Y + 1), RandomSelectedActor, ETileOwner::WHITE);
+	
 
 	// Change piece key from his old location to his new location
 	GameMode->GField->BasePieceMap.Remove(OldBlackActorLocation2D);
@@ -465,8 +482,13 @@ void ACHS_RandomPlayer::MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVe
 		GameMode->GField->PawnPromotion(RandomSelectedActor, 2, Piece);
 
 	}
+	else
+	{
+		GameInstance->DestroyedPieceArrayIndexCounter++;
+	}
 	
 	
+
 	// End AI turn 
 	GameMode->EndAITurn();
 }
