@@ -63,7 +63,6 @@ void AGameField::ResetField()
 		Tile->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
 		Tile->Destroy();
 	}
-
 	for (auto& Pair : BasePieceMap)
 	{
 		ABasePiece* Piece = Pair.Value;
@@ -72,6 +71,18 @@ void AGameField::ResetField()
 	for (ABasePiece* Piece : GameInstance->PiecesForReplay)
 	{
 		Piece->Destroy();
+	}
+	for (ABasePiece* Piece : GameInstance->PieceAfterPromo)
+	{
+		Piece->Destroy();
+	}
+	for (int i = 0; i < GameInstance->DestroyedPieceArray.Num(); i++)
+	{
+		GameInstance->DestroyedPieceArray[i].Piece->Destroy();
+	}
+	for (int i = 0; i < GameInstance->PromotedPieceArray.Num(); i++)
+	{
+		GameInstance->PromotedPieceArray[i].Piece->Destroy();
 	}
 	
 	BasePieceMap.Empty();

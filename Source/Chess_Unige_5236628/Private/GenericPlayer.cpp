@@ -957,7 +957,7 @@ void AGenericPlayer::MoveSimulation(FVector SelectedActorLocation, FVector2D Sel
 
 }
 
-//Per REPLAYOGNi mossa salva la posizione della pedina con getactorlocation. poi una funzione prende in ingresso le coordinate e restituisce la string per il widget in base alla posizione. ad es : DF3
+//TODO NON VA BENE SERVE IL CONTROLLO COMPLETO CON LA SIMULAZIONE
 void AGenericPlayer::IsCheckMate(ETileOwner FriendColor, ETileOwner EnemyColor)
 {
 	CalculatePossibleMoves(FriendColor, EnemyColor);

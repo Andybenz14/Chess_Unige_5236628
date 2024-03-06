@@ -100,80 +100,55 @@ void UCHS_GameInstance::MoveInterpreterForReplay(FString SelectedMove)
 		PieceAfterPromo[z]->SetActorHiddenInGame(true);
 	}
 
-	for (int i = 0; i <= Number - 1; i++)
+	for (int32 i = 0; i <= Number - 1; i++)
 	{
-		//TODO Hidden NUOVO Actor PROMO TRUE
-
-		FVector ActorLocation = MovesForReplay[i];
-		FVector2D Normalized;
-		Normalized.X = ActorLocation.X / 120;
-		Normalized.Y = ActorLocation.Y / 120;
-
-		ABasePiece* Actor = PiecesForReplay[i];
-		Actor->SetActorLocation(ActorLocation);
-
-		if (Moves[i].Contains("x"))
-		{
-			for (int j=0; j < DestroyedPieceArray.Num(); j++)
-			{
-				if (DestroyedPieceArray[j].TurnCounter == i)
-				{
-					DestroyedPieceArray[j].Piece->SetActorHiddenInGame(true);
-				}
-			}
-	
-		}
-
-		for (int j = 0; j < PromotedPieceArray.Num(); j++)
-		{
-			if (PromotedPieceArray[j].TurnCounter == i)
-			{
-				PromotedPieceArray[j].Piece->SetActorHiddenInGame(true);
-				PieceAfterPromo[j]->SetActorHiddenInGame(false);
-			}
-		}
+		Replay(i);
 	}	
+
 }
+
 
 void UCHS_GameInstance::ReturnToGameAfterReplay()
 {
-	for (int i = Number; i <= MovesForReplay.Num() - 1; i++)
+	for (int32 i = Number; i <= MovesForReplay.Num() - 1; i++)
 	{
-		FVector ActorLocation = MovesForReplay[i];
-		FVector2D Normalized;
-		Normalized.X = ActorLocation.X / 120;
-		Normalized.Y = ActorLocation.Y / 120;
-
-		ABasePiece* Actor = PiecesForReplay[i];
-		Actor->SetActorLocation(ActorLocation);
-
-
-		if (Moves[i].Contains("x"))
-		{
-			for (int j = 0; j < DestroyedPieceArray.Num(); j++)
-			{
-				if (DestroyedPieceArray[j].TurnCounter == i)
-				{
-					DestroyedPieceArray[j].Piece->SetActorHiddenInGame(true);
-				}
-			}
-
-		}
-
-		for (int j = 0; j < PromotedPieceArray.Num(); j++)
-		{
-			if (PromotedPieceArray[j].TurnCounter == i)
-			{
-				PromotedPieceArray[j].Piece->SetActorHiddenInGame(true);
-				PieceAfterPromo[j]->SetActorHiddenInGame(false);
-			}
-		}
-
-
-		
+		Replay(i);
 	}
-
 
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
 	PlayerController->EnableInput(PlayerController);
+}
+
+void UCHS_GameInstance::Replay(int32 i)
+{
+	FVector ActorLocation = MovesForReplay[i];
+	FVector2D Normalized;
+	Normalized.X = ActorLocation.X / 120;
+	Normalized.Y = ActorLocation.Y / 120;
+
+	ABasePiece* Actor = PiecesForReplay[i];
+	Actor->SetActorLocation(ActorLocation);
+
+	if (Moves[i].Contains("x"))
+	{
+		for (int j = 0; j < DestroyedPieceArray.Num(); j++)
+		{
+			if (DestroyedPieceArray[j].TurnCounter == i)
+			{
+				DestroyedPieceArray[j].Piece->SetActorHiddenInGame(true);
+			}
+		}
+
+	}
+
+	for (int j = 0; j < PromotedPieceArray.Num(); j++)
+	{
+		if (PromotedPieceArray[j].TurnCounter == i)
+		{
+			PromotedPieceArray[j].Piece->SetActorHiddenInGame(true);
+			FVector Location = PromotedPieceArray[j].Piece->GetActorLocation();
+			PieceAfterPromo[j]->SetActorLocation(Location);
+			PieceAfterPromo[j]->SetActorHiddenInGame(false);
+		}
+	}
 }

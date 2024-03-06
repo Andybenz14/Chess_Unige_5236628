@@ -101,6 +101,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void ReturnToGameAfterReplay();
 
+	UFUNCTION(BlueprintCallable)
+		void Replay(int32 index);
+
 	UPROPERTY(Transient)
 		TArray<FVector> MovesForReplay;
 
