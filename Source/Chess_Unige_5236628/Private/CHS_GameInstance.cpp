@@ -54,6 +54,11 @@ TArray<FString> UCHS_GameInstance::GetMovesArray() const
 	return Moves;
 }
 
+void UCHS_GameInstance::SetUseMinimax(bool Choose)
+{
+	UseMinimax = Choose;
+}
+
 void UCHS_GameInstance::MoveInterpreterForReplay(FString SelectedMove)
 {
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
@@ -152,3 +157,5 @@ void UCHS_GameInstance::Replay(int32 i)
 		}
 	}
 }
+
+

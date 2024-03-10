@@ -32,9 +32,9 @@ void AMinimaxPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
-/*
+
 void AMinimaxPlayer::OnTurn()
 {
-	
+	int gg = 10;
 
-}*/
+}

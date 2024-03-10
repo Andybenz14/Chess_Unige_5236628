@@ -5,6 +5,7 @@
 #include "CHS_HumanPlayer.h"
 #include "CHS_PlayerController.h"
 #include "CHS_RandomPlayer.h"
+#include "MinimaxPlayer.h"
 #include "EngineUtils.h"
 
 ACHS_GameMode::ACHS_GameMode()
@@ -12,7 +13,7 @@ ACHS_GameMode::ACHS_GameMode()
 	PlayerControllerClass = ACHS_PlayerController::StaticClass();
 	DefaultPawnClass = ACHS_HumanPlayer::StaticClass();
 	FieldSize = 8;
-	
+	GameInstance = Cast<UCHS_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 }
 
 
@@ -41,20 +42,26 @@ void ACHS_GameMode::BeginPlay()
 	FVector CameraPos(CameraPosX, CameraPosX, 1000.0f);
 	HumanPlayer->SetActorLocationAndRotation(CameraPos, FRotationMatrix::MakeFromX(FVector(0, 0, -1)).Rotator());
 
-	// Random Player
-	auto* AI = GetWorld()->SpawnActor<ACHS_RandomPlayer>(FVector(), FRotator());
+	if (GameInstance->UseMinimax)
+	{
+		AMinimaxPlayer* AI = GetWorld()->SpawnActor<AMinimaxPlayer>(FVector(), FRotator());
+		
+	}
+	else
+	{
+		ACHS_RandomPlayer* AI = GetWorld()->SpawnActor<ACHS_RandomPlayer>(FVector(), FRotator());
+	
+	}
 	
 	if (IsMyTurn)
 	{
 		HumanPlayer->OnTurn();
 	}
-	else
-	{
-		AI->OnTurn();
-	}
+	
 
 	
 }
+
 
 void ACHS_GameMode::EndHumanTurn()
 {
@@ -65,11 +72,19 @@ void ACHS_GameMode::EndHumanTurn()
 	
 		PlayerController->DisableInput(PlayerController);
 	
-
-	ACHS_RandomPlayer* AI = Cast<ACHS_RandomPlayer>(*TActorIterator<ACHS_RandomPlayer>(GetWorld()));
 	if (!IsGameFinished())
 	{
-		AI->OnTurn();
+		if (GameInstance->UseMinimax)
+		{
+			AMinimaxPlayer* AI = Cast<AMinimaxPlayer>(*TActorIterator<AMinimaxPlayer>(GetWorld()));
+			AI->OnTurn();
+		}
+		else
+		{
+			ACHS_RandomPlayer* AI = Cast<ACHS_RandomPlayer>(*TActorIterator<ACHS_RandomPlayer>(GetWorld()));
+			AI->OnTurn();
+		}
+
 	}
 }
 

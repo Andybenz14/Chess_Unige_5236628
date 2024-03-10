@@ -95,6 +95,12 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		TArray<FString> Moves;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+		bool UseMinimax;
+
+	UFUNCTION(BlueprintCallable)
+		void SetUseMinimax(bool Choose);
+
 	UFUNCTION(BlueprintCallable)
 		void MoveInterpreterForReplay(FString SelectedMove);
 

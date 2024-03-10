@@ -387,10 +387,8 @@ void AGameField::SetPieceColor(int32 Color, T* ChessPiece)
 void AGameField::PawnPromotion(ABasePiece* Pawn, int32 Color, FString NewPiece)
 {
 	FVector PawnPosition = Pawn->GetActorLocation();
-	FVector2D PawnPositionNormalized;
-	PawnPositionNormalized.X = (PawnPosition.X/120);
-	PawnPositionNormalized.Y = (PawnPosition.Y/120 );
-	FVector2D PawnPosition2d(PawnPosition);
+	FVector2D PawnPositionNormalized(PawnPosition.X / 120, PawnPosition.Y / 120);
+	
 	Pawn->SetActorHiddenInGame(true);
 	Pawn->SetActorEnableCollision(false);
 

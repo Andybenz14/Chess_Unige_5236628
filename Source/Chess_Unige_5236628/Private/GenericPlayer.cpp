@@ -957,7 +957,7 @@ void AGenericPlayer::MoveSimulation(FVector SelectedActorLocation, FVector2D Sel
 
 }
 
-//TODO NON VA BENE SERVE IL CONTROLLO COMPLETO CON LA SIMULAZIONE
+//TODO NON VA BENE SERVE IL CONTROLLO COMPLETO CON LA SIMULAZIONE, Da implentare quando si calcola lo scacco.
 void AGenericPlayer::IsCheckMate(ETileOwner FriendColor, ETileOwner EnemyColor)
 {
 	CalculatePossibleMoves(FriendColor, EnemyColor);
