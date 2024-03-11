@@ -793,6 +793,11 @@ void AGenericPlayer::CalculatePossibleMoves(ETileOwner FriendColor, ETileOwner E
 	BishopIsInGame = 0;
 	KnightIsInGame = 0;
 	RookIsInGame = 0;
+	NoPawnMovesLeftIndex = 0;
+	NoQueenMovesLeftIndex = 0;
+	NoBishopMovesLeftIndex = 0;
+	NoKnightMovesLeftIndex = 0;
+	NoRookMovesLeftIndex = 0;
 
 	Actors.Empty();
 
@@ -838,36 +843,54 @@ void AGenericPlayer::CalculatePossibleMoves(ETileOwner FriendColor, ETileOwner E
 			{
 				// Calcolate King(PossiblePiece) possible moves
 				KingPossibleMoves(ActorLocation, EnemyColor);
-
-
 			}
 
 			else if (APawnChess* PawnActor = Cast<APawnChess>(PossiblePiece))
 			{
 				PawnPossibleMoves(ActorLocation, EnemyColor);
-				PawnIsInGame = 1;
+				PawnIsInGame++;
+				if (PossiblePawnMoves.Num() == 0) 
+				{
+					NoPawnMovesLeftIndex++;
+				}
 			}
 
 			else if (AQueen* QueenActor = Cast<AQueen>(PossiblePiece))
 			{
 				QueenPossibleMoves(ActorLocation, EnemyColor);
-				QueenIsInGame = 1;
+				QueenIsInGame++;
+				if (PossibleQueenMoves.Num() == 0)
+				{
+					NoQueenMovesLeftIndex++;
+				}
 			}
 			else if (ABishop* BishopActor = Cast<ABishop>(PossiblePiece))
 			{
 				BishopPossibleMoves(ActorLocation, EnemyColor);
-				BishopIsInGame = 1;
+				BishopIsInGame++;
+				if (PossibleBishopMoves.Num() == 0)
+				{
+					NoBishopMovesLeftIndex++;
+				}
 			}
 			else if (AKnight* KnightActor = Cast<AKnight>(PossiblePiece))
 			{
 				KnightPossibleMoves(ActorLocation, EnemyColor);
-				KnightIsInGame = 1;
+				KnightIsInGame++;
+				if (PossibleKnightMoves.Num() == 0)
+				{
+					NoKnightMovesLeftIndex++;
+				}
 
 			}
 			else if (ARook* RookActor = Cast<ARook>(PossiblePiece))
 			{
 				RookPossibleMoves(ActorLocation, EnemyColor);
-				RookIsInGame = 1;
+				RookIsInGame++;
+				if (PossibleRookMoves.Num() == 0)
+				{
+					NoRookMovesLeftIndex++;
+				}
 			}
 		}
 	}
@@ -957,23 +980,30 @@ void AGenericPlayer::MoveSimulation(FVector SelectedActorLocation, FVector2D Sel
 
 }
 
-//TODO NON VA BENE SERVE IL CONTROLLO COMPLETO CON LA SIMULAZIONE, Da implentare quando si calcola lo scacco.
 void AGenericPlayer::IsCheckMate(ETileOwner FriendColor, ETileOwner EnemyColor)
 {
 	CalculatePossibleMoves(FriendColor, EnemyColor);
 	if (
-		((PossibleBishopMoves.Num() == 0 && BishopIsInGame == 1) || (BishopIsInGame == 0)) &&
+		(KnightIsInGame == NoKnightMovesLeftIndex) &&
 		(PossibleKingMoves.Num() == 0 ) && 
-		((PossibleQueenMoves.Num() == 0 && QueenIsInGame == 1) || (QueenIsInGame == 0)) &&
-		((PossibleRookMoves.Num() == 0 && RookIsInGame == 1) || (RookIsInGame == 0)) &&
-		((PossiblePawnMoves.Num() == 0 && PawnIsInGame == 1) || (PawnIsInGame == 0)) &&
-		((PossibleKnightMoves.Num() == 0 && KnightIsInGame == 1) || (KnightIsInGame == 0))
-		)
+		(RookIsInGame == NoRookMovesLeftIndex) &&
+		(BishopIsInGame == NoBishopMovesLeftIndex) &&
+		(PawnIsInGame == NoPawnMovesLeftIndex) &&
+		(QueenIsInGame == NoQueenMovesLeftIndex)
+	   )
 	{
-		GameInstance->SetTurnMessage(TEXT("WIN"));
-		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
-		PlayerController->EnableInput(PlayerController);
+		if(EnemyColor == ETileOwner::WHITE)
+		{
+			GameInstance->SetTurnMessage(TEXT("WHITE WINS"));
+		}
+		else
+		{
+			GameInstance->SetTurnMessage(TEXT("BLACK WINS"));
+		}
 		
+		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+		PlayerController->DisableInput(PlayerController);
+		GameInstance->IsGameFinished = true;
 	}
 	
 

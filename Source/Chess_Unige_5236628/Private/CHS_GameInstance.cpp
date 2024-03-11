@@ -120,8 +120,11 @@ void UCHS_GameInstance::ReturnToGameAfterReplay()
 		Replay(i);
 	}
 
-	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
-	PlayerController->EnableInput(PlayerController);
+	if (IsGameFinished == false)
+	{
+		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+		PlayerController->EnableInput(PlayerController);
+	}
 }
 
 void UCHS_GameInstance::Replay(int32 i)

@@ -132,7 +132,13 @@ public:
 	int BishopIsInGame = 0;
 	int KnightIsInGame = 0;
 	int RookIsInGame = 0;
+	int NoPawnMovesLeftIndex = 0;
+	int NoQueenMovesLeftIndex = 0;
+	int NoBishopMovesLeftIndex = 0;
+	int NoKnightMovesLeftIndex = 0;
+	int NoRookMovesLeftIndex = 0;
 	int RegisterMovesCounter = 0;
+	
 
 	
 	

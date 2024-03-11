@@ -133,4 +133,5 @@ public:
 
 	int Number = 1;
 
+	bool IsGameFinished = false;
 };

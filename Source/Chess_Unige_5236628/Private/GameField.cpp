@@ -100,6 +100,7 @@ void AGameField::ResetField()
 	GameInstance->PromotedPieceArray.Empty();
 	GameInstance->PieceAfterPromo.Empty();
 	GameInstance->DestroyedPieceArrayIndexCounter = 0;
+	GameInstance->IsGameFinished = false;
 
 	// Genera nuovamente il campo e le pedine
 	GenerateField();

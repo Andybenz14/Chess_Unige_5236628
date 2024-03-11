@@ -72,93 +72,53 @@ void ACHS_HumanPlayer::OnClick()
 			// Check if the user clicked white piece. User can use only white pieces.
 			if (Color == EPieceColor::WHITE)
 			{
-				
-
 				IsCheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
 				IsCheckMate(ETileOwner::WHITE, ETileOwner::BLACK);
 
+				ClickCounter = ClickCounter + 1;
 
-				/*for (const FVector2D& Vec : IllegalPawnMoveDueToCheck)
+				// Get clicked piece xyz location
+				ClickedActorLocation = CurrPiece->GetActorLocation();
+
+				// Save the first clicked piece for the future if conditions
+				BasePieceActor = CurrPiece;
+
+				if (BasePieceActor->IsA(AKnight::StaticClass()))
 				{
-					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
-					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Red, VecAsString);
+					KnightPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
+					ApplyPossibleMovesMaterials(PossibleKnightMoves);
 				}
-				for (const FVector2D& Vec : IllegalKingMoveDueToCheck)
+				else if (BasePieceActor->IsA(AKing::StaticClass()))
 				{
-					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
-					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Yellow, VecAsString);
+					KingPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
+					ApplyPossibleMovesMaterials(PossibleKingMoves);
 				}
-				for (const FVector2D& Vec : IllegalBishopMoveDueToCheck)
+				else if (BasePieceActor->IsA(APawnChess::StaticClass()))
 				{
-					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
-					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Green, VecAsString);
+					PawnPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
+					ApplyPossibleMovesMaterials(PossiblePawnMoves);
 				}
-
-				for (const FVector2D& Vec : IllegalRookMoveDueToCheck)
+				else if (BasePieceActor->IsA(ARook::StaticClass()))
 				{
-					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
-					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Blue, VecAsString);
+					RookPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
+					ApplyPossibleMovesMaterials(PossibleRookMoves);
 				}
-				for (const FVector2D& Vec : IllegalKnightMoveDueToCheck)
+				else if (BasePieceActor->IsA(ABishop::StaticClass()))
 				{
-					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
-					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Purple, VecAsString);
+					BishopPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
+					ApplyPossibleMovesMaterials(PossibleBishopMoves);
 				}
-				for (const FVector2D& Vec : IllegalQueenMoveDueToCheck)
+				else if (BasePieceActor->IsA(AQueen::StaticClass()))
 				{
-					FString VecAsString = FString::Printf(TEXT("X: %f, Y: %f"), Vec.X, Vec.Y);
-					GEngine->AddOnScreenDebugMessage(-1, 60.f, FColor::Orange, VecAsString);
-				}*/
-
-				
-				
-					ClickCounter = ClickCounter + 1;
-
-					// Get clicked piece xyz location
-					ClickedActorLocation = CurrPiece->GetActorLocation();
-
-					// Save the first clicked piece for the future if conditions
-					BasePieceActor = CurrPiece;
-
-					if (BasePieceActor->IsA(AKnight::StaticClass()))
-					{
-						KnightPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
-						ApplyPossibleMovesMaterials(PossibleKnightMoves);
-					}
-					else if (BasePieceActor->IsA(AKing::StaticClass()))
-					{
-						KingPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
-						ApplyPossibleMovesMaterials(PossibleKingMoves);
-					}
-					else if (BasePieceActor->IsA(APawnChess::StaticClass()))
-					{
-						PawnPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
-						ApplyPossibleMovesMaterials(PossiblePawnMoves);
-					}
-					else if (BasePieceActor->IsA(ARook::StaticClass()))
-					{
-						RookPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
-						ApplyPossibleMovesMaterials(PossibleRookMoves);
-					}
-					else if (BasePieceActor->IsA(ABishop::StaticClass()))
-					{
-						BishopPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
-						ApplyPossibleMovesMaterials(PossibleBishopMoves);
-					}
-					else if (BasePieceActor->IsA(AQueen::StaticClass()))
-					{
-						QueenPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
-						ApplyPossibleMovesMaterials(PossibleQueenMoves);
-					}
-				
+					QueenPossibleMoves(ClickedActorLocation, ETileOwner::BLACK);
+					ApplyPossibleMovesMaterials(PossibleQueenMoves);
+				}
 			}
 		}
 	}
 
 	if (Hit.bBlockingHit && IsMyTurn && ClickCounter != 0)
 	{
-		
-
 		// Check if the second click is on a tile
 		if (ATile* CurrTile = Cast<ATile>(Hit.GetActor()))
 
