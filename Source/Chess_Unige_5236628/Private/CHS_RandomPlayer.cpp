@@ -370,6 +370,8 @@ void ACHS_RandomPlayer::OnTurn()
 						{
 							int32 RandIdx1 = FMath::RandRange(0, PossibleRookMoves.Num() - 1);
 							FVector2D RandomPosition = PossibleRookMoves[RandIdx1];
+
+							//DA QUI CREARE FUNZIONE
 							FVector RandomPosition3d;
 							RandomPosition3d.X = RandomPosition.X;
 							RandomPosition3d.Y = RandomPosition.Y;
