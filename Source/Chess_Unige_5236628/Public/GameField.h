@@ -26,6 +26,7 @@ class CHESS_UNIGE_5236628_API AGameField : public AActor
 	GENERATED_BODY()
 	
 public:	
+
 	// Keeps track of tiles
 	UPROPERTY(Transient)
 		TArray<ATile*> TileArray;
@@ -150,7 +151,7 @@ public:
 	template <typename T>
 	void SetPieceColor(int32 Color, T* ChessPiece);
 	
-	// Change pawn actor with a new piece given a pawn, a color (1==WHITE, 2==BLACK) and the type of the new piece
+	// Change pawn actor with a new piece given pawn pointer, a color (1==WHITE, 2==BLACK) and the type of the new piece
 	UFUNCTION(BlueprintCallable)
 	void PawnPromotion(ABasePiece* Pawn, int32 Color, FString NewPiece);
 

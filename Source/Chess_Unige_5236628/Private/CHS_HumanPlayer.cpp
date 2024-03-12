@@ -46,6 +46,15 @@ void ACHS_HumanPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 }
 
+void ACHS_HumanPlayer::OnTurn()
+{
+	IsMyTurn = true;
+	GameInstance->SetTurnMessage(TEXT("Human Player Turn"));
+	IsCheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
+	IsCheckMate(ETileOwner::WHITE, ETileOwner::BLACK);
+
+}
+
 void ACHS_HumanPlayer::OnClick()
 {
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
@@ -72,9 +81,7 @@ void ACHS_HumanPlayer::OnClick()
 			// Check if the user clicked white piece. User can use only white pieces.
 			if (Color == EPieceColor::WHITE)
 			{
-				IsCheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
-				IsCheckMate(ETileOwner::WHITE, ETileOwner::BLACK);
-
+				
 				ClickCounter = ClickCounter + 1;
 
 				// Get clicked piece xyz location
@@ -317,16 +324,6 @@ void ACHS_HumanPlayer::OnClick()
 			}
 		}
 	}
-}
-
-
-
-
-void ACHS_HumanPlayer::OnTurn()
-{
-	IsMyTurn = true;
-	GameInstance->SetTurnMessage(TEXT("Human Player Turn"));
-	
 }
 
 void ACHS_HumanPlayer::MoveBasePiece(ABasePiece*, FVector OldLocation, FVector NewLocation)

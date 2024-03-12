@@ -35,7 +35,6 @@ public:
 
 
 	// Possible moves array
-
 	UPROPERTY(EditDefaultsOnly)
 		TArray<FVector2D> PossibleKnightMoves;
 
