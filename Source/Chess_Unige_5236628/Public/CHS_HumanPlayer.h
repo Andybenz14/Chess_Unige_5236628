@@ -79,5 +79,5 @@ public:
 
 	void ApplyPossibleMovesMaterials(const TArray<FVector2D>& PossibleMoves);
 
-	
+	void SetHiddenKilledPiece(FVector2D Position, ABasePiece* ClickedPiece);
 };

@@ -206,17 +206,7 @@ void ACHS_HumanPlayer::OnClick()
 				{
 					if (int32 IsValid = IsPieceMoveValid(Position, PossiblePawnMoves) == 1) 
 					{
-						Position.X = Position.X / 120;
-						Position.Y = Position.Y / 120;
-
-						ClickedPiece->SetActorHiddenInGame(true);
-						ClickedPiece->SetActorEnableCollision(false);
-						GameMode->GField->BasePieceMap.Remove(Position);
-						FDestroyedPiece NewDestroyedPiece;
-						NewDestroyedPiece.Piece = ClickedPiece;
-						NewDestroyedPiece.Position = Position;
-						NewDestroyedPiece.TurnCounter = GameInstance->DestroyedPieceArrayIndexCounter;
-						GameInstance->DestroyedPieceArray.Add(NewDestroyedPiece);
+						SetHiddenKilledPiece(Position, ClickedPiece);
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}
@@ -226,17 +216,7 @@ void ACHS_HumanPlayer::OnClick()
 				{
 					if (int32 IsValid = IsPieceMoveValid(Position, PossibleKingMoves) == 1) 
 					{
-						Position.X = Position.X / 120;
-						Position.Y = Position.Y / 120;
-
-						ClickedPiece->SetActorHiddenInGame(true);
-						ClickedPiece->SetActorEnableCollision(false);
-						GameMode->GField->BasePieceMap.Remove(Position);
-						FDestroyedPiece NewDestroyedPiece;
-						NewDestroyedPiece.Piece = ClickedPiece;
-						NewDestroyedPiece.Position = Position;
-						NewDestroyedPiece.TurnCounter = GameInstance->DestroyedPieceArrayIndexCounter;
-						GameInstance->DestroyedPieceArray.Add(NewDestroyedPiece);
+						SetHiddenKilledPiece(Position, ClickedPiece);
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}
@@ -246,17 +226,7 @@ void ACHS_HumanPlayer::OnClick()
 				{
 					if (int32 IsValid = IsPieceMoveValid(Position, PossibleQueenMoves) == 1) 
 					{
-						Position.X = Position.X / 120;
-						Position.Y = Position.Y / 120;
-
-						ClickedPiece->SetActorHiddenInGame(true);
-						ClickedPiece->SetActorEnableCollision(false);
-						GameMode->GField->BasePieceMap.Remove(Position);
-						FDestroyedPiece NewDestroyedPiece;
-						NewDestroyedPiece.Piece = ClickedPiece;
-						NewDestroyedPiece.Position = Position;
-						NewDestroyedPiece.TurnCounter = GameInstance->DestroyedPieceArrayIndexCounter;
-						GameInstance->DestroyedPieceArray.Add(NewDestroyedPiece);
+						SetHiddenKilledPiece(Position, ClickedPiece);
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}
@@ -266,17 +236,7 @@ void ACHS_HumanPlayer::OnClick()
 				{
 					if (int32 IsValid = IsPieceMoveValid(Position, PossibleBishopMoves) == 1) 
 					{
-						Position.X = Position.X / 120;
-						Position.Y = Position.Y / 120;
-
-						ClickedPiece->SetActorHiddenInGame(true);
-						ClickedPiece->SetActorEnableCollision(false);
-						GameMode->GField->BasePieceMap.Remove(Position);
-						FDestroyedPiece NewDestroyedPiece;
-						NewDestroyedPiece.Piece = ClickedPiece;
-						NewDestroyedPiece.Position = Position;
-						NewDestroyedPiece.TurnCounter = GameInstance->DestroyedPieceArrayIndexCounter;
-						GameInstance->DestroyedPieceArray.Add(NewDestroyedPiece);
+						SetHiddenKilledPiece(Position, ClickedPiece);
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}
@@ -286,17 +246,7 @@ void ACHS_HumanPlayer::OnClick()
 				{
 					if (int32 IsValid = IsPieceMoveValid(Position, PossibleKnightMoves) == 1) 
 					{
-						Position.X = Position.X / 120;
-						Position.Y = Position.Y / 120;
-
-						ClickedPiece->SetActorHiddenInGame(true);
-						ClickedPiece->SetActorEnableCollision(false);
-						GameMode->GField->BasePieceMap.Remove(Position);
-						FDestroyedPiece NewDestroyedPiece;
-						NewDestroyedPiece.Piece = ClickedPiece;
-						NewDestroyedPiece.Position = Position;
-						NewDestroyedPiece.TurnCounter = GameInstance->DestroyedPieceArrayIndexCounter;
-						GameInstance->DestroyedPieceArray.Add(NewDestroyedPiece);
+						SetHiddenKilledPiece(Position, ClickedPiece);
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}
@@ -306,17 +256,7 @@ void ACHS_HumanPlayer::OnClick()
 				{
 					if (int32 IsValid = IsPieceMoveValid(Position, PossibleRookMoves) == 1)
 					{
-						Position.X = Position.X / 120;
-						Position.Y = Position.Y / 120;
-
-						ClickedPiece->SetActorHiddenInGame(true);
-						ClickedPiece->SetActorEnableCollision(false);
-						GameMode->GField->BasePieceMap.Remove(Position);
-						FDestroyedPiece NewDestroyedPiece;
-						NewDestroyedPiece.Piece = ClickedPiece;
-						NewDestroyedPiece.Position = Position;
-						NewDestroyedPiece.TurnCounter = GameInstance->DestroyedPieceArrayIndexCounter;
-						GameInstance->DestroyedPieceArray.Add(NewDestroyedPiece);
+						SetHiddenKilledPiece(Position, ClickedPiece);
 						MoveBasePiece(BasePieceActor, ClickedActorLocation, BlackActorLocation);
 						
 					}
@@ -324,6 +264,21 @@ void ACHS_HumanPlayer::OnClick()
 			}
 		}
 	}
+}
+
+void ACHS_HumanPlayer::SetHiddenKilledPiece(FVector2D Position, ABasePiece* ClickedPiece)
+{
+	Position.X = Position.X / 120;
+	Position.Y = Position.Y / 120;
+	ClickedPiece->SetActorHiddenInGame(true);
+	ClickedPiece->SetActorEnableCollision(false);
+	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+	GameMode->GField->BasePieceMap.Remove(Position);
+	FDestroyedPiece NewDestroyedPiece;
+	NewDestroyedPiece.Piece = ClickedPiece;
+	NewDestroyedPiece.Position = Position;
+	NewDestroyedPiece.TurnCounter = GameInstance->DestroyedPieceArrayIndexCounter;
+	GameInstance->DestroyedPieceArray.Add(NewDestroyedPiece);
 }
 
 void ACHS_HumanPlayer::MoveBasePiece(ABasePiece*, FVector OldLocation, FVector NewLocation)
