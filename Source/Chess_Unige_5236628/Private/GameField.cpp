@@ -53,66 +53,67 @@ void AGameField::ResetField()
 	FTimerHandle TimerHandle;
 
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&]()
+	{
+
+		ACHS_GameMode* GameMode = Cast<ACHS_GameMode>(GetWorld()->GetAuthGameMode());
+		GameMode->IsMyTurn = 1;
+
+		for (auto& Pair : TileMap)
 		{
-	ACHS_GameMode* GameMode = Cast<ACHS_GameMode>(GetWorld()->GetAuthGameMode());
-	GameMode->IsMyTurn = 1;
-
-	for (auto& Pair : TileMap)
-	{
-		ATile* Tile = Pair.Value;
-		Tile->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
-		Tile->Destroy();
-	}
-	for (auto& Pair : BasePieceMap)
-	{
-		ABasePiece* Piece = Pair.Value;
-		Piece->Destroy();
-	}
-	for (ABasePiece* Piece : GameInstance->PiecesForReplay)
-	{
-		Piece->Destroy();
-	}
-	for (ABasePiece* Piece : GameInstance->PieceAfterPromo)
-	{
-		Piece->Destroy();
-	}
-	for (int i = 0; i < GameInstance->DestroyedPieceArray.Num(); i++)
-	{
-		GameInstance->DestroyedPieceArray[i].Piece->Destroy();
-	}
-	for (int i = 0; i < GameInstance->PromotedPieceArray.Num(); i++)
-	{
-		GameInstance->PromotedPieceArray[i].Piece->Destroy();
-	}
+			ATile* Tile = Pair.Value;
+			Tile->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
+			Tile->Destroy();
+		}
+		for (auto& Pair : BasePieceMap)
+		{
+			ABasePiece* Piece = Pair.Value;
+			Piece->Destroy();
+		}
+		for (ABasePiece* Piece : GameInstance->PiecesForReplay)
+		{
+			Piece->Destroy();
+		}
+		for (ABasePiece* Piece : GameInstance->PieceAfterPromo)
+		{
+			Piece->Destroy();
+		}
+		for (int i = 0; i < GameInstance->DestroyedPieceArray.Num(); i++)
+		{
+			GameInstance->DestroyedPieceArray[i].Piece->Destroy();
+		}
+		for (int i = 0; i < GameInstance->PromotedPieceArray.Num(); i++)
+		{
+			GameInstance->PromotedPieceArray[i].Piece->Destroy();
+		}
 	
-	BasePieceMap.Empty();
-	TileMap.Empty();
-	BasePieceArray.Empty();
-	TileArray.Empty();
+		BasePieceMap.Empty();
+		TileMap.Empty();
+		BasePieceArray.Empty();
+		TileArray.Empty();
 	
-	FString reset = TEXT(" ");
-	GameInstance->SetRegisterMove(reset);
-	GameInstance->SetTurnMessage(reset);
-	GameInstance->Moves.Empty();
-	GameInstance->MovesForReplay.Empty();
-	GameInstance->PiecesForReplay.Empty();
-	GameInstance->DestroyedPieceArray.Empty();
-	GameInstance->PromotedPieceArray.Empty();
-	GameInstance->PieceAfterPromo.Empty();
-	GameInstance->DestroyedPieceArrayIndexCounter = 0;
-	GameInstance->IsGameFinished = false;
+		FString reset = TEXT(" ");
+		GameInstance->SetRegisterMove(reset);
+		GameInstance->SetTurnMessage(reset);
+		GameInstance->Moves.Empty();
+		GameInstance->MovesForReplay.Empty();
+		GameInstance->PiecesForReplay.Empty();
+		GameInstance->DestroyedPieceArray.Empty();
+		GameInstance->PromotedPieceArray.Empty();
+		GameInstance->PieceAfterPromo.Empty();
+		GameInstance->DestroyedPieceArrayIndexCounter = 0;
+		GameInstance->IsGameFinished = false;
 
-	// Genera nuovamente il campo e le pedine
-	GenerateField();
+		// Genera nuovamente il campo e le pedine
+		GenerateField();
 	
-	// Invia l'evento di reset a tutti gli oggetti registrati
-	OnResetEvent.Broadcast();
+		// Invia l'evento di reset a tutti gli oggetti registrati
+		OnResetEvent.Broadcast();
 
-	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
 
-	PlayerController->EnableInput(PlayerController);
+		PlayerController->EnableInput(PlayerController);
 
-		}, 0.5, false);
+	}, 0.5, false);
 	
 }
 

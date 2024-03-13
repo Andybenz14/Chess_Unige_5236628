@@ -17,8 +17,6 @@ public:
 	// Sets default values for this pawn's properties
 	ACHS_RandomPlayer();
 
-	
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -51,5 +49,7 @@ public:
 
 	// Move piece into a new position
 	void MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVector NewLocation);
+
+	void SetKilledPieceHidden(FVector2D NormalizedPosition);
 
 };
