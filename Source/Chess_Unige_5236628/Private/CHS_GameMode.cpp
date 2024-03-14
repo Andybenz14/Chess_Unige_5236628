@@ -65,7 +65,6 @@ void ACHS_GameMode::BeginPlay()
 
 void ACHS_GameMode::EndHumanTurn()
 {
-	
 	IsMyTurn = 0;
 
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0); 

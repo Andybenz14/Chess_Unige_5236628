@@ -29,4 +29,6 @@ public:
 
 	virtual void OnTurn();
 
+	int32 Evaluate();
+
 };
