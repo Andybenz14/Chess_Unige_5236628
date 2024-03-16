@@ -30,5 +30,15 @@ public:
 	virtual void OnTurn();
 
 	int32 Evaluate();
+	
+	int32 AlfaBetaMinimax(const TMap<FVector2D, ABasePiece*>& State, int32 Depth, int32 Alfa, int32 Beta, bool IsMax);
 
+	TMap<FVector2D, ABasePiece*> UpdateInGamePiecesMapForMinimaxSimulation();
+	
+
+	int32 NodeCounter = 0;
+	int32 V;
+
+	UPROPERTY(Transient)
+		TMap<FVector2D, ABasePiece*> PiecesMapForMinimax;
 };
