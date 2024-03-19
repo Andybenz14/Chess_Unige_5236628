@@ -40,7 +40,8 @@ public:
 	void MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVector NewLocation);
 
 	void SetKilledPieceHidden(FVector2D NormalizedPosition);
-;
+; 
+	void TileMapReset();
 	
 	
 };

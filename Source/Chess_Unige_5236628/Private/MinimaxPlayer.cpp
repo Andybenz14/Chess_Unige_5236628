@@ -38,27 +38,36 @@ void AMinimaxPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 void AMinimaxPlayer::OnTurn()
 {
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
-
+	IsKillMove = false;
 	bool IsMax = true;
-	int32 Depth = 3;
+	int32 Depth = 2;
 	int32 Alfa = std::numeric_limits<int>::min();
 	int32 Beta = std::numeric_limits<int>::max();
 	FVector2D BestMove;
-	ABasePiece* BestActor;
+	ABasePiece* BestActor = nullptr;
 	TMap<FVector2D, ABasePiece*>Backup = GameMode->GField->BasePieceMap;
 	int32 test=AlfaBetaMinimax(Depth, IsMax, Alfa, Beta, BestMove, BestActor);
 
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Black Score: %d"), test));
 
 	GameMode->GField->BasePieceMap = Backup;
-
-	BestMove.X = BestMove.X / 120;
-	BestMove.Y = BestMove.Y / 120;
-	SetKilledPieceHidden(BestMove);
-	FVector NewLocation(BestMove.X * 120, BestMove.Y * 120, 10);
-	FVector OldLocation = BestActor->GetActorLocation();
-	MoveBaseBlackPiece(BestActor, OldLocation, NewLocation);
-	
+	TileMapReset();
+	if (BestActor != nullptr)
+	{
+		BestMove.X = BestMove.X / 120;
+		BestMove.Y = BestMove.Y / 120;
+		SetKilledPieceHidden(BestMove);
+		FVector NewLocation(BestMove.X * 120, BestMove.Y * 120, 10.00);
+		FVector OldLocation = BestActor->GetActorLocation();
+		MoveBaseBlackPiece(BestActor, OldLocation, NewLocation);
+	}
+	else
+	{
+		GameInstance->SetTurnMessage(TEXT("WHITE WINS"));
+		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+		PlayerController->DisableInput(PlayerController);
+		GameInstance->IsGameFinished = true;
+	}
 }
 
 //Il Problema è che gli array dei cicli cambiano nel mentre
@@ -88,9 +97,14 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 		//Da capire come mai a volte gli actors siano più di 16
 		for (ABasePiece* SelectedActor : ActorsBackup)
 		{
+			FVector ActorLocation = SelectedActor->GetActorLocation();
+
 			// Try to cast PossiblePice to AKing and check if cast is successful 
 			if (AKing* KingActor = Cast<AKing>(SelectedActor))
 			{
+				IsCheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
+				IsCheckMate(ETileOwner::BLACK, ETileOwner::WHITE);
+				KingPossibleMoves(ActorLocation, ETileOwner::WHITE);
 				TArray<FVector2D> PossibleKingMovesBackup = PossibleKingMoves;
 
 				if (PossibleKingMovesBackup.Num() > 0)
@@ -99,17 +113,26 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
 						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
+
+						if (V > Alfa) {
+							Alfa = V;
+							BestMove = Move;
+							BestActor = SelectedActor;
+						}
 						if (V >= Beta)
 						{
 							return V;
 						}
-						Alfa = std::max(Alfa, V);
+					
 
 					}
 				}
 			}
 			else if (APawnChess* PawnActor = Cast<APawnChess>(SelectedActor))
 			{
+				IsCheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
+				IsCheckMate(ETileOwner::BLACK, ETileOwner::WHITE);
+				PawnPossibleMoves(ActorLocation, ETileOwner::WHITE);
 				TArray<FVector2D> PossiblePawnMovesBackup = PossiblePawnMoves;
 
 				if (PossiblePawnMovesBackup.Num() > 0)
@@ -118,16 +141,25 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
 						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
+
+						if (V > Alfa) {
+							Alfa = V;
+							BestMove = Move;
+							BestActor = SelectedActor;
+						}
 						if (V >= Beta)
 						{
 							return V;
 						}
-						Alfa = std::max(Alfa, V);
+					
 					}
 				}
 			}
 			else if (AQueen* QueenActor = Cast<AQueen>(SelectedActor))
 			{
+				IsCheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
+				IsCheckMate(ETileOwner::BLACK, ETileOwner::WHITE);
+				QueenPossibleMoves(ActorLocation, ETileOwner::WHITE);
 				TArray<FVector2D> PossibleQueenMovesBackup = PossibleQueenMoves;
 
 				if (PossibleQueenMovesBackup.Num() > 0)
@@ -136,17 +168,26 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
 						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
+
+						if (V > Alfa) {
+							Alfa = V;
+							BestMove = Move;
+							BestActor = SelectedActor;
+						}
 						if (V >= Beta)
 						{
 							return V;
 						}
-						Alfa = std::max(Alfa, V);
+					
 
 					}
 				}
 			}
 			else if (ABishop* BishopActor = Cast<ABishop>(SelectedActor))
 			{
+				IsCheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
+				IsCheckMate(ETileOwner::BLACK, ETileOwner::WHITE);
+				BishopPossibleMoves(ActorLocation, ETileOwner::WHITE);
 				TArray<FVector2D> PossibleBishopMovesBackup = PossibleBishopMoves;
 
 				if (PossibleBishopMovesBackup.Num() > 0)
@@ -155,18 +196,27 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
 						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
+
+						if (V > Alfa) {
+							Alfa = V;
+							BestMove = Move;
+							BestActor = SelectedActor;
+						}
+
 						if (V >= Beta)
 						{
 							return V;
 						}
-						Alfa = std::max(Alfa, V);
+						
 
 					}
 				}
 			}
 			else if (AKnight* KnightActor = Cast<AKnight>(SelectedActor))
 			{
-
+				IsCheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
+				IsCheckMate(ETileOwner::BLACK, ETileOwner::WHITE);
+				KnightPossibleMoves(ActorLocation, ETileOwner::WHITE);
 				TArray<FVector2D> PossibleKnightMovesBackup = PossibleKnightMoves;
 
 				if (PossibleKnightMovesBackup.Num() > 0)
@@ -175,17 +225,26 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
 						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
+
+						if (V > Alfa) {
+							Alfa = V;
+							BestMove = Move;
+							BestActor = SelectedActor;
+						}
 						if (V >= Beta)
 						{
 							return V;
 						}
-						Alfa = std::max(Alfa, V);
+					
 
 					}
 				}
 			}
 			else if (ARook* RookActor = Cast<ARook>(SelectedActor))
 			{
+				IsCheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
+				IsCheckMate(ETileOwner::BLACK, ETileOwner::WHITE);
+				RookPossibleMoves(ActorLocation, ETileOwner::WHITE);
 				TArray<FVector2D> PossibleRookMovesBackup = PossibleRookMoves;
 
 				if (PossibleRookMovesBackup.Num() > 0)
@@ -194,17 +253,24 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
 						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
+
+						if (V > Alfa) {
+							Alfa = V;
+							BestMove = Move;
+							BestActor = SelectedActor;
+						}
 						if (V >= Beta)
 						{
 							return V;
 						}
-						Alfa = std::max(Alfa, V);
+					
 
 					}
 				}
 			}
 
 		}
+
 		return V;
 	}
 	else
@@ -224,10 +290,15 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 		//Qui eseguo tutti i nodi possibili
 		for (ABasePiece* SelectedActor : ActorsBackup)
 		{
+			FVector ActorLocation = SelectedActor->GetActorLocation();
+
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Actor: %s"), *SelectedActor->GetName()));
 			// Try to cast PossiblePice to AKing and check if cast is successful 
 			if (AKing* KingActor = Cast<AKing>(SelectedActor))
 			{
+				IsCheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
+				IsCheckMate(ETileOwner::WHITE, ETileOwner::BLACK);
+				KingPossibleMoves(ActorLocation, ETileOwner::BLACK);
 				TArray<FVector2D> PossibleKingMovesBackup = PossibleKingMoves;
 
 				if (PossibleKingMovesBackup.Num() > 0)
@@ -236,17 +307,25 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
 						MoveSimulation(StartLocation, Move, ETileOwner::WHITE, ETileOwner::BLACK, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
+
+						if (V < Beta) {
+							Beta = V;
+
+						}
 						if (V <= Alfa)
 						{
 							return V;
 						}
-						Beta = std::min(Beta, V);
+						
 
 					}
 				}
 			}
 			else if (APawnChess* PawnActor = Cast<APawnChess>(SelectedActor))
 			{
+				IsCheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
+				IsCheckMate(ETileOwner::WHITE, ETileOwner::BLACK);
+				PawnPossibleMoves(ActorLocation, ETileOwner::BLACK);
 				TArray<FVector2D> PossiblePawnMovesBackup = PossiblePawnMoves;
 
 				if (PossiblePawnMovesBackup.Num() > 0)
@@ -255,18 +334,26 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
 						MoveSimulation(StartLocation, Move, ETileOwner::WHITE, ETileOwner::BLACK, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
+
+						if (V < Beta) {
+							Beta = V;
+							
+						}
 						if (V <= Alfa)
 						{
 
 							return V;
 						}
-						Beta = std::min(Beta, V);
+						
 
 					}
 				}
 			}
 			else if (AQueen* QueenActor = Cast<AQueen>(SelectedActor))
 			{
+				IsCheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
+				IsCheckMate(ETileOwner::WHITE, ETileOwner::BLACK);
+				QueenPossibleMoves(ActorLocation, ETileOwner::BLACK);
 				TArray<FVector2D> PossibleQueenMovesBackup = PossibleQueenMoves;
 
 				if (PossibleQueenMovesBackup.Num() > 0)
@@ -275,17 +362,25 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
 						MoveSimulation(StartLocation, Move, ETileOwner::WHITE, ETileOwner::BLACK, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
+
+						if (V < Beta) {
+							Beta = V;
+							
+						}
 						if (V <= Alfa)
 						{
 							return V;
 						}
-						Beta = std::min(Beta, V);
+						
 
 					}
 				}
 			}
 			else if (ABishop* BishopActor = Cast<ABishop>(SelectedActor))
 			{
+				IsCheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
+				IsCheckMate(ETileOwner::WHITE, ETileOwner::BLACK);
+				BishopPossibleMoves(ActorLocation, ETileOwner::BLACK);
 				TArray<FVector2D> PossibleBishopMovesBackup = PossibleBishopMoves;
 
 				if (PossibleBishopMovesBackup.Num() > 0)
@@ -294,17 +389,25 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
 						MoveSimulation(StartLocation, Move, ETileOwner::WHITE, ETileOwner::BLACK, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
+
+						if (V < Beta) {
+							Beta = V;
+							
+						}
 						if (V <= Alfa)
 						{
 							return V;
 						}
-						Beta = std::min(Beta, V);
+						
 
 					}
 				}
 			}
 			else if (AKnight* KnightActor = Cast<AKnight>(SelectedActor))
 			{
+				IsCheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
+				IsCheckMate(ETileOwner::WHITE, ETileOwner::BLACK);
+				KnightPossibleMoves(ActorLocation, ETileOwner::BLACK);
 				TArray<FVector2D> PossibleKnightMovesBackup = PossibleKnightMoves;
 
 				if (PossibleKnightMovesBackup.Num() > 0)
@@ -313,17 +416,25 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
 						MoveSimulation(StartLocation, Move, ETileOwner::WHITE, ETileOwner::BLACK, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
+
+						if (V < Beta) {
+							Beta = V;
+							
+						}
 						if (V <= Alfa)
 						{
 							return V;
 						}
-						Beta = std::min(Beta, V);
+						
 
 					}
 				}
 			}
 			else if (ARook* RookActor = Cast<ARook>(SelectedActor))
 			{
+				IsCheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
+				IsCheckMate(ETileOwner::WHITE, ETileOwner::BLACK);
+				RookPossibleMoves(ActorLocation, ETileOwner::BLACK);
 				TArray<FVector2D> PossibleRookMovesBackup = PossibleRookMoves;
 
 				if (PossibleRookMovesBackup.Num() > 0)
@@ -332,11 +443,17 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
 						MoveSimulation(StartLocation, Move, ETileOwner::WHITE, ETileOwner::BLACK, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
+
+						if (V < Beta) {
+							Beta = V;
+							
+						}
 						if (V <= Alfa)
 						{
 							return V;
 						}
-						Beta = std::min(Beta, V);
+					
+
 					}
 				}
 			}
@@ -364,13 +481,9 @@ void AMinimaxPlayer::MoveSimulation(FVector SelectedActorLocation, FVector2D Sel
 	FVector2D SelectedActorLocation2D(SelectedActorLocation);
 	// Set tile located at old piece position as empty and without owner
 	// Set tile located at old piece position as empty and without owner
-	ETileStatus Status0 = GameMode->GField->TileMap[SelectedActorLocation2D]->GetTileStatus();
-	ETileOwner Owner0 = GameMode->GField->TileMap[SelectedActorLocation2D]->GetOwner();
 	GameMode->GField->TileMap[SelectedActorLocation2D]->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
 
 	// Set tile located at new black piece position as occupied and with black owner
-	ETileStatus Status1 = GameMode->GField->TileMap[SelectedMovePosition]->GetTileStatus();
-	ETileOwner Owner1 = GameMode->GField->TileMap[SelectedMovePosition]->GetOwner();
 	GameMode->GField->TileMap[SelectedMovePosition]->SetTileStatus(FriendColor, ETileStatus::OCCUPIED);
 
 	// Normalize
@@ -385,31 +498,16 @@ void AMinimaxPlayer::MoveSimulation(FVector SelectedActorLocation, FVector2D Sel
 
 	if (FriendColor == ETileOwner::BLACK)
 	{
-		if (V > Alfa)
-		{
-			Alfa = V;
-			BestMove = SelectedMovePosition;
-			BestActor = SelectedActor;
-		}
-
 		V = std::max(V, AlfaBetaMinimax(Depth - 1, false, Alfa, Beta, BestMove, BestActor));
 	}
 	else
 	{
-		if (V < Beta)
-		{
-			Beta = V;
-			BestMove = SelectedMovePosition;
-			BestActor = SelectedActor;
-		}
-
 		V = std::min(V, AlfaBetaMinimax(Depth - 1, true, Alfa, Beta, BestMove, BestActor));
 	}
 
 	GameMode->GField->BasePieceMap=BackupBasePieceMap;
-	GameMode->GField->TileMap[SelectedActorLocation2D]->SetTileStatus(Owner0, Status0);
-	GameMode->GField->TileMap[SelectedMovePosition]->SetTileStatus(Owner1, Status1);
-
+	TileMapReset();
+	
 }
 
 
@@ -501,6 +599,34 @@ void AMinimaxPlayer::SetKilledPieceHidden(FVector2D NormalizedPosition)
 		NewDestroyedPiece.Position = NormalizedPosition;
 		NewDestroyedPiece.TurnCounter = GameInstance->DestroyedPieceArrayIndexCounter;
 		GameInstance->DestroyedPieceArray.Add(NewDestroyedPiece);
+	}
+
+}
+
+void AMinimaxPlayer::TileMapReset()
+{
+	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+
+	for (auto& Pair : GameMode->GField->TileMap)
+	{
+		ATile* Tile = Pair.Value;
+		Tile->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
+		FVector TileLocation = Tile->GetActorLocation();
+		FVector2D TileLocation2D(TileLocation.X / 120, TileLocation.Y / 120);
+
+		if (GameMode->GField->BasePieceMap.Contains(TileLocation2D))
+		{
+			EPieceColor Color = GameMode->GField->BasePieceMap[TileLocation2D]->GetPieceColor();
+
+			if (Color == EPieceColor::BLACK)
+			{
+				Tile->SetTileStatus(ETileOwner::BLACK, ETileStatus::OCCUPIED);
+			}
+			else
+			{
+				Tile->SetTileStatus(ETileOwner::WHITE, ETileStatus::OCCUPIED);
+			}
+		}
 	}
 
 }
