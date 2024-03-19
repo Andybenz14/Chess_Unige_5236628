@@ -627,6 +627,28 @@ int32 AMinimaxPlayer::EvaluateCenterControl(ABasePiece* BasePieceActor)
 			Score = 4;
 		}
 	}
+	else if (BasePieceActor->IsA(APawn::StaticClass()))
+	{
+		if ((ActorLocation.X == 360 || ActorLocation.X == 480) && (ActorLocation.Y == 360 || ActorLocation.Y == 480))
+		{
+			Score = 10;
+		}
+		else if ((ActorLocation.X == 240 || ActorLocation.X == 600) && (ActorLocation.Y == 240 || ActorLocation.Y == 600))
+		{
+			Score = 2;
+		}
+	}
+	else if (BasePieceActor->IsA(AKing::StaticClass()))
+	{
+		if ((ActorLocation.X == 360 || ActorLocation.X == 480) && (ActorLocation.Y == 360 || ActorLocation.Y == 480))
+		{
+			Score = -30;
+		}
+		else if ((ActorLocation.X == 240 || ActorLocation.X == 600) && (ActorLocation.Y == 240 || ActorLocation.Y == 600))
+		{
+			Score = -15;
+		}
+	}
 
 	return Score;
 }
@@ -653,7 +675,7 @@ int32 AMinimaxPlayer::EvaluateKingDefence(ABasePiece* BasePieceActor, int32 Colo
 
 				if (Distance == 120)
 				{
-					Score = 5;
+					Score = 2;
 				}
 			}
 		}
