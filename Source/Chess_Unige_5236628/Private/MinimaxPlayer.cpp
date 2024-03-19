@@ -37,63 +37,68 @@ void AMinimaxPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void AMinimaxPlayer::OnTurn()
 {
+	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+
 	bool IsMax = true;
-	int32 Depth = 2;
+	int32 Depth = 3;
 	int32 Alfa = std::numeric_limits<int>::min();
 	int32 Beta = std::numeric_limits<int>::max();
-	PieceMapBackupArray.Empty();
-	IsCheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
-	IsCheckMate(ETileOwner::BLACK, ETileOwner::WHITE);
-	int32 test=AlfaBetaMinimax(Depth, Alfa, Beta, IsMax);
+	FVector2D BestMove;
+	ABasePiece* BestActor;
+	TMap<FVector2D, ABasePiece*>Backup = GameMode->GField->BasePieceMap;
+	int32 test=AlfaBetaMinimax(Depth, IsMax, Alfa, Beta, BestMove, BestActor);
 
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Black Score: %d"), test));
 
+	GameMode->GField->BasePieceMap = Backup;
+
+	BestMove.X = BestMove.X / 120;
+	BestMove.Y = BestMove.Y / 120;
+	SetKilledPieceHidden(BestMove);
+	FVector NewLocation(BestMove.X * 120, BestMove.Y * 120, 10);
+	FVector OldLocation = BestActor->GetActorLocation();
+	MoveBaseBlackPiece(BestActor, OldLocation, NewLocation);
 	
 }
 
-int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, int32 Alfa, int32 Beta, bool IsMax)
+//Il Problema è che gli array dei cicli cambiano nel mentre
+int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32 Beta, FVector2D& BestMove, ABasePiece*& BestActor)
 {
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
 
-	if (Depth == 3)
-	{
-		PieceMapBackupArray.SetNum(FMath::Max(PieceMapBackupArray.Num(), 3));
-		PieceMapBackupArray[2] = GameMode->GField->BasePieceMap;
-	}
-	else if (Depth == 2)
-	{
-		PieceMapBackupArray.SetNum(FMath::Max(PieceMapBackupArray.Num(), 2));
-		PieceMapBackupArray[1] = GameMode->GField->BasePieceMap;
-	}
-	else if (Depth == 1)
-	{
-		PieceMapBackupArray.SetNum(FMath::Max(PieceMapBackupArray.Num(), 1));
-		PieceMapBackupArray[0] = GameMode->GField->BasePieceMap;
-	}
-	else if (Depth == 0)
+	if (Depth == 0 )
 	{
 		return Evaluate();
 	}
 
 	if (IsMax)
 	{
+		IsCheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
+		IsCheckMate(ETileOwner::BLACK, ETileOwner::WHITE);
+
+		if (GameInstance->IsGameFinished)
+		{
+			GameInstance->IsGameFinished = false;
+			return std::numeric_limits<int>::min();
+		}
+
 		V = std::numeric_limits<int>::min();
 
-		SimulatePossibleMoves(ETileOwner::BLACK, ETileOwner::WHITE);
-	
-		//Qui eseguo tutti i nodi possibili
-		for (ABasePiece* SelectedActor : Actors)
+		TArray<ABasePiece*> ActorsBackup = Actors;
+		//Da capire come mai a volte gli actors siano più di 16
+		for (ABasePiece* SelectedActor : ActorsBackup)
 		{
 			// Try to cast PossiblePice to AKing and check if cast is successful 
 			if (AKing* KingActor = Cast<AKing>(SelectedActor))
 			{
-				if (PossibleKingMoves.Num() > 0)
+				TArray<FVector2D> PossibleKingMovesBackup = PossibleKingMoves;
+
+				if (PossibleKingMovesBackup.Num() > 0)
 				{
-					for (FVector2D Move : PossibleKingMoves)
+					for (FVector2D Move : PossibleKingMovesBackup)
 					{
-						GameMode->GField->BasePieceMap = PieceMapBackupArray[Depth - 1];
-						SimulateMove(SelectedActor, Move, 0);
-						V = std::max(V, AlfaBetaMinimax(Depth - 1, Alfa, Beta, false));
+						FVector StartLocation = SelectedActor->GetActorLocation();
+						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 						if (V >= Beta)
 						{
 							return V;
@@ -101,36 +106,36 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, int32 Alfa, int32 Beta, bool 
 						Alfa = std::max(Alfa, V);
 
 					}
-					return V;
 				}
 			}
 			else if (APawnChess* PawnActor = Cast<APawnChess>(SelectedActor))
 			{
-				if (PossiblePawnMoves.Num() > 0)
+				TArray<FVector2D> PossiblePawnMovesBackup = PossiblePawnMoves;
+
+				if (PossiblePawnMovesBackup.Num() > 0)
 				{
-					for (FVector2D Move : PossiblePawnMoves)
+					for (FVector2D Move : PossiblePawnMovesBackup)
 					{
-						GameMode->GField->BasePieceMap = PieceMapBackupArray[Depth - 1];
-						SimulateMove(SelectedActor, Move, 0);
-						V = std::max(V, AlfaBetaMinimax(Depth - 1, Alfa, Beta, false));
+						FVector StartLocation = SelectedActor->GetActorLocation();
+						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 						if (V >= Beta)
 						{
 							return V;
 						}
 						Alfa = std::max(Alfa, V);
 					}
-					return V;
 				}
 			}
 			else if (AQueen* QueenActor = Cast<AQueen>(SelectedActor))
 			{
-				if (PossibleQueenMoves.Num() > 0)
+				TArray<FVector2D> PossibleQueenMovesBackup = PossibleQueenMoves;
+
+				if (PossibleQueenMovesBackup.Num() > 0)
 				{
-					for (FVector2D Move : PossibleQueenMoves)
+					for (FVector2D Move : PossibleQueenMovesBackup)
 					{
-						GameMode->GField->BasePieceMap = PieceMapBackupArray[Depth - 1];
-						SimulateMove(SelectedActor, Move, 0);
-						V = std::max(V, AlfaBetaMinimax(Depth - 1, Alfa, Beta, false));
+						FVector StartLocation = SelectedActor->GetActorLocation();
+						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 						if (V >= Beta)
 						{
 							return V;
@@ -138,18 +143,18 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, int32 Alfa, int32 Beta, bool 
 						Alfa = std::max(Alfa, V);
 
 					}
-					return V;
 				}
 			}
 			else if (ABishop* BishopActor = Cast<ABishop>(SelectedActor))
 			{
-				if (PossibleBishopMoves.Num() > 0)
+				TArray<FVector2D> PossibleBishopMovesBackup = PossibleBishopMoves;
+
+				if (PossibleBishopMovesBackup.Num() > 0)
 				{
-					for (FVector2D Move : PossibleBishopMoves)
+					for (FVector2D Move : PossibleBishopMovesBackup)
 					{
-						GameMode->GField->BasePieceMap = PieceMapBackupArray[Depth - 1];
-						SimulateMove(SelectedActor, Move, 0);
-						V = std::max(V, AlfaBetaMinimax(Depth - 1, Alfa, Beta, false));
+						FVector StartLocation = SelectedActor->GetActorLocation();
+						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 						if (V >= Beta)
 						{
 							return V;
@@ -157,18 +162,19 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, int32 Alfa, int32 Beta, bool 
 						Alfa = std::max(Alfa, V);
 
 					}
-					return V;
 				}
 			}
 			else if (AKnight* KnightActor = Cast<AKnight>(SelectedActor))
 			{
-				if (PossibleKnightMoves.Num() > 0)
+
+				TArray<FVector2D> PossibleKnightMovesBackup = PossibleKnightMoves;
+
+				if (PossibleKnightMovesBackup.Num() > 0)
 				{
-					for (FVector2D Move : PossibleKnightMoves)
+					for (FVector2D Move : PossibleKnightMovesBackup)
 					{
-						GameMode->GField->BasePieceMap = PieceMapBackupArray[Depth - 1];
-						SimulateMove(SelectedActor, Move, 0);
-						V = std::max(V, AlfaBetaMinimax(Depth - 1, Alfa, Beta, false));
+						FVector StartLocation = SelectedActor->GetActorLocation();
+						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 						if (V >= Beta)
 						{
 							return V;
@@ -176,18 +182,18 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, int32 Alfa, int32 Beta, bool 
 						Alfa = std::max(Alfa, V);
 
 					}
-					return V;
 				}
 			}
 			else if (ARook* RookActor = Cast<ARook>(SelectedActor))
 			{
-				if (PossibleRookMoves.Num() > 0)
+				TArray<FVector2D> PossibleRookMovesBackup = PossibleRookMoves;
+
+				if (PossibleRookMovesBackup.Num() > 0)
 				{
-					for (FVector2D Move : PossibleRookMoves)
+					for (FVector2D Move : PossibleRookMovesBackup)
 					{
-						GameMode->GField->BasePieceMap = PieceMapBackupArray[Depth - 1];
-						SimulateMove(SelectedActor, Move, 0);
-						V = std::max(V, AlfaBetaMinimax(Depth - 1, Alfa, Beta, false));
+						FVector StartLocation = SelectedActor->GetActorLocation();
+						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 						if (V >= Beta)
 						{
 							return V;
@@ -195,33 +201,41 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, int32 Alfa, int32 Beta, bool 
 						Alfa = std::max(Alfa, V);
 
 					}
-					return V;
 				}
 			}
 
 		}
-
+		return V;
 	}
 	else
 	{
+		IsCheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
+		IsCheckMate(ETileOwner::WHITE, ETileOwner::BLACK);
+
+		if (GameInstance->IsGameFinished)
+		{
+			GameInstance->IsGameFinished = false;
+			return std::numeric_limits<int>::max();
+		}
 
 		V = std::numeric_limits<int>::max();
 
-		SimulatePossibleMoves(ETileOwner::WHITE, ETileOwner::BLACK);
-
+		TArray<ABasePiece*> ActorsBackup = Actors;
 		//Qui eseguo tutti i nodi possibili
-		for (ABasePiece* SelectedActor : Actors)
+		for (ABasePiece* SelectedActor : ActorsBackup)
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Actor: %s"), *SelectedActor->GetName()));
 			// Try to cast PossiblePice to AKing and check if cast is successful 
 			if (AKing* KingActor = Cast<AKing>(SelectedActor))
 			{
-				if (PossibleKingMoves.Num() > 0)
+				TArray<FVector2D> PossibleKingMovesBackup = PossibleKingMoves;
+
+				if (PossibleKingMovesBackup.Num() > 0)
 				{
-					for (FVector2D Move : PossibleKingMoves)
+					for (FVector2D Move : PossibleKingMovesBackup)
 					{
-						GameMode->GField->BasePieceMap = PieceMapBackupArray[Depth - 1];
-						SimulateMove(SelectedActor, Move, 1);
-						V = std::min(V, AlfaBetaMinimax(Depth - 1, Alfa, Beta, true));
+						FVector StartLocation = SelectedActor->GetActorLocation();
+						MoveSimulation(StartLocation, Move, ETileOwner::WHITE, ETileOwner::BLACK, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 						if (V <= Alfa)
 						{
 							return V;
@@ -229,37 +243,38 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, int32 Alfa, int32 Beta, bool 
 						Beta = std::min(Beta, V);
 
 					}
-					return V;
 				}
 			}
 			else if (APawnChess* PawnActor = Cast<APawnChess>(SelectedActor))
 			{
-				if (PossiblePawnMoves.Num() > 0)
+				TArray<FVector2D> PossiblePawnMovesBackup = PossiblePawnMoves;
+
+				if (PossiblePawnMovesBackup.Num() > 0)
 				{
-					for (FVector2D Move : PossiblePawnMoves)
+					for (FVector2D Move : PossiblePawnMovesBackup)
 					{
-						GameMode->GField->BasePieceMap = PieceMapBackupArray[Depth - 1];
-						SimulateMove(SelectedActor, Move, 1);
-						V = std::min(V, AlfaBetaMinimax(Depth - 1, Alfa, Beta, true));
+						FVector StartLocation = SelectedActor->GetActorLocation();
+						MoveSimulation(StartLocation, Move, ETileOwner::WHITE, ETileOwner::BLACK, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 						if (V <= Alfa)
 						{
+
 							return V;
 						}
 						Beta = std::min(Beta, V);
 
 					}
-					return V;
 				}
 			}
 			else if (AQueen* QueenActor = Cast<AQueen>(SelectedActor))
 			{
-				if (PossibleQueenMoves.Num() > 0)
+				TArray<FVector2D> PossibleQueenMovesBackup = PossibleQueenMoves;
+
+				if (PossibleQueenMovesBackup.Num() > 0)
 				{
-					for (FVector2D Move : PossibleQueenMoves)
+					for (FVector2D Move : PossibleQueenMovesBackup)
 					{
-						GameMode->GField->BasePieceMap = PieceMapBackupArray[Depth - 1];
-						SimulateMove(SelectedActor, Move, 1);
-						V = std::min(V, AlfaBetaMinimax(Depth - 1, Alfa, Beta, true));
+						FVector StartLocation = SelectedActor->GetActorLocation();
+						MoveSimulation(StartLocation, Move, ETileOwner::WHITE, ETileOwner::BLACK, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 						if (V <= Alfa)
 						{
 							return V;
@@ -267,18 +282,18 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, int32 Alfa, int32 Beta, bool 
 						Beta = std::min(Beta, V);
 
 					}
-					return V;
 				}
 			}
 			else if (ABishop* BishopActor = Cast<ABishop>(SelectedActor))
 			{
-				if (PossibleBishopMoves.Num() > 0)
+				TArray<FVector2D> PossibleBishopMovesBackup = PossibleBishopMoves;
+
+				if (PossibleBishopMovesBackup.Num() > 0)
 				{
-					for (FVector2D Move : PossibleBishopMoves)
+					for (FVector2D Move : PossibleBishopMovesBackup)
 					{
-						GameMode->GField->BasePieceMap = PieceMapBackupArray[Depth - 1];
-						SimulateMove(SelectedActor, Move, 1);
-						V = std::min(V, AlfaBetaMinimax(Depth - 1, Alfa, Beta, true));
+						FVector StartLocation = SelectedActor->GetActorLocation();
+						MoveSimulation(StartLocation, Move, ETileOwner::WHITE, ETileOwner::BLACK, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 						if (V <= Alfa)
 						{
 							return V;
@@ -286,20 +301,18 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, int32 Alfa, int32 Beta, bool 
 						Beta = std::min(Beta, V);
 
 					}
-
-					return V;
 				}
-
 			}
 			else if (AKnight* KnightActor = Cast<AKnight>(SelectedActor))
 			{
-				if (PossibleKnightMoves.Num() > 0)
+				TArray<FVector2D> PossibleKnightMovesBackup = PossibleKnightMoves;
+
+				if (PossibleKnightMovesBackup.Num() > 0)
 				{
-					for (FVector2D Move : PossibleKnightMoves)
+					for (FVector2D Move : PossibleKnightMovesBackup)
 					{
-						GameMode->GField->BasePieceMap = PieceMapBackupArray[Depth - 1];
-						SimulateMove(SelectedActor, Move, 1);
-						V = std::min(V, AlfaBetaMinimax(Depth - 1, Alfa, Beta, true));
+						FVector StartLocation = SelectedActor->GetActorLocation();
+						MoveSimulation(StartLocation, Move, ETileOwner::WHITE, ETileOwner::BLACK, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 						if (V <= Alfa)
 						{
 							return V;
@@ -307,65 +320,96 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, int32 Alfa, int32 Beta, bool 
 						Beta = std::min(Beta, V);
 
 					}
-
-					return V;
 				}
 			}
 			else if (ARook* RookActor = Cast<ARook>(SelectedActor))
 			{
-				if (PossibleRookMoves.Num() > 0)
+				TArray<FVector2D> PossibleRookMovesBackup = PossibleRookMoves;
+
+				if (PossibleRookMovesBackup.Num() > 0)
 				{
-					for (FVector2D Move : PossibleRookMoves)
+					for (FVector2D Move : PossibleRookMovesBackup)
 					{
-						GameMode->GField->BasePieceMap = PieceMapBackupArray[Depth - 1];
-						SimulateMove(SelectedActor, Move, 1);
-						V = std::min(V, AlfaBetaMinimax(Depth - 1, Alfa, Beta, true));
+						FVector StartLocation = SelectedActor->GetActorLocation();
+						MoveSimulation(StartLocation, Move, ETileOwner::WHITE, ETileOwner::BLACK, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 						if (V <= Alfa)
 						{
 							return V;
 						}
 						Beta = std::min(Beta, V);
 					}
-
-					return V;
 				}
 			}
-
 		}
-
-
+		return V;
 	}
-	return V;
+	
 }
 
-void AMinimaxPlayer::SimulateMove(ABasePiece* SelectedActor, FVector2D Move, int32 Color)
+void AMinimaxPlayer::MoveSimulation(FVector SelectedActorLocation, FVector2D SelectedMovePosition, ETileOwner FriendColor, ETileOwner EnemyColor, ABasePiece* SelectedActor, int32 Depth, int32 Alfa, int32 Beta, FVector2D& BestMove, ABasePiece*& BestActor)
 {
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+	TMap<FVector2D, ABasePiece*> BackupBasePieceMap = GameMode->GField->BasePieceMap;
+	//Normalize
+	FVector2D NormalizedPosition(SelectedMovePosition.X / 120, SelectedMovePosition.Y / 120);
 
-	// Get actor location
-	FVector ActorLocation = SelectedActor->GetActorLocation();
-	FVector2D ActorLocation2D(ActorLocation);
-	FVector2D SelectedActorLocationNormalized(ActorLocation.X / 120, ActorLocation.Y / 120);
-
-	if (Color == 0)
+	// Check if BasePieceMap contains a piece in the move position. If yes it's a kill move.
+	if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
 	{
-		GameMode->GField->TileMap[ActorLocation2D]->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
-		GameMode->GField->TileMap[Move]->SetTileStatus(ETileOwner::BLACK, ETileStatus::OCCUPIED);
+		// Remove from basepiecemap the white actor in the move position
+		GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
+
+	}
+
+	FVector2D SelectedActorLocation2D(SelectedActorLocation);
+	// Set tile located at old piece position as empty and without owner
+	// Set tile located at old piece position as empty and without owner
+	ETileStatus Status0 = GameMode->GField->TileMap[SelectedActorLocation2D]->GetTileStatus();
+	ETileOwner Owner0 = GameMode->GField->TileMap[SelectedActorLocation2D]->GetOwner();
+	GameMode->GField->TileMap[SelectedActorLocation2D]->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
+
+	// Set tile located at new black piece position as occupied and with black owner
+	ETileStatus Status1 = GameMode->GField->TileMap[SelectedMovePosition]->GetTileStatus();
+	ETileOwner Owner1 = GameMode->GField->TileMap[SelectedMovePosition]->GetOwner();
+	GameMode->GField->TileMap[SelectedMovePosition]->SetTileStatus(FriendColor, ETileStatus::OCCUPIED);
+
+	// Normalize
+	FVector2D SelectedActorLocation2DNormalized;
+	SelectedActorLocation2DNormalized.X = SelectedActorLocation2D.X / 120;
+	SelectedActorLocation2DNormalized.Y = SelectedActorLocation2D.Y / 120;
+
+
+	// Change piece key from his old location to his new location
+	GameMode->GField->BasePieceMap.Remove(SelectedActorLocation2DNormalized);
+	GameMode->GField->BasePieceMap.Add(NormalizedPosition, SelectedActor);
+
+	if (FriendColor == ETileOwner::BLACK)
+	{
+		if (V > Alfa)
+		{
+			Alfa = V;
+			BestMove = SelectedMovePosition;
+			BestActor = SelectedActor;
+		}
+
+		V = std::max(V, AlfaBetaMinimax(Depth - 1, false, Alfa, Beta, BestMove, BestActor));
 	}
 	else
 	{
-		GameMode->GField->TileMap[ActorLocation2D]->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
-		GameMode->GField->TileMap[Move]->SetTileStatus(ETileOwner::WHITE, ETileStatus::OCCUPIED);
+		if (V < Beta)
+		{
+			Beta = V;
+			BestMove = SelectedMovePosition;
+			BestActor = SelectedActor;
+		}
+
+		V = std::min(V, AlfaBetaMinimax(Depth - 1, true, Alfa, Beta, BestMove, BestActor));
 	}
 
-	FVector2D MoveNormalized(Move.X / 120, Move.Y / 120);
-	if (GameMode->GField->BasePieceMap.Contains(MoveNormalized))
-	{
-		GameMode->GField->BasePieceMap.Remove(MoveNormalized);
-	}
+	GameMode->GField->BasePieceMap=BackupBasePieceMap;
+	GameMode->GField->TileMap[SelectedActorLocation2D]->SetTileStatus(Owner0, Status0);
+	GameMode->GField->TileMap[SelectedMovePosition]->SetTileStatus(Owner1, Status1);
 
-	GameMode->GField->BasePieceMap.Remove(SelectedActorLocationNormalized);
-	GameMode->GField->BasePieceMap.Add(MoveNormalized, SelectedActor);
 }
 
 
@@ -430,10 +474,101 @@ int32 AMinimaxPlayer::Evaluate()
 		
 	
 
-	return /*da definire*/ 0;
+	return BlackScore-WhiteScore;
 }
 
 
+
+
+void AMinimaxPlayer::SetKilledPieceHidden(FVector2D NormalizedPosition)
+{
+	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+
+	if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
+	{
+		IsKillMove = true;
+
+		ABasePiece* KilledActor = GameMode->GField->BasePieceMap[NormalizedPosition];
+		// Destroy the white actor in the move position
+		KilledActor->SetActorHiddenInGame(true);
+		KilledActor->SetActorEnableCollision(false);
+
+		// Remove from basepiecemap the white actor in the move position
+		GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
+
+		FDestroyedPiece NewDestroyedPiece;
+		NewDestroyedPiece.Piece = KilledActor;
+		NewDestroyedPiece.Position = NormalizedPosition;
+		NewDestroyedPiece.TurnCounter = GameInstance->DestroyedPieceArrayIndexCounter;
+		GameInstance->DestroyedPieceArray.Add(NewDestroyedPiece);
+	}
+
+}
+
+
+// Move black piece into new location
+void AMinimaxPlayer::MoveBaseBlackPiece(ABasePiece* SelectedActor, FVector OldLocation, FVector NewLocation)
+{
+	// GameMode pointer
+	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+
+	// Set black piece into new location
+	SelectedActor->SetActorLocation(NewLocation);
+
+	// Old black piece location in 2d
+	FVector2D OldBlackActorLocation2D(OldLocation);
+
+	// Get new piece location after the move
+	FVector NewActorLocation = SelectedActor->GetActorLocation();
+
+	GameInstance->MovesForReplay.Add(NewActorLocation);
+	GameInstance->PiecesForReplay.Add(SelectedActor);
+
+	// New 2d location
+	FVector2D NewActorLocation2D(NewActorLocation);
+
+	// Check if actor moved 
+	if (NewActorLocation == NewLocation)
+	{
+		// Set tile located at old piece position as empty and without owner
+		GameMode->GField->TileMap[OldBlackActorLocation2D]->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
+
+		// Set tile located at new black piece position as occupied and with black owner
+		GameMode->GField->TileMap[NewActorLocation2D]->SetTileStatus(ETileOwner::BLACK, ETileStatus::OCCUPIED);
+	}
+
+	// Normalize
+	OldBlackActorLocation2D.X = OldBlackActorLocation2D.X / 120;
+	OldBlackActorLocation2D.Y = OldBlackActorLocation2D.Y / 120;
+	NewActorLocation2D.X = NewActorLocation2D.X / 120;
+	NewActorLocation2D.Y = NewActorLocation2D.Y / 120;
+
+	if (GameInstance->Moves.Num() == 1)
+	{
+		RegisterMovesCounter = 0;
+	}
+	RegisterMoveConverter(FVector2D(NewActorLocation2D.X + 1, NewActorLocation2D.Y + 1), FVector2D(OldBlackActorLocation2D.X + 1, OldBlackActorLocation2D.Y + 1), SelectedActor, ETileOwner::WHITE);
+
+	// Change piece key from his old location to his new location
+	GameMode->GField->BasePieceMap.Remove(OldBlackActorLocation2D);
+	GameMode->GField->BasePieceMap.Add(NewActorLocation2D, SelectedActor);
+
+	// Check if the piece is a pawn and if it reached the other side of the chessboard
+	if (SelectedActor->IsA(APawnChess::StaticClass()) && NewActorLocation2D.X == 0)
+	{
+
+		// Call PawnPromotionFunction. ( 2 == BLACK)
+		GameMode->GField->PawnPromotion(SelectedActor, 2, "Queen");
+
+	}
+	else
+	{
+		GameInstance->DestroyedPieceArrayIndexCounter++;
+	}
+
+	// End AI turn 
+	GameMode->EndAITurn();
+}
 
 
 

@@ -31,14 +31,16 @@ public:
 
 	int32 Evaluate();
 	
-	int32 AlfaBetaMinimax(int32 Depth, int32 Alfa, int32 Beta, bool IsMax);
+	int32 AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32 Beta, FVector2D& BestMove, ABasePiece*& BestActor);
 
 	int32 V;
 
-	void SimulateMove(ABasePiece* SelectedActor, FVector2D Move, int32 Color);
-
+	void MoveSimulation(FVector SelectedActorLocation, FVector2D SelectedMovePosition, ETileOwner FriendColor, ETileOwner EnemyColor, ABasePiece* SelectedActor, int32 Depth, int32 Alfa, int32 Beta, FVector2D& BestMove, ABasePiece*& BestActor);
 	
-	TArray<TMap<FVector2D, ABasePiece*>> PieceMapBackupArray;
+	void MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVector NewLocation);
+
+	void SetKilledPieceHidden(FVector2D NormalizedPosition);
+;
 	
 	
 };
