@@ -29,11 +29,15 @@ public:
 
 	virtual void OnTurn();
 
+	int32 V;
+
 	int32 Evaluate();
+
+	int32 EvaluateCenterControl(ABasePiece* Actor);
+
+	int32 EvaluateKingDefence(ABasePiece* Actor, int32 Color);
 	
 	int32 AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32 Beta, FVector2D& BestMove, ABasePiece*& BestActor);
-
-	int32 V;
 
 	void MoveSimulation(FVector SelectedActorLocation, FVector2D SelectedMovePosition, ETileOwner FriendColor, ETileOwner EnemyColor, ABasePiece* SelectedActor, int32 Depth, int32 Alfa, int32 Beta, FVector2D& BestMove, ABasePiece*& BestActor);
 	

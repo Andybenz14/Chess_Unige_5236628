@@ -38,6 +38,7 @@ void AMinimaxPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 void AMinimaxPlayer::OnTurn()
 {
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+
 	IsKillMove = false;
 	bool IsMax = true;
 	int32 Depth = 2;
@@ -46,12 +47,13 @@ void AMinimaxPlayer::OnTurn()
 	FVector2D BestMove;
 	ABasePiece* BestActor = nullptr;
 	TMap<FVector2D, ABasePiece*>Backup = GameMode->GField->BasePieceMap;
-	int32 test=AlfaBetaMinimax(Depth, IsMax, Alfa, Beta, BestMove, BestActor);
 
+	int32 test=AlfaBetaMinimax(Depth, IsMax, Alfa, Beta, BestMove, BestActor);
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Black Score: %d"), test));
 
 	GameMode->GField->BasePieceMap = Backup;
 	TileMapReset();
+
 	if (BestActor != nullptr)
 	{
 		BestMove.X = BestMove.X / 120;
@@ -70,7 +72,7 @@ void AMinimaxPlayer::OnTurn()
 	}
 }
 
-//Il Problema è che gli array dei cicli cambiano nel mentre
+
 int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32 Beta, FVector2D& BestMove, ABasePiece*& BestActor)
 {
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
@@ -94,7 +96,7 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 		V = std::numeric_limits<int>::min();
 
 		TArray<ABasePiece*> ActorsBackup = Actors;
-		//Da capire come mai a volte gli actors siano più di 16
+		
 		for (ABasePiece* SelectedActor : ActorsBackup)
 		{
 			FVector ActorLocation = SelectedActor->GetActorLocation();
@@ -105,6 +107,7 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 				IsCheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
 				IsCheckMate(ETileOwner::BLACK, ETileOwner::WHITE);
 				KingPossibleMoves(ActorLocation, ETileOwner::WHITE);
+
 				TArray<FVector2D> PossibleKingMovesBackup = PossibleKingMoves;
 
 				if (PossibleKingMovesBackup.Num() > 0)
@@ -112,6 +115,7 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					for (FVector2D Move : PossibleKingMovesBackup)
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
+
 						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 
 						if (V > Alfa) {
@@ -119,12 +123,11 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 							BestMove = Move;
 							BestActor = SelectedActor;
 						}
+
 						if (V >= Beta)
 						{
 							return V;
 						}
-					
-
 					}
 				}
 			}
@@ -133,6 +136,7 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 				IsCheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
 				IsCheckMate(ETileOwner::BLACK, ETileOwner::WHITE);
 				PawnPossibleMoves(ActorLocation, ETileOwner::WHITE);
+
 				TArray<FVector2D> PossiblePawnMovesBackup = PossiblePawnMoves;
 
 				if (PossiblePawnMovesBackup.Num() > 0)
@@ -140,6 +144,7 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					for (FVector2D Move : PossiblePawnMovesBackup)
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
+
 						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 
 						if (V > Alfa) {
@@ -147,11 +152,11 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 							BestMove = Move;
 							BestActor = SelectedActor;
 						}
+
 						if (V >= Beta)
 						{
 							return V;
 						}
-					
 					}
 				}
 			}
@@ -160,6 +165,7 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 				IsCheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
 				IsCheckMate(ETileOwner::BLACK, ETileOwner::WHITE);
 				QueenPossibleMoves(ActorLocation, ETileOwner::WHITE);
+
 				TArray<FVector2D> PossibleQueenMovesBackup = PossibleQueenMoves;
 
 				if (PossibleQueenMovesBackup.Num() > 0)
@@ -167,6 +173,7 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					for (FVector2D Move : PossibleQueenMovesBackup)
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
+
 						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 
 						if (V > Alfa) {
@@ -174,12 +181,11 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 							BestMove = Move;
 							BestActor = SelectedActor;
 						}
+
 						if (V >= Beta)
 						{
 							return V;
 						}
-					
-
 					}
 				}
 			}
@@ -188,6 +194,7 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 				IsCheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
 				IsCheckMate(ETileOwner::BLACK, ETileOwner::WHITE);
 				BishopPossibleMoves(ActorLocation, ETileOwner::WHITE);
+
 				TArray<FVector2D> PossibleBishopMovesBackup = PossibleBishopMoves;
 
 				if (PossibleBishopMovesBackup.Num() > 0)
@@ -195,6 +202,7 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					for (FVector2D Move : PossibleBishopMovesBackup)
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
+
 						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 
 						if (V > Alfa) {
@@ -207,8 +215,6 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 						{
 							return V;
 						}
-						
-
 					}
 				}
 			}
@@ -224,6 +230,7 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					for (FVector2D Move : PossibleKnightMovesBackup)
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
+
 						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 
 						if (V > Alfa) {
@@ -231,12 +238,11 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 							BestMove = Move;
 							BestActor = SelectedActor;
 						}
+
 						if (V >= Beta)
 						{
 							return V;
 						}
-					
-
 					}
 				}
 			}
@@ -245,6 +251,7 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 				IsCheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
 				IsCheckMate(ETileOwner::BLACK, ETileOwner::WHITE);
 				RookPossibleMoves(ActorLocation, ETileOwner::WHITE);
+
 				TArray<FVector2D> PossibleRookMovesBackup = PossibleRookMoves;
 
 				if (PossibleRookMovesBackup.Num() > 0)
@@ -252,6 +259,7 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					for (FVector2D Move : PossibleRookMovesBackup)
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
+
 						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 
 						if (V > Alfa) {
@@ -259,16 +267,14 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 							BestMove = Move;
 							BestActor = SelectedActor;
 						}
+
 						if (V >= Beta)
 						{
 							return V;
 						}
-					
-
 					}
 				}
 			}
-
 		}
 
 		return V;
@@ -287,18 +293,18 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 		V = std::numeric_limits<int>::max();
 
 		TArray<ABasePiece*> ActorsBackup = Actors;
-		//Qui eseguo tutti i nodi possibili
+		
 		for (ABasePiece* SelectedActor : ActorsBackup)
 		{
 			FVector ActorLocation = SelectedActor->GetActorLocation();
 
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Actor: %s"), *SelectedActor->GetName()));
 			// Try to cast PossiblePice to AKing and check if cast is successful 
 			if (AKing* KingActor = Cast<AKing>(SelectedActor))
 			{
 				IsCheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
 				IsCheckMate(ETileOwner::WHITE, ETileOwner::BLACK);
 				KingPossibleMoves(ActorLocation, ETileOwner::BLACK);
+
 				TArray<FVector2D> PossibleKingMovesBackup = PossibleKingMoves;
 
 				if (PossibleKingMovesBackup.Num() > 0)
@@ -306,18 +312,18 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					for (FVector2D Move : PossibleKingMovesBackup)
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
+
 						MoveSimulation(StartLocation, Move, ETileOwner::WHITE, ETileOwner::BLACK, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 
 						if (V < Beta) {
 							Beta = V;
 
 						}
+
 						if (V <= Alfa)
 						{
 							return V;
 						}
-						
-
 					}
 				}
 			}
@@ -326,6 +332,7 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 				IsCheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
 				IsCheckMate(ETileOwner::WHITE, ETileOwner::BLACK);
 				PawnPossibleMoves(ActorLocation, ETileOwner::BLACK);
+
 				TArray<FVector2D> PossiblePawnMovesBackup = PossiblePawnMoves;
 
 				if (PossiblePawnMovesBackup.Num() > 0)
@@ -333,19 +340,19 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					for (FVector2D Move : PossiblePawnMovesBackup)
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
+
 						MoveSimulation(StartLocation, Move, ETileOwner::WHITE, ETileOwner::BLACK, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 
 						if (V < Beta) {
 							Beta = V;
 							
 						}
+
 						if (V <= Alfa)
 						{
 
 							return V;
 						}
-						
-
 					}
 				}
 			}
@@ -354,6 +361,7 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 				IsCheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
 				IsCheckMate(ETileOwner::WHITE, ETileOwner::BLACK);
 				QueenPossibleMoves(ActorLocation, ETileOwner::BLACK);
+
 				TArray<FVector2D> PossibleQueenMovesBackup = PossibleQueenMoves;
 
 				if (PossibleQueenMovesBackup.Num() > 0)
@@ -361,6 +369,7 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					for (FVector2D Move : PossibleQueenMovesBackup)
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
+
 						MoveSimulation(StartLocation, Move, ETileOwner::WHITE, ETileOwner::BLACK, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 
 						if (V < Beta) {
@@ -371,8 +380,6 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 						{
 							return V;
 						}
-						
-
 					}
 				}
 			}
@@ -381,6 +388,7 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 				IsCheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
 				IsCheckMate(ETileOwner::WHITE, ETileOwner::BLACK);
 				BishopPossibleMoves(ActorLocation, ETileOwner::BLACK);
+
 				TArray<FVector2D> PossibleBishopMovesBackup = PossibleBishopMoves;
 
 				if (PossibleBishopMovesBackup.Num() > 0)
@@ -388,6 +396,7 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					for (FVector2D Move : PossibleBishopMovesBackup)
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
+
 						MoveSimulation(StartLocation, Move, ETileOwner::WHITE, ETileOwner::BLACK, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 
 						if (V < Beta) {
@@ -398,8 +407,6 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 						{
 							return V;
 						}
-						
-
 					}
 				}
 			}
@@ -408,6 +415,7 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 				IsCheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
 				IsCheckMate(ETileOwner::WHITE, ETileOwner::BLACK);
 				KnightPossibleMoves(ActorLocation, ETileOwner::BLACK);
+
 				TArray<FVector2D> PossibleKnightMovesBackup = PossibleKnightMoves;
 
 				if (PossibleKnightMovesBackup.Num() > 0)
@@ -415,6 +423,7 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					for (FVector2D Move : PossibleKnightMovesBackup)
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
+
 						MoveSimulation(StartLocation, Move, ETileOwner::WHITE, ETileOwner::BLACK, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 
 						if (V < Beta) {
@@ -425,8 +434,6 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 						{
 							return V;
 						}
-						
-
 					}
 				}
 			}
@@ -435,6 +442,7 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 				IsCheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
 				IsCheckMate(ETileOwner::WHITE, ETileOwner::BLACK);
 				RookPossibleMoves(ActorLocation, ETileOwner::BLACK);
+
 				TArray<FVector2D> PossibleRookMovesBackup = PossibleRookMoves;
 
 				if (PossibleRookMovesBackup.Num() > 0)
@@ -442,6 +450,7 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 					for (FVector2D Move : PossibleRookMovesBackup)
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
+
 						MoveSimulation(StartLocation, Move, ETileOwner::WHITE, ETileOwner::BLACK, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 
 						if (V < Beta) {
@@ -452,8 +461,6 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 						{
 							return V;
 						}
-					
-
 					}
 				}
 			}
@@ -466,7 +473,9 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 void AMinimaxPlayer::MoveSimulation(FVector SelectedActorLocation, FVector2D SelectedMovePosition, ETileOwner FriendColor, ETileOwner EnemyColor, ABasePiece* SelectedActor, int32 Depth, int32 Alfa, int32 Beta, FVector2D& BestMove, ABasePiece*& BestActor)
 {
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+
 	TMap<FVector2D, ABasePiece*> BackupBasePieceMap = GameMode->GField->BasePieceMap;
+
 	//Normalize
 	FVector2D NormalizedPosition(SelectedMovePosition.X / 120, SelectedMovePosition.Y / 120);
 
@@ -479,7 +488,7 @@ void AMinimaxPlayer::MoveSimulation(FVector SelectedActorLocation, FVector2D Sel
 	}
 
 	FVector2D SelectedActorLocation2D(SelectedActorLocation);
-	// Set tile located at old piece position as empty and without owner
+	
 	// Set tile located at old piece position as empty and without owner
 	GameMode->GField->TileMap[SelectedActorLocation2D]->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
 
@@ -526,53 +535,131 @@ int32 AMinimaxPlayer::Evaluate()
 		{
 			if (BasePieceActor->IsA(APawnChess::StaticClass()))
 			{
-				BlackScore = BlackScore + 1;
+				BlackScore = BlackScore + 10;
 			}
 			else if (BasePieceActor->IsA(AQueen::StaticClass()))
 			{
-				BlackScore = BlackScore + 9;
+				BlackScore = BlackScore + 90;
 			}
 			else if (BasePieceActor->IsA(ABishop::StaticClass()))
 			{
-				BlackScore = BlackScore + 3;
+				BlackScore = BlackScore + 30;
 			}
 			else if (BasePieceActor->IsA(AKnight::StaticClass()))
 			{
-				BlackScore = BlackScore + 3;
+				BlackScore = BlackScore + 30;
 			}
 			else if (BasePieceActor->IsA(ARook::StaticClass()))
 			{
-				BlackScore = BlackScore + 5;
+				BlackScore = BlackScore + 50;
 			}
+
+			BlackScore = BlackScore + EvaluateCenterControl(BasePieceActor);
+			BlackScore = BlackScore + EvaluateKingDefence(BasePieceActor, 1);
 		}
 		else
 		{
 			if (BasePieceActor->IsA(APawnChess::StaticClass()))
 			{
-				WhiteScore = WhiteScore + 1;
+				WhiteScore = WhiteScore + 10;
 			}
 			else if (BasePieceActor->IsA(AQueen::StaticClass()))
 			{
-				WhiteScore = WhiteScore + 9;
+				WhiteScore = WhiteScore + 90;
 			}
 			else if (BasePieceActor->IsA(ABishop::StaticClass()))
 			{
-				WhiteScore = WhiteScore + 3;
+				WhiteScore = WhiteScore + 30;
 			}
 			else if (BasePieceActor->IsA(AKnight::StaticClass()))
 			{
-				WhiteScore = WhiteScore + 3;
+				WhiteScore = WhiteScore + 30;
 			}
 			else if (BasePieceActor->IsA(ARook::StaticClass()))
 			{
-				WhiteScore = WhiteScore + 5;
+				WhiteScore = WhiteScore + 50;
 			}
+
+			WhiteScore = WhiteScore + EvaluateCenterControl(BasePieceActor);
+			WhiteScore = WhiteScore + EvaluateKingDefence(BasePieceActor, 0);
 		}
 	}
 		
-	
-
 	return BlackScore-WhiteScore;
+}
+
+int32 AMinimaxPlayer::EvaluateCenterControl(ABasePiece* BasePieceActor)
+{	
+	int Score = 0;
+
+	FVector ActorLocation = BasePieceActor->GetActorLocation();
+
+	if (BasePieceActor->IsA(AQueen::StaticClass()))
+	{
+		if ((ActorLocation.X == 360 || ActorLocation.X == 480) && (ActorLocation.Y == 360 || ActorLocation.Y == 480))
+		{
+			Score = 10;
+		}
+		else if ((ActorLocation.X == 240 || ActorLocation.X == 600) && (ActorLocation.Y == 240 || ActorLocation.Y == 600))
+		{
+			Score = 5;
+		}
+	}
+	else if (BasePieceActor->IsA(ABishop::StaticClass()))
+	{
+		if ((ActorLocation.X == 360 || ActorLocation.X == 480) && (ActorLocation.Y == 360 || ActorLocation.Y == 480))
+		{
+			Score = 7;
+		}
+		else if ((ActorLocation.X == 240 || ActorLocation.X == 600) && (ActorLocation.Y == 240 || ActorLocation.Y == 600))
+		{
+			Score = 3;
+		}
+	}
+	else if (BasePieceActor->IsA(ARook::StaticClass()))
+	{
+		if ((ActorLocation.X == 360 || ActorLocation.X == 480) && (ActorLocation.Y == 360 || ActorLocation.Y == 480))
+		{
+			Score = 8;
+		}
+		else if ((ActorLocation.X == 240 || ActorLocation.X == 600) && (ActorLocation.Y == 240 || ActorLocation.Y == 600))
+		{
+			Score = 4;
+		}
+	}
+
+	return Score;
+}
+
+int32 AMinimaxPlayer::EvaluateKingDefence(ABasePiece* BasePieceActor, int32 Color)
+{
+	int Score = 0;
+
+	FVector ActorLocation = BasePieceActor->GetActorLocation();
+
+	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+
+	for (auto& Pair : GameMode->GField->BasePieceMap)
+	{
+		ABasePiece* Piece = Pair.Value;
+
+		if ((Piece->GetPieceColor() == EPieceColor::BLACK && Color == 1) || (Piece->GetPieceColor() == EPieceColor::WHITE && Color == 0))
+		{
+			if (Piece->IsA(AKing::StaticClass()))
+			{
+				FVector KingLocation = Piece->GetActorLocation();
+
+				int32 Distance = FVector::Dist(ActorLocation, KingLocation);
+
+				if (Distance == 120)
+				{
+					Score = 5;
+				}
+			}
+		}
+	}
+
+	return Score;
 }
 
 
@@ -673,6 +760,7 @@ void AMinimaxPlayer::MoveBaseBlackPiece(ABasePiece* SelectedActor, FVector OldLo
 	{
 		RegisterMovesCounter = 0;
 	}
+
 	RegisterMoveConverter(FVector2D(NewActorLocation2D.X + 1, NewActorLocation2D.Y + 1), FVector2D(OldBlackActorLocation2D.X + 1, OldBlackActorLocation2D.Y + 1), SelectedActor, ETileOwner::WHITE);
 
 	// Change piece key from his old location to his new location
