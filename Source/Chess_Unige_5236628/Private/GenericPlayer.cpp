@@ -1004,6 +1004,12 @@ void AGenericPlayer::IsCheckMate(ETileOwner FriendColor, ETileOwner EnemyColor)
 		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
 		PlayerController->DisableInput(PlayerController);
 		GameInstance->IsGameFinished = true;
+		IllegalKingMoveDueToCheck.Empty();
+		IllegalQueenMoveDueToCheck.Empty();
+		IllegalPawnMoveDueToCheck.Empty();
+		IllegalRookMoveDueToCheck.Empty();
+		IllegalBishopMoveDueToCheck.Empty();
+		IllegalKnightMoveDueToCheck.Empty();
 	}
 	
 
