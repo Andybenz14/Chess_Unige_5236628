@@ -671,7 +671,6 @@ void AGenericPlayer::CalculateQueenMoves(FVector QueenLocation, FVector2D Direct
 						PossibleQueenMovesForCheck.Add(NextTileLocation);
 					}
 					Check = true;
-
 					
 			
 				}
