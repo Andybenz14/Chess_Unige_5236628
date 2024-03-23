@@ -40,6 +40,7 @@ void AGenericPlayer::KnightPossibleMoves(FVector KnightLocation, ETileOwner Enem
 	PossibleKnightMoves.Empty();
 	PossibleKnightMovesForCheck.Empty();
 
+	
 
 	TArray<FVector2D> KnightPositions = {
 		FVector2D(1, 2),
@@ -119,6 +120,8 @@ void AGenericPlayer::KingPossibleMoves(FVector KingLocation, ETileOwner EnemyCol
 	PossibleKingMoves.Empty();
 	PossibleKingMovesForCheck.Empty();
 
+	
+
 	TArray<FVector2D> KingPositions = {
 		FVector2D(1, 0),
 		FVector2D(1, 1),
@@ -175,6 +178,8 @@ void AGenericPlayer::KingPossibleMoves(FVector KingLocation, ETileOwner EnemyCol
 						else
 						{
 							Check = true;
+							
+
 							if (!(IllegalKingMoveDueToCheck.Contains(NextTileLocation)))
 							{
 								PossibleKingMovesForCheck.Add(NextTileLocation);
@@ -193,6 +198,8 @@ void AGenericPlayer::PawnPossibleMoves(FVector PawnLocation, ETileOwner EnemyCol
 
 	PossiblePawnMoves.Empty();
 	PossiblePawnMovesForCheck.Empty();
+
+	
 
 	if (EnemyColor == ETileOwner::BLACK)
 	{
@@ -266,6 +273,7 @@ void AGenericPlayer::PawnPossibleMoves(FVector PawnLocation, ETileOwner EnemyCol
 							PossiblePawnMovesForCheck.Add(Pawn2dLocation2);
 						}
 						Check = true;
+				
 					}
 				}
 			}
@@ -304,6 +312,7 @@ void AGenericPlayer::PawnPossibleMoves(FVector PawnLocation, ETileOwner EnemyCol
 							//TODO potrei inserire un counter per lo scacco nell'else di questi if
 						}
 						Check = true;
+				
 					}
 				}
 			}
@@ -392,6 +401,7 @@ void AGenericPlayer::PawnPossibleMoves(FVector PawnLocation, ETileOwner EnemyCol
 							PossiblePawnMovesForCheck.Add(Pawn2dLocation2);
 						}
 						Check = true;
+						
 
 					}
 				}
@@ -435,6 +445,7 @@ void AGenericPlayer::PawnPossibleMoves(FVector PawnLocation, ETileOwner EnemyCol
 							PossiblePawnMovesForCheck.Add(Pawn2dLocation3);
 						}
 						Check = true;
+					
 					}
 				}
 			}
@@ -449,6 +460,8 @@ void AGenericPlayer::RookPossibleMoves(FVector RookLocation, ETileOwner EnemyCol
 
 	PossibleRookMoves.Empty();
 	PossibleRookMovesForCheck.Empty();
+
+
 
 	CalculateRookMoves(RookLocation, FVector2D(0, 1), EnemyColor);
 	CalculateRookMoves(RookLocation, FVector2D(0, -1), EnemyColor);
@@ -510,6 +523,7 @@ void AGenericPlayer::CalculateRookMoves(FVector RookLocation, FVector2D Directio
 						PossibleRookMovesForCheck.Add(NextTileLocation);
 					}
 					Check = true;
+					
 				}
 			}
 		}
@@ -522,6 +536,8 @@ void AGenericPlayer::BishopPossibleMoves(FVector BishopLocation, ETileOwner Enem
 
 	PossibleBishopMoves.Empty();
 	PossibleBishopMovesForCheck.Empty();
+
+
 
 	CalculateBishopMoves(BishopLocation, FVector2D(1, 1), EnemyColor);
 	CalculateBishopMoves(BishopLocation, FVector2D(1, -1), EnemyColor);
@@ -579,6 +595,7 @@ void AGenericPlayer::CalculateBishopMoves(FVector BishopLocation, FVector2D Dire
 						PossibleBishopMovesForCheck.Add(NextTileLocation);
 					}
 					Check = true;
+			
 				}
 			}
 		}
@@ -591,6 +608,7 @@ void AGenericPlayer::QueenPossibleMoves(FVector QueenLocation, ETileOwner EnemyC
 
 	PossibleQueenMoves.Empty();
 	PossibleQueenMovesForCheck.Empty();
+
 
 	
 	CalculateQueenMoves(QueenLocation, FVector2D(0, 1), EnemyColor); 
@@ -654,6 +672,8 @@ void AGenericPlayer::CalculateQueenMoves(FVector QueenLocation, FVector2D Direct
 					}
 					Check = true;
 
+					
+			
 				}
 			}
 		}

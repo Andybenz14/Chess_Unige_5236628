@@ -147,6 +147,24 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 
 						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 
+						FVector2D KingLocation = FindKingLocation();
+
+						if (FMath::Abs(KingLocation.X - Move.X) > 120 && FMath::Abs(KingLocation.Y - Move.Y) > 120)
+						{
+
+							Check = false;
+
+							FVector Move3d(Move.X, Move.Y, 10);
+
+							PawnPossibleMoves(Move3d, ETileOwner::WHITE);
+
+							if (Check)
+							{
+								V += 1;
+							}
+
+						}
+
 						if (V > Alfa) {
 							Alfa = V;
 							BestMove = Move;
@@ -175,6 +193,22 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 						FVector StartLocation = SelectedActor->GetActorLocation();
 
 						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
+						
+						FVector2D KingLocation = FindKingLocation();
+						
+						if (FMath::Abs(KingLocation.X - Move.X) > 120 && FMath::Abs(KingLocation.Y - Move.Y) > 120)
+						{
+							Check = false;
+
+							FVector Move3d(Move.X, Move.Y, 10);
+
+							QueenPossibleMoves(Move3d, ETileOwner::WHITE);
+
+							if (Check)
+							{
+								V += 1;
+							}
+						}
 
 						if (V > Alfa) {
 							Alfa = V;
@@ -205,6 +239,23 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 
 						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 
+						FVector2D KingLocation = FindKingLocation();
+
+						if (FMath::Abs(KingLocation.X - Move.X) > 120 && FMath::Abs(KingLocation.Y - Move.Y) > 120)
+						{
+
+							Check = false;
+
+							FVector Move3d(Move.X, Move.Y, 10);
+
+							BishopPossibleMoves(Move3d, ETileOwner::WHITE);
+
+							if (Check)
+							{
+								V += 1;
+							}
+						}
+
 						if (V > Alfa) {
 							Alfa = V;
 							BestMove = Move;
@@ -212,6 +263,7 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 						}
 
 						if (V >= Beta)
+
 						{
 							return V;
 						}
@@ -232,6 +284,23 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 						FVector StartLocation = SelectedActor->GetActorLocation();
 
 						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
+
+						FVector2D KingLocation = FindKingLocation();
+
+						if (FMath::Abs(KingLocation.X - Move.X) > 120 && FMath::Abs(KingLocation.Y - Move.Y) > 120)
+						{
+
+							Check = false;
+
+							FVector Move3d(Move.X, Move.Y, 10);
+
+							KnightPossibleMoves(Move3d, ETileOwner::WHITE);
+
+							if (Check)
+							{
+								V += 1;
+							}
+						}
 
 						if (V > Alfa) {
 							Alfa = V;
@@ -261,6 +330,24 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 						FVector StartLocation = SelectedActor->GetActorLocation();
 
 						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
+
+						FVector2D KingLocation = FindKingLocation();
+
+						if (FMath::Abs(KingLocation.X - Move.X) > 120 && FMath::Abs(KingLocation.Y - Move.Y) > 120)
+						{
+
+							Check = false;
+
+							FVector Move3d(Move.X, Move.Y, 10);
+
+							RookPossibleMoves(Move3d, ETileOwner::WHITE);
+
+							if (Check)
+							{
+								V += 1;
+							}
+
+						}
 
 						if (V > Alfa) {
 							Alfa = V;
@@ -526,166 +613,134 @@ int32 AMinimaxPlayer::Evaluate()
 	int WhiteScore = 0;
 
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
-	
+
 	for (auto& Pair : GameMode->GField->BasePieceMap)
 	{
 		ABasePiece* BasePieceActor = Pair.Value;
+
+		FVector ActorLocation = BasePieceActor->GetActorLocation();
 
 		if (BasePieceActor->GetPieceColor() == EPieceColor::BLACK)
 		{
 			if (BasePieceActor->IsA(APawnChess::StaticClass()))
 			{
-				BlackScore = BlackScore + 10;
+				BlackScore += 10;
+				BlackScore += EvaluatePawnPromotion(BasePieceActor, 1);
+				BlackScore += EvaluateStartingGameOpening(BasePieceActor, 1);
 			}
 			else if (BasePieceActor->IsA(AQueen::StaticClass()))
 			{
-				BlackScore = BlackScore + 90;
+				BlackScore += 90;
+
 			}
 			else if (BasePieceActor->IsA(ABishop::StaticClass()))
 			{
-				BlackScore = BlackScore + 30;
+				BlackScore += 30;
+				BlackScore += EvaluateStartingGameOpening(BasePieceActor, 1);
 			}
 			else if (BasePieceActor->IsA(AKnight::StaticClass()))
 			{
-				BlackScore = BlackScore + 30;
+				BlackScore += 30;
+				BlackScore += EvaluateStartingGameOpening(BasePieceActor, 1);
 			}
 			else if (BasePieceActor->IsA(ARook::StaticClass()))
 			{
-				BlackScore = BlackScore + 50;
+				BlackScore += 50;
 			}
-
-			BlackScore = BlackScore + EvaluateCenterControl(BasePieceActor);
-			BlackScore = BlackScore + EvaluateKingDefence(BasePieceActor, 1);
+			
 		}
 		else
 		{
 			if (BasePieceActor->IsA(APawnChess::StaticClass()))
 			{
-				WhiteScore = WhiteScore + 10;
+				WhiteScore += 10;
+				WhiteScore += EvaluatePawnPromotion(BasePieceActor, 0);
+				WhiteScore += EvaluateStartingGameOpening(BasePieceActor, 0);
 			}
 			else if (BasePieceActor->IsA(AQueen::StaticClass()))
 			{
-				WhiteScore = WhiteScore + 90;
+				WhiteScore += 90;
 			}
 			else if (BasePieceActor->IsA(ABishop::StaticClass()))
 			{
-				WhiteScore = WhiteScore + 30;
+				WhiteScore += 30;
+				WhiteScore += EvaluateStartingGameOpening(BasePieceActor, 0);
 			}
 			else if (BasePieceActor->IsA(AKnight::StaticClass()))
 			{
-				WhiteScore = WhiteScore + 30;
+				WhiteScore += 30;
+				WhiteScore += EvaluateStartingGameOpening(BasePieceActor, 0);
 			}
 			else if (BasePieceActor->IsA(ARook::StaticClass()))
 			{
-				WhiteScore = WhiteScore + 50;
+				WhiteScore += 50;
 			}
-
-			WhiteScore = WhiteScore + EvaluateCenterControl(BasePieceActor);
-			WhiteScore = WhiteScore + EvaluateKingDefence(BasePieceActor, 0);
 		}
 	}
 		
 	return BlackScore-WhiteScore;
 }
 
-int32 AMinimaxPlayer::EvaluateCenterControl(ABasePiece* BasePieceActor)
-{	
+int32 AMinimaxPlayer::EvaluatePawnPromotion(ABasePiece* Actor, int32 Color)
+{
 	int Score = 0;
 
-	FVector ActorLocation = BasePieceActor->GetActorLocation();
+	FVector ActorLocation = Actor->GetActorLocation();
+	if ((ActorLocation.X == 0) && Color == 1)
+	{
+		Score = 80;
+	}
+	else if ((ActorLocation.X == 840) && Color == 0)
+	{
+		Score = 80;
+	}
 
-	if (BasePieceActor->IsA(AQueen::StaticClass()))
-	{
-		if ((ActorLocation.X == 360 || ActorLocation.X == 480) && (ActorLocation.Y == 360 || ActorLocation.Y == 480))
-		{
-			Score = 10;
-		}
-		else if ((ActorLocation.X == 240 || ActorLocation.X == 600) && (ActorLocation.Y == 240 || ActorLocation.Y == 600))
-		{
-			Score = 5;
-		}
-	}
-	else if (BasePieceActor->IsA(ABishop::StaticClass()))
-	{
-		if ((ActorLocation.X == 360 || ActorLocation.X == 480) && (ActorLocation.Y == 360 || ActorLocation.Y == 480))
-		{
-			Score = 7;
-		}
-		else if ((ActorLocation.X == 240 || ActorLocation.X == 600) && (ActorLocation.Y == 240 || ActorLocation.Y == 600))
-		{
-			Score = 3;
-		}
-	}
-	else if (BasePieceActor->IsA(ARook::StaticClass()))
-	{
-		if ((ActorLocation.X == 360 || ActorLocation.X == 480) && (ActorLocation.Y == 360 || ActorLocation.Y == 480))
-		{
-			Score = 8;
-		}
-		else if ((ActorLocation.X == 240 || ActorLocation.X == 600) && (ActorLocation.Y == 240 || ActorLocation.Y == 600))
-		{
-			Score = 4;
-		}
-	}
-	else if (BasePieceActor->IsA(APawn::StaticClass()))
-	{
-		if ((ActorLocation.X == 360 || ActorLocation.X == 480) && (ActorLocation.Y == 360 || ActorLocation.Y == 480))
-		{
-			Score = 10;
-		}
-		else if ((ActorLocation.X == 240 || ActorLocation.X == 600) && (ActorLocation.Y == 240 || ActorLocation.Y == 600))
-		{
-			Score = 2;
-		}
-	}
-	else if (BasePieceActor->IsA(AKing::StaticClass()))
-	{
-		if ((ActorLocation.X == 360 || ActorLocation.X == 480) && (ActorLocation.Y == 360 || ActorLocation.Y == 480))
-		{
-			Score = -30;
-		}
-		else if ((ActorLocation.X == 240 || ActorLocation.X == 600) && (ActorLocation.Y == 240 || ActorLocation.Y == 600))
-		{
-			Score = -15;
-		}
-	}
 
 	return Score;
 }
 
-int32 AMinimaxPlayer::EvaluateKingDefence(ABasePiece* BasePieceActor, int32 Color)
+int32 AMinimaxPlayer::EvaluateStartingGameOpening(ABasePiece* Actor, int32 Color)
 {
 	int Score = 0;
 
-	FVector ActorLocation = BasePieceActor->GetActorLocation();
+	FVector ActorLocation = Actor->GetActorLocation();
 
+	if (GameInstance->DestroyedPieceArrayIndexCounter < 15)
+	{
+		if ((ActorLocation.X == 240 || ActorLocation.X == 360) && (ActorLocation.Y < 360 || ActorLocation.Y > 600) && Color == 0)
+		{
+			Score = 2;
+		}
+		else if ((ActorLocation.X == 600 || ActorLocation.X == 480) && (ActorLocation.Y < 360 || ActorLocation.Y > 600) && Color == 1)
+		{
+			Score = 2;
+		}
+	}
+	
+
+	return Score;
+}
+
+FVector2D AMinimaxPlayer::FindKingLocation()
+{
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+
+	FVector KingLocation(0, 0, 0);
 
 	for (auto& Pair : GameMode->GField->BasePieceMap)
 	{
 		ABasePiece* Piece = Pair.Value;
 
-		if ((Piece->GetPieceColor() == EPieceColor::BLACK && Color == 1) || (Piece->GetPieceColor() == EPieceColor::WHITE && Color == 0))
+		if (Piece->IsA(AKing::StaticClass()) && Piece->GetPieceColor() == EPieceColor::WHITE)
 		{
-			if (Piece->IsA(AKing::StaticClass()))
-			{
-				FVector KingLocation = Piece->GetActorLocation();
-
-				int32 Distance = FVector::Dist(ActorLocation, KingLocation);
-
-				if (Distance == 120)
-				{
-					Score = 2;
-				}
-			}
+			KingLocation = Piece->GetActorLocation();
 		}
 	}
+		
+	FVector2d KLocation(KingLocation);
 
-	return Score;
+	return KLocation;
 }
-
-
-
 
 void AMinimaxPlayer::SetKilledPieceHidden(FVector2D NormalizedPosition)
 {

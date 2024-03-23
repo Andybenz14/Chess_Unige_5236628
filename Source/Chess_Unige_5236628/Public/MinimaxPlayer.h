@@ -33,9 +33,11 @@ public:
 
 	int32 Evaluate();
 
-	int32 EvaluateCenterControl(ABasePiece* Actor);
+	int32 EvaluatePawnPromotion(ABasePiece* Actor, int32 Color);
 
-	int32 EvaluateKingDefence(ABasePiece* Actor, int32 Color);
+	int32 EvaluateStartingGameOpening(ABasePiece* Actor, int32 Color);
+
+	FVector2D FindKingLocation();
 	
 	int32 AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32 Beta, FVector2D& BestMove, ABasePiece*& BestActor);
 
@@ -46,6 +48,5 @@ public:
 	void SetKilledPieceHidden(FVector2D NormalizedPosition);
 ; 
 	void TileMapReset();
-	
 	
 };
