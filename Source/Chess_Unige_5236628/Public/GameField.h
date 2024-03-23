@@ -93,6 +93,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		float TileSize;
 
+	// GameIstance
 	UCHS_GameInstance* GameInstance;
 
 	// Sets default values for this actor's properties
@@ -111,36 +112,18 @@ public:
 	// Generate an empty game field
 	void GenerateField();
 
-	// Return a (x,y) position given a hit (click) on a field tile
-	FVector2D GetPosition(const FHitResult& Hit);
-
-	// Return the array of tile pointers
-	TArray<ATile*>& GetTileArray();
-
-	// Return the array of tile pointers
-	TArray<ABasePiece*>& GetBasePieceArray();
-
-	// Return the array of tile pointers
-	TMap<FVector2D, ATile*>& GetTileMap();
-
 	// Return a relative position given (x,y) position
 	FVector GetRelativeLocationByXYPosition(const int32 InX, const int32 InY) const;
 
-	// Return (x,y) position given a relative position
-	FVector2D GetXYPositionByRelativeLocation(const FVector& Location) const;
-
+	// Spawn in game chess pieces
 	void SpawnChessPiece(int32 x, int32 y, FVector Location, float TileScale, int32 Color, int32 IsAPromotedPiece, TSubclassOf<ABasePiece> PieceClass);
 
-	// Set chess pieces materials (called at spawn)
+	// Set chess pieces materials (called at pieces spawn)
 	template <typename T>
 	void SetPieceColor(int32 Color, T* ChessPiece);
 	
 	// Change pawn actor with a new piece given pawn pointer, a color (1==WHITE, 2==BLACK) and the type of the new piece
 	UFUNCTION(BlueprintCallable)
 	void PawnPromotion(ABasePiece* Pawn, int32 Color, FString NewPiece);
-
-	//public:	
-	//	// Called every frame
-	//	virtual void Tick(float DeltaTime) override;
 
 };
