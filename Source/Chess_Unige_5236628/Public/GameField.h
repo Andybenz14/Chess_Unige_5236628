@@ -94,6 +94,7 @@ public:
 		float TileSize;
 
 	// GameIstance
+	UPROPERTY(EditDefaultsOnly)
 	UCHS_GameInstance* GameInstance;
 
 	// Sets default values for this actor's properties

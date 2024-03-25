@@ -71,7 +71,7 @@ void ACHS_GameMode::EndHumanTurn()
 	
 		PlayerController->DisableInput(PlayerController);
 	
-	if (!IsGameFinished())
+	if (GameInstance->IsGameFinished == false)
 	{
 		if (GameInstance->UseMinimax)
 		{
@@ -97,7 +97,7 @@ void ACHS_GameMode::EndAITurn()
 
 	PlayerController->EnableInput(PlayerController);
 	
-	if (!IsGameFinished())
+	if (GameInstance->IsGameFinished == false)
 	{
 		HumanPlayer->OnTurn();
 	}

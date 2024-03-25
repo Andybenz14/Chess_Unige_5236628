@@ -41,15 +41,16 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	// On Turn
 	virtual void OnTurn();
-
-	// Array of the positions that can be occupied by the black  
-	UPROPERTY(EditDefaultsOnly)
-		TArray<ABasePiece*> BlackMovableActors;
 
 	// Move piece into a new position
 	void MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVector NewLocation);
 
+	// Set white killed piece hidden
 	void SetKilledPieceHidden(FVector2D NormalizedPosition);
 
+	// Array of black movable actors 
+	UPROPERTY(EditDefaultsOnly)
+		TArray<ABasePiece*> BlackMovableActors;
 };

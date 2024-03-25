@@ -7,7 +7,7 @@
 #include "CHS_GameInstance.generated.h"
 
 
-
+// Struct to track pieces after destruction. Useful for replay
 USTRUCT() struct FDestroyedPiece
 {
 	GENERATED_BODY()
@@ -21,7 +21,7 @@ USTRUCT() struct FDestroyedPiece
 	UPROPERTY(Transient)
 		int32 TurnCounter;
 };
-
+// Struct to track pieces befor them promotion. Useful for replay
 USTRUCT() struct FPromotedPiece
 {
 	GENERATED_BODY()
@@ -46,34 +46,65 @@ class CHESS_UNIGE_5236628_API UCHS_GameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
-	
+
+	// Store all in-game moves
+	UPROPERTY(Transient)
+		TArray<FVector> MovesForReplay;
+
+	// Store all pieces moved in-game
+	UPROPERTY(Transient)
+		TArray<ABasePiece*> PiecesForReplay;
+
+	// Store at the begining the starting position
+	UPROPERTY(Transient)
+		TMap<FVector2D, ABasePiece*> PiecesStartingPosition;
+
+	// Array of Struct
+	UPROPERTY(Transient)
+		TArray<FDestroyedPiece> DestroyedPieceArray;
+
+	// Array of Struct
+	UPROPERTY(Transient)
+		TArray<FPromotedPiece> PromotedPieceArray;
+
+	// Keeps track of pieces after promotion
+	UPROPERTY(Transient)
+		TArray<ABasePiece*> PieceAfterPromo;
+
+	// Is a turn counter used to define .turncounter of the struct
+	UPROPERTY(Transient)
+		int32 DestroyedPieceArrayIndexCounter = 0;
+
 	// message to show every turn
 	UPROPERTY(EditAnywhere)
 		FString CurrentTurnMessage = "Current Player";
-
-	// get the current turn message
-	UFUNCTION(BlueprintCallable)
-		FString GetTurnMessage();
-
-	// set the turn message
-	UFUNCTION(BlueprintCallable)
-		void SetTurnMessage(FString Message);
 
 	// message to show every turn
 	UPROPERTY(EditAnywhere)
 		FString WinMessage = "";
 
-	// get the current turn message
-	UFUNCTION(BlueprintCallable)
-		FString GetWinMessage();
-
-	// set the turn message
-	UFUNCTION(BlueprintCallable)
-		void SetWinMessage(FString Message);
-
 	// message to show every turn
 	UPROPERTY(EditAnywhere)
 		FString RegisterMove = "";
+
+	UPROPERTY(EditAnywhere)
+		bool NewText = false;
+
+	// Defined at main menu to selected against which enemy play.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+		bool UseMinimax;
+
+	// Array of all match moves
+	UPROPERTY(EditDefaultsOnly)
+		TArray<FString> Moves;
+
+	// Turn counter used by MoveInterpreterForReplay()
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		int Number = 1;
+
+	// Defined by IsCheckMate()
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		bool IsGameFinished = false;
 
 	// get the current turn message
 	UFUNCTION(BlueprintCallable)
@@ -86,52 +117,41 @@ public:
 	UFUNCTION(BlueprintCallable)
 		bool GetNewText();
 
-	UPROPERTY(EditAnywhere)
-		bool NewText = false;
-
+	// Get moves array
 	UFUNCTION(BlueprintCallable)
 		TArray<FString> GetMovesArray() const;
 
-	UPROPERTY(EditDefaultsOnly)
-		TArray<FString> Moves;
+	// get the current turn message
+	UFUNCTION(BlueprintCallable)
+		FString GetTurnMessage();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-		bool UseMinimax;
+	// set the turn message
+	UFUNCTION(BlueprintCallable)
+		void SetTurnMessage(FString Message);
 
+	// get the current turn message
+	UFUNCTION(BlueprintCallable)
+		FString GetWinMessage();
+
+	// set the turn message
+	UFUNCTION(BlueprintCallable)
+		void SetWinMessage(FString Message);
+
+	// Used by main menu widget to selected the enemy
 	UFUNCTION(BlueprintCallable)
 		void SetUseMinimax(bool Choose);
 
+	// Interpret the move string ( selected by user in game), reset the chessboard to starting position
+	// and calls replay. It disable user input
 	UFUNCTION(BlueprintCallable)
 		void MoveInterpreterForReplay(FString SelectedMove);
 
+	// From the selected replay state, reset the last move state and enable user to play again
 	UFUNCTION(BlueprintCallable)
 		void ReturnToGameAfterReplay();
 
+	// Moves pieces into the turn (index) chessboard state
 	UFUNCTION(BlueprintCallable)
 		void Replay(int32 index);
-
-	UPROPERTY(Transient)
-		TArray<FVector> MovesForReplay;
-
-	UPROPERTY(Transient)
-		TArray<ABasePiece*> PiecesForReplay;
 	
-	UPROPERTY(Transient)
-		TMap<FVector2D, ABasePiece*> PiecesStartingPosition;
-
-	UPROPERTY(Transient)
-		TArray<FDestroyedPiece> DestroyedPieceArray;
-
-	UPROPERTY(Transient)
-		TArray<FPromotedPiece> PromotedPieceArray;
-
-	UPROPERTY(Transient)
-		TArray<ABasePiece*> PieceAfterPromo;
-
-	UPROPERTY(Transient)
-		int32 DestroyedPieceArrayIndexCounter = 0;
-
-	int Number = 1;
-
-	bool IsGameFinished = false;
 };

@@ -16,9 +16,6 @@ public:
 	// Sets default values for this actor's properties
 	ARook();
 
-	// set Rook material
-	void SetRookMaterial(const int32 ElementIndex, UMaterialInterface* TileMaterial);
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -19,9 +19,7 @@ public:
 	// Sets default values for this pawn's properties
 	ACHS_HumanPlayer();
 
-	
-
-	// Camera component attacched to player pawn
+	// Camera component attached to player pawn
 	UCameraComponent* Camera;
 
 protected:
@@ -62,22 +60,23 @@ public:
 	// Called when it's human turn
 	virtual void OnTurn();
 
-
 	// Check if the clicked tile/black actor position is a legit move
 	int32 IsPieceMoveValid(FVector2D Position, TArray<FVector2D> PossiblePieceMoves);
 
 	// Move actor into new location
 	void MoveBasePiece(ABasePiece*, FVector OldLocation, FVector NewLocation);
 
+	// Called after move to reset tiles materials after possible move materials.  
 	UFUNCTION(BlueprintCallable)
-	// Set spawn tile materials
-	void SetOriginalTileMaterial();
+		void SetOriginalTileMaterial();
 
 	// Called on left mouse click (binding)
 	UFUNCTION()
 		void OnClick();
 
+	// Apply possible moves materials to tile after clicking on actor
 	void ApplyPossibleMovesMaterials(const TArray<FVector2D>& PossibleMoves);
 
+	// Set hidden killed pieces
 	void SetHiddenKilledPiece(FVector2D Position, ABasePiece* ClickedPiece);
 };
