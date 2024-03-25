@@ -43,9 +43,6 @@ public:
 	// End AI turn
 	void EndAITurn();
 
-	// Bool game finished
-	bool IsGameFinished() const;
-
 	ACHS_GameMode();
 
 	// Called when the game starts or when spawned

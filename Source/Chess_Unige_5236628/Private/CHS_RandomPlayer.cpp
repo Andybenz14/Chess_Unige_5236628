@@ -43,10 +43,12 @@ void ACHS_RandomPlayer::OnTurn()
 
 	// Timer
 	FTimerHandle TimerHandle;
-	
+
+	// Check if black king is on check or on checkmate and calculate all the illegal moves that white can't do this turn
 	IsCheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
 	IsCheckMate(ETileOwner::BLACK, ETileOwner::WHITE);
 
+	// Check if game can continue
 	if (GameInstance->IsGameFinished == false)
 	{
 
@@ -62,6 +64,7 @@ void ACHS_RandomPlayer::OnTurn()
 				// Empty the array of black movable pieces
 				BlackMovableActors.Empty();
 
+				// Bool reset
 				IsKillMove = false;
 
 				// GameMode pointer
@@ -97,13 +100,13 @@ void ACHS_RandomPlayer::OnTurn()
 				// Check if there is at least one black piece
 				if (BlackActors.Num() > 0)
 				{
-					// Iterate on BlackActors array
+					// Iterate on BlackActors array to calculate all possible moves
 					for (ABasePiece* PossiblePiece : BlackActors)
 					{
 						// Get iterated black actor location
 						FVector ActorLocation = PossiblePiece->GetActorLocation();
 
-						// Try to cast PossiblePice to AKing and check if cast is successful 
+						// Check if is a king
 						if (AKing* KingActor = Cast<AKing>(PossiblePiece))
 						{
 							// Calcolate King(PossiblePiece) possible moves
@@ -112,7 +115,8 @@ void ACHS_RandomPlayer::OnTurn()
 							// Check if there is at least one possible move for the king
 							if (PossibleKingMoves.Num() > 0)
 							{
-								// Add King(PossiblePiece) to an array of movable black pieces
+								// Add King(PossiblePiece) to an array of movable black pieces. 
+								// One of this actors will be randomly choose to move
 								BlackMovableActors.Add(PossiblePiece);
 							}
 						}
@@ -170,27 +174,31 @@ void ACHS_RandomPlayer::OnTurn()
 					// Initialize Random index to choose randomly one movable black piece
 					int32 RandIdx = FMath::RandRange(0, BlackMovableActors.Num() - 1);
 
-					// Random movable black piece
+					// Select randomly a Piece to move
 					RandomSelectedActor = BlackMovableActors[RandIdx];
 
 					// Get actor location
 					FVector RandomActorLocation = RandomSelectedActor->GetActorLocation();
 
-					// Try to cast PossiblePice to AKing and check if cast is successful 
+					// Check if is a king
 					if (AKing* KingActor = Cast<AKing>(RandomSelectedActor))
 					{
-						// Calcolate King(RandomSelectedActor) possible moves
+						// Calcolate King possible moves
 						KingPossibleMoves(RandomActorLocation, ETileOwner::WHITE);
 
 						// Check if there is at least one king possible move (just for safety)
 						if (PossibleKingMoves.Num() > 0)
 						{
+							// Select Random Move
 							int32 RandIdx1 = FMath::RandRange(0, PossibleKingMoves.Num() - 1);
 							FVector2D RandomPosition = PossibleKingMoves[RandIdx1];
 							FVector RandomPosition3d(RandomPosition.X, RandomPosition.Y, 10.00);
 							FVector2D NormalizedPosition(RandomPosition.X / 120, RandomPosition.Y / 120);
 
+							// Set killed piece random
 							SetKilledPieceHidden(NormalizedPosition);
+
+							// Move piece
 							MoveBaseBlackPiece(RandomSelectedActor, RandomActorLocation, RandomPosition3d);
 						}
 					}
@@ -279,18 +287,22 @@ void ACHS_RandomPlayer::SetKilledPieceHidden(FVector2D NormalizedPosition)
 {
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
 
+	// If it's a kill move
 	if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
 	{
+		// It's a kill move. Information used by register
 		IsKillMove = true;
 
 		ABasePiece* KilledActor = GameMode->GField->BasePieceMap[NormalizedPosition];
-		// Destroy the white actor in the move position
+
+		// Set hidden the white actor in the move position
 		KilledActor->SetActorHiddenInGame(true);
 		KilledActor->SetActorEnableCollision(false);
 
 		// Remove from basepiecemap the white actor in the move position
 		GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
 
+		// Create new object for replay
 		FDestroyedPiece NewDestroyedPiece;
 		NewDestroyedPiece.Piece = KilledActor;
 		NewDestroyedPiece.Position = NormalizedPosition;
@@ -307,7 +319,7 @@ void ACHS_RandomPlayer::MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVe
 	// GameMode pointer
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
 
-	// Set black piece into new location
+	// Set black piece into move location
 	RandomSelectedActor->SetActorLocation(NewLocation);
 
 	// Old black piece location in 2d
@@ -316,6 +328,7 @@ void ACHS_RandomPlayer::MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVe
 	// Get new piece location after the move
 	FVector NewActorLocation = RandomSelectedActor->GetActorLocation();
 
+	// Add new move for replay
 	GameInstance->MovesForReplay.Add(NewActorLocation);
 	GameInstance->PiecesForReplay.Add(RandomSelectedActor);
 
@@ -325,10 +338,8 @@ void ACHS_RandomPlayer::MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVe
 	// Check if actor moved 
 	if (NewActorLocation == NewLocation)
 	{
-		// Set tile located at old piece position as empty and without owner
+		// Update tiles status and owners
 		GameMode->GField->TileMap[OldBlackActorLocation2D]->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
-
-		// Set tile located at new black piece position as occupied and with black owner
 		GameMode->GField->TileMap[NewActorLocation2D]->SetTileStatus(ETileOwner::BLACK, ETileStatus::OCCUPIED);
 	}
 
@@ -338,14 +349,18 @@ void ACHS_RandomPlayer::MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVe
 	NewActorLocation2D.X = NewActorLocation2D.X / 120;
 	NewActorLocation2D.Y = NewActorLocation2D.Y / 120;
 
+	// Reset register turn index
 	if (GameInstance->Moves.Num() == 1)
 	{
 		RegisterMovesCounter = 0;
 	}
+
+	// Send register new move
 	RegisterMoveConverter(FVector2D(NewActorLocation2D.X + 1, NewActorLocation2D.Y + 1), FVector2D(OldBlackActorLocation2D.X + 1, OldBlackActorLocation2D.Y + 1), RandomSelectedActor, ETileOwner::WHITE);
 	
-	// Change piece key from his old location to his new location
+	// Remove moved piece from map
 	GameMode->GField->BasePieceMap.Remove(OldBlackActorLocation2D);
+	// Update map with the moved actor in his new location
 	GameMode->GField->BasePieceMap.Add(NewActorLocation2D, RandomSelectedActor);
 
 	// Check if the piece is a pawn and if it reached the other side of the chessboard
@@ -372,6 +387,7 @@ void ACHS_RandomPlayer::MoveBaseBlackPiece(ABasePiece*, FVector OldLocation, FVe
 	}
 	else
 	{
+		// Update turn index
 		GameInstance->DestroyedPieceArrayIndexCounter++;
 	}
 	

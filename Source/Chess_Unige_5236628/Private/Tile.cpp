@@ -17,6 +17,7 @@ ATile::ATile()
 	SetRootComponent(Scene);
 	StaticMeshComponent->SetupAttachment(Scene);
 
+	// Default values
 	Status = ETileStatus::EMPTY;
 	PlayerOwner = ETileOwner::NONE;
 	TileGridPosition = FVector2D(0, 0);
@@ -29,6 +30,7 @@ void ATile::BeginPlay()
 	
 }
 
+// Set tile owner and status (ENUM)
 void ATile::SetTileStatus(const ETileOwner TileOwner, const ETileStatus TileStatus)
 {
 	PlayerOwner = TileOwner;
@@ -41,6 +43,7 @@ void ATile::SetTileMaterial(const int32 ElementIndex, UMaterialInterface* TileMa
 	StaticMeshComponent->SetMaterial(0, TileMaterial);
 }
 
+// Get Tile material
 UMaterialInterface* ATile::GetTileMaterial(const int32 ElementIndex) const
 {
 	if (StaticMeshComponent)
@@ -50,30 +53,29 @@ UMaterialInterface* ATile::GetTileMaterial(const int32 ElementIndex) const
 	return nullptr;
 }
 
+// Get status
 ETileStatus ATile::GetTileStatus()
 {
 	return Status;
 }
 
+// Get owner
 ETileOwner ATile::GetOwner()
 {
 	return PlayerOwner;
 }
 
+// Set grid position
 void ATile::SetGridPosition(const double InX, const double InY)
 {
 	TileGridPosition.Set(InX, InY);
 }
 
+// Get grid position
 FVector2D ATile::GetGridPosition()
 {
 	return TileGridPosition;
 }
 
-// Called every frame
-//void ATile::Tick(float DeltaTime)
-//{
-//	Super::Tick(DeltaTime);
 
-//}
 

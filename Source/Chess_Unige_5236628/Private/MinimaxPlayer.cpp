@@ -34,37 +34,54 @@ void AMinimaxPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
-
 void AMinimaxPlayer::OnTurn()
 {
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
 
+	// Reset 
 	IsKillMove = false;
+	// AI is the max user
 	bool IsMax = true;
+	// Minimax Depth
 	int32 Depth = 2;
+	// Set ALFA = -inf
 	int32 Alfa = std::numeric_limits<int>::min();
+	// Set BETA = +inf
 	int32 Beta = std::numeric_limits<int>::max();
+
+	// Inizialize best move and the actor to move
 	FVector2D BestMove;
 	ABasePiece* BestActor = nullptr;
+
+	// Pieces map backup for safety
 	TMap<FVector2D, ABasePiece*>Backup = GameMode->GField->BasePieceMap;
 
+	// Minimax call
 	int32 test=AlfaBetaMinimax(Depth, IsMax, Alfa, Beta, BestMove, BestActor);
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Black Score: %d"), test));
 
+	// Reset pieces map for safety
 	GameMode->GField->BasePieceMap = Backup;
+	// Reset tile status for safety
 	TileMapReset();
 
+	// If minimax found a move
 	if (BestActor != nullptr)
 	{
 		BestMove.X = BestMove.X / 120;
 		BestMove.Y = BestMove.Y / 120;
+
+		// Set white killed piece hidden
 		SetKilledPieceHidden(BestMove);
 		FVector NewLocation(BestMove.X * 120, BestMove.Y * 120, 10.00);
 		FVector OldLocation = BestActor->GetActorLocation();
+
+		// Move black piece into best move position
 		MoveBaseBlackPiece(BestActor, OldLocation, NewLocation);
 	}
 	else
 	{
+		// White wins if minimax doesn't find a move to do
 		GameInstance->SetTurnMessage(TEXT("WHITE WINS"));
 		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
 		PlayerController->DisableInput(PlayerController);
@@ -77,49 +94,67 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 {
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
 
+	// If depth = 0 calls the evaluation of the node
 	if (Depth == 0 )
 	{
 		return Evaluate();
 	}
 
+	// If it's black
 	if (IsMax)
 	{
+		// Calculate all the illegal moves that the black can't do
 		IsCheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
 		IsCheckMate(ETileOwner::BLACK, ETileOwner::WHITE);
 
+		// If it finds a check mate on black returns -inf
 		if (GameInstance->IsGameFinished)
 		{
 			GameInstance->IsGameFinished = false;
 			return std::numeric_limits<int>::min();
 		}
 
+		// Best value = -inf
 		V = std::numeric_limits<int>::min();
 
+		// Actors is the array of black in-game actors calculated with IsCheckKing()
 		TArray<ABasePiece*> ActorsBackup = Actors;
 		
+		// Iterate over all black in-game actors
 		for (ABasePiece* SelectedActor : ActorsBackup)
 		{
 			FVector ActorLocation = SelectedActor->GetActorLocation();
 
-			// Try to cast PossiblePice to AKing and check if cast is successful 
+			// If is a king 
 			if (AKing* KingActor = Cast<AKing>(SelectedActor))
 			{
+				// Calculate all the illegal moves
 				IsCheckKing(ETileOwner::BLACK, ETileOwner::WHITE);
 				IsCheckMate(ETileOwner::BLACK, ETileOwner::WHITE);
+
+				// Calculate king legal moves
 				KingPossibleMoves(ActorLocation, ETileOwner::WHITE);
 
+				// Save the legal moves into a backup. Each depth will have his immutable 
+				// backup moves array for each piece where can iterate without changes
 				TArray<FVector2D> PossibleKingMovesBackup = PossibleKingMoves;
 
 				if (PossibleKingMovesBackup.Num() > 0)
 				{
+					// Iterate over legal moves
 					for (FVector2D Move : PossibleKingMovesBackup)
 					{
 						FVector StartLocation = SelectedActor->GetActorLocation();
 
+						// Simulate the selected move
+						// This function contains recursive call to AlphaBetaMinimax()
 						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 
+						// Alfa-Beta pruning
 						if (V > Alfa) {
 							Alfa = V;
+
+							// Pick best move
 							BestMove = Move;
 							BestActor = SelectedActor;
 						}
@@ -147,19 +182,25 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 
 						MoveSimulation(StartLocation, Move, ETileOwner::BLACK, ETileOwner::WHITE, SelectedActor, Depth, Alfa, Beta, BestMove, BestActor);
 
+						// Find white king location
 						FVector2D KingLocation = FindKingLocation();
 
+						// If the selected piece location is not in the tile next to the king.
+						// This is to prevent a white king instant kill of the black piece in the next turn
 						if (FMath::Abs(KingLocation.X - Move.X) > 120 && FMath::Abs(KingLocation.Y - Move.Y) > 120)
 						{
-
+							// Check reset
 							Check = false;
 
 							FVector Move3d(Move.X, Move.Y, 10);
 
+							// Calculate pawn moves to see if the pawn makes check on the white king
 							PawnPossibleMoves(Move3d, ETileOwner::WHITE);
 
+							// If pawn makes check on white king this is best move
 							if (Check)
 							{
+								// Increment best value 
 								V += 1;
 							}
 
@@ -363,9 +404,10 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 				}
 			}
 		}
-
+		// return best value
 		return V;
 	}
+	// Same for white but minimizing
 	else
 	{
 		IsCheckKing(ETileOwner::WHITE, ETileOwner::BLACK);
@@ -557,10 +599,12 @@ int32 AMinimaxPlayer::AlfaBetaMinimax(int32 Depth, bool IsMax, int32 Alfa, int32
 	
 }
 
+// Simulate move to evaluate the new chessboard state. This function contains new minimax calls
 void AMinimaxPlayer::MoveSimulation(FVector SelectedActorLocation, FVector2D SelectedMovePosition, ETileOwner FriendColor, ETileOwner EnemyColor, ABasePiece* SelectedActor, int32 Depth, int32 Alfa, int32 Beta, FVector2D& BestMove, ABasePiece*& BestActor)
 {
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
 
+	// Pieces backup
 	TMap<FVector2D, ABasePiece*> BackupBasePieceMap = GameMode->GField->BasePieceMap;
 
 	//Normalize
@@ -576,10 +620,8 @@ void AMinimaxPlayer::MoveSimulation(FVector SelectedActorLocation, FVector2D Sel
 
 	FVector2D SelectedActorLocation2D(SelectedActorLocation);
 	
-	// Set tile located at old piece position as empty and without owner
+	// Update tiles status and owner
 	GameMode->GField->TileMap[SelectedActorLocation2D]->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
-
-	// Set tile located at new black piece position as occupied and with black owner
 	GameMode->GField->TileMap[SelectedMovePosition]->SetTileStatus(FriendColor, ETileStatus::OCCUPIED);
 
 	// Normalize
@@ -588,10 +630,11 @@ void AMinimaxPlayer::MoveSimulation(FVector SelectedActorLocation, FVector2D Sel
 	SelectedActorLocation2DNormalized.Y = SelectedActorLocation2D.Y / 120;
 
 
-	// Change piece key from his old location to his new location
+	// Update moved piece in map
 	GameMode->GField->BasePieceMap.Remove(SelectedActorLocation2DNormalized);
 	GameMode->GField->BasePieceMap.Add(NormalizedPosition, SelectedActor);
 
+	// Recursive call to AlphaBetaMinimax() after the move simulation
 	if (FriendColor == ETileOwner::BLACK)
 	{
 		V = std::max(V, AlfaBetaMinimax(Depth - 1, false, Alfa, Beta, BestMove, BestActor));
@@ -601,12 +644,14 @@ void AMinimaxPlayer::MoveSimulation(FVector SelectedActorLocation, FVector2D Sel
 		V = std::min(V, AlfaBetaMinimax(Depth - 1, true, Alfa, Beta, BestMove, BestActor));
 	}
 
+	// Reset BasePieceMap for safety
 	GameMode->GField->BasePieceMap=BackupBasePieceMap;
+	// Reset tiles for safety
 	TileMapReset();
 	
 }
 
-
+// Gives a score to chessboard state
 int32 AMinimaxPlayer::Evaluate()
 {
 	int BlackScore = 0;
@@ -614,37 +659,44 @@ int32 AMinimaxPlayer::Evaluate()
 
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
 
+	// Gets all actors in-game
 	for (auto& Pair : GameMode->GField->BasePieceMap)
 	{
 		ABasePiece* BasePieceActor = Pair.Value;
 
 		FVector ActorLocation = BasePieceActor->GetActorLocation();
 
+		// All black actors
 		if (BasePieceActor->GetPieceColor() == EPieceColor::BLACK)
 		{
 			if (BasePieceActor->IsA(APawnChess::StaticClass()))
 			{
+				// In game pawn value
 				BlackScore += 10;
 				BlackScore += EvaluatePawnPromotion(BasePieceActor, 1);
 				BlackScore += EvaluateStartingGameOpening(BasePieceActor, 1);
 			}
 			else if (BasePieceActor->IsA(AQueen::StaticClass()))
 			{
+				// In game queen value
 				BlackScore += 90;
 
 			}
 			else if (BasePieceActor->IsA(ABishop::StaticClass()))
 			{
+				// In game bishop value
 				BlackScore += 30;
 				BlackScore += EvaluateStartingGameOpening(BasePieceActor, 1);
 			}
 			else if (BasePieceActor->IsA(AKnight::StaticClass()))
 			{
+				// In game knight value
 				BlackScore += 30;
 				BlackScore += EvaluateStartingGameOpening(BasePieceActor, 1);
 			}
 			else if (BasePieceActor->IsA(ARook::StaticClass()))
 			{
+				// In game rook value
 				BlackScore += 50;
 			}
 			
@@ -677,10 +729,12 @@ int32 AMinimaxPlayer::Evaluate()
 			}
 		}
 	}
-		
+	
+	// Return the global chessboard state value
 	return BlackScore-WhiteScore;
 }
 
+// Gives an extra value to the pawn when is going to promote to a queen
 int32 AMinimaxPlayer::EvaluatePawnPromotion(ABasePiece* Actor, int32 Color)
 {
 	int Score = 0;
@@ -688,6 +742,7 @@ int32 AMinimaxPlayer::EvaluatePawnPromotion(ABasePiece* Actor, int32 Color)
 	FVector ActorLocation = Actor->GetActorLocation();
 	if ((ActorLocation.X == 0) && Color == 1)
 	{
+		// Queen value is 90. So Queen.Value - Pawn.Value = Extra = 80
 		Score = 80;
 	}
 	else if ((ActorLocation.X == 840) && Color == 0)
@@ -699,6 +754,7 @@ int32 AMinimaxPlayer::EvaluatePawnPromotion(ABasePiece* Actor, int32 Color)
 	return Score;
 }
 
+// Gives extra value to openings in the first 15 moves 
 int32 AMinimaxPlayer::EvaluateStartingGameOpening(ABasePiece* Actor, int32 Color)
 {
 	int Score = 0;
@@ -721,6 +777,7 @@ int32 AMinimaxPlayer::EvaluateStartingGameOpening(ABasePiece* Actor, int32 Color
 	return Score;
 }
 
+// Finds white king location
 FVector2D AMinimaxPlayer::FindKingLocation()
 {
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
@@ -742,15 +799,18 @@ FVector2D AMinimaxPlayer::FindKingLocation()
 	return KLocation;
 }
 
+// Set killed piece hidden
 void AMinimaxPlayer::SetKilledPieceHidden(FVector2D NormalizedPosition)
 {
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
 
+	// if is killed
 	if (GameMode->GField->BasePieceMap.Contains(NormalizedPosition))
 	{
 		IsKillMove = true;
 
 		ABasePiece* KilledActor = GameMode->GField->BasePieceMap[NormalizedPosition];
+
 		// Destroy the white actor in the move position
 		KilledActor->SetActorHiddenInGame(true);
 		KilledActor->SetActorEnableCollision(false);
@@ -758,6 +818,7 @@ void AMinimaxPlayer::SetKilledPieceHidden(FVector2D NormalizedPosition)
 		// Remove from basepiecemap the white actor in the move position
 		GameMode->GField->BasePieceMap.Remove(NormalizedPosition);
 
+		// Create new object for replay
 		FDestroyedPiece NewDestroyedPiece;
 		NewDestroyedPiece.Piece = KilledActor;
 		NewDestroyedPiece.Position = NormalizedPosition;
@@ -767,17 +828,22 @@ void AMinimaxPlayer::SetKilledPieceHidden(FVector2D NormalizedPosition)
 
 }
 
+// Analyze which pieces are on board and reset tiles status and owner for safety
 void AMinimaxPlayer::TileMapReset()
 {
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
 
+	// Iterate over all tiles
 	for (auto& Pair : GameMode->GField->TileMap)
 	{
 		ATile* Tile = Pair.Value;
+
+		// Set All tiles as empty
 		Tile->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
 		FVector TileLocation = Tile->GetActorLocation();
 		FVector2D TileLocation2D(TileLocation.X / 120, TileLocation.Y / 120);
 
+		// If there's a piece above the tile set tile owner as the piece color
 		if (GameMode->GField->BasePieceMap.Contains(TileLocation2D))
 		{
 			EPieceColor Color = GameMode->GField->BasePieceMap[TileLocation2D]->GetPieceColor();
@@ -811,6 +877,7 @@ void AMinimaxPlayer::MoveBaseBlackPiece(ABasePiece* SelectedActor, FVector OldLo
 	// Get new piece location after the move
 	FVector NewActorLocation = SelectedActor->GetActorLocation();
 
+	// Replay data
 	GameInstance->MovesForReplay.Add(NewActorLocation);
 	GameInstance->PiecesForReplay.Add(SelectedActor);
 
@@ -838,6 +905,7 @@ void AMinimaxPlayer::MoveBaseBlackPiece(ABasePiece* SelectedActor, FVector OldLo
 		RegisterMovesCounter = 0;
 	}
 
+	// Send to register
 	RegisterMoveConverter(FVector2D(NewActorLocation2D.X + 1, NewActorLocation2D.Y + 1), FVector2D(OldBlackActorLocation2D.X + 1, OldBlackActorLocation2D.Y + 1), SelectedActor, ETileOwner::WHITE);
 
 	// Change piece key from his old location to his new location
@@ -848,7 +916,8 @@ void AMinimaxPlayer::MoveBaseBlackPiece(ABasePiece* SelectedActor, FVector OldLo
 	if (SelectedActor->IsA(APawnChess::StaticClass()) && NewActorLocation2D.X == 0)
 	{
 
-		// Call PawnPromotionFunction. ( 2 == BLACK)
+		// Call PawnPromotionFunction. ( 2 == BLACK) 
+		// Set queen promotion by default
 		GameMode->GField->PawnPromotion(SelectedActor, 2, "Queen");
 
 	}

@@ -32,16 +32,16 @@ void AGenericPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
-
+// Calculate Knight legal move positions
 void AGenericPlayer::KnightPossibleMoves(FVector KnightLocation, ETileOwner EnemyColor)
 {
 	ACHS_GameMode* GameMode = Cast<ACHS_GameMode>(GetWorld()->GetAuthGameMode());
 
+	// Empty array
 	PossibleKnightMoves.Empty();
 	PossibleKnightMovesForCheck.Empty();
 
-	
-
+	// Knight legal move from his actual position
 	TArray<FVector2D> KnightPositions = {
 		FVector2D(1, 2),
 		FVector2D(2, 1),
@@ -53,30 +53,33 @@ void AGenericPlayer::KnightPossibleMoves(FVector KnightLocation, ETileOwner Enem
 		FVector2D(-2, -1)
 	};
 
-
+	// Check for all legal position
 	for (const FVector2D& Positions : KnightPositions)
 	{
 		FVector2D NextTileLocation(KnightLocation.X + (Positions.X * 120.0), KnightLocation.Y + (Positions.Y * 120.0));
 
-
+		// Check if move is inside game field
 		if (GameMode->GField->TileMap.Contains(NextTileLocation))
 		{
 			ATile* NextTile = GameMode->GField->TileMap[NextTileLocation];
 			ETileStatus Status = NextTile->GetTileStatus();
 
-
+			// Check if move is on empty tile
 			if (Status == ETileStatus::EMPTY)
 			{
+				// Add possible move if it is not illegal. (Illegal calculated by IsCheckKing())
 				if (!(IllegalKnightMoveDueToCheck.Contains(NextTileLocation)))
 				{
+					// Legal moves
+
 					PossibleKnightMoves.Add(NextTileLocation);
 					PossibleKnightMovesForCheck.Add(NextTileLocation);
 				}
 			}
-
+			// Check if move is on occupied tile
 			else if (Status == ETileStatus::OCCUPIED)
 			{
-
+				// Check if tile is owned by enemy
 				if (NextTile->GetOwner() == EnemyColor)
 				{
 					FVector2D NextTileLocation2dNormalized;
@@ -87,11 +90,15 @@ void AGenericPlayer::KnightPossibleMoves(FVector KnightLocation, ETileOwner Enem
 					if (GameMode->GField->BasePieceMap.Contains(NextTileLocation2dNormalized))
 					{
 						ABasePiece* IsKing = GameMode->GField->BasePieceMap[NextTileLocation2dNormalized];
+
+						// If black piece is not a king it is a legal move
 						if (!(IsKing->IsA(AKing::StaticClass())))
 						{
+							// Check that it isn't an illegal move
 							if (!(IllegalKnightMoveDueToCheck.Contains(NextTileLocation)))
 							{
 								PossibleKnightMoves.Add(NextTileLocation);
+								
 								PossibleKnightMovesForCheck.Add(NextTileLocation);
 							}
 						}
@@ -99,8 +106,11 @@ void AGenericPlayer::KnightPossibleMoves(FVector KnightLocation, ETileOwner Enem
 						{
 							if (!(IllegalKnightMoveDueToCheck.Contains(NextTileLocation)))
 							{
+								// Legal moves + enemy king hypothetic kill. Usefull for IsCheckKing().
 								PossibleKnightMovesForCheck.Add(NextTileLocation);
 							}
+
+							// Check true for IsCheckKing()
 							Check = true;
 						}
 					}
@@ -114,6 +124,7 @@ void AGenericPlayer::KnightPossibleMoves(FVector KnightLocation, ETileOwner Enem
 
 void AGenericPlayer::KingPossibleMoves(FVector KingLocation, ETileOwner EnemyColor)
 {
+	// Same logic used in KnightPossibleMoves
 
 	ACHS_GameMode* GameMode = Cast<ACHS_GameMode>(GetWorld()->GetAuthGameMode());
 
@@ -121,7 +132,6 @@ void AGenericPlayer::KingPossibleMoves(FVector KingLocation, ETileOwner EnemyCol
 	PossibleKingMovesForCheck.Empty();
 
 	
-
 	TArray<FVector2D> KingPositions = {
 		FVector2D(1, 0),
 		FVector2D(1, 1),
@@ -195,15 +205,13 @@ void AGenericPlayer::KingPossibleMoves(FVector KingLocation, ETileOwner EnemyCol
 void AGenericPlayer::PawnPossibleMoves(FVector PawnLocation, ETileOwner EnemyColor)
 {
 
-
 	PossiblePawnMoves.Empty();
 	PossiblePawnMovesForCheck.Empty();
 
-	
-
+	// Legal move calculate section for white pawns
 	if (EnemyColor == ETileOwner::BLACK)
 	{
-
+		// One upper tile move
 		FVector2D Pawn2dLocation0(PawnLocation.X + 120, PawnLocation.Y);
 
 		ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
@@ -213,6 +221,7 @@ void AGenericPlayer::PawnPossibleMoves(FVector PawnLocation, ETileOwner EnemyCol
 
 			ETileStatus status0 = GameMode->GField->TileMap[Pawn2dLocation0]->GetTileStatus();
 
+			// Upper tile must be empty
 			if (status0 == ETileStatus::EMPTY)
 			{
 				if (!(IllegalPawnMoveDueToCheck.Contains(Pawn2dLocation0)))
@@ -223,6 +232,7 @@ void AGenericPlayer::PawnPossibleMoves(FVector PawnLocation, ETileOwner EnemyCol
 			}
 		}
 
+		// Two upper tile move 
 		FVector2D Pawn2dLocation1(PawnLocation.X + 240, PawnLocation.Y);
 
 		if (GameMode->GField->TileMap.Contains(Pawn2dLocation1))
@@ -231,6 +241,7 @@ void AGenericPlayer::PawnPossibleMoves(FVector PawnLocation, ETileOwner EnemyCol
 			ETileStatus status1 = GameMode->GField->TileMap[Pawn2dLocation1]->GetTileStatus();
 			ETileStatus status2 = GameMode->GField->TileMap[Pawn2dLocation0]->GetTileStatus();
 
+			// To do double tile move, pawn must be in his starting position and tile must be empty
 			if (PawnLocation.X == 120.0 && status1 == ETileStatus::EMPTY && status2 == ETileStatus::EMPTY)
 			{
 				if (!(IllegalPawnMoveDueToCheck.Contains(Pawn2dLocation1)))
@@ -241,6 +252,7 @@ void AGenericPlayer::PawnPossibleMoves(FVector PawnLocation, ETileOwner EnemyCol
 			}
 		}
 
+		// Kill move
 		FVector2D Pawn2dLocation2(PawnLocation.X + 120, PawnLocation.Y + 120);
 
 		if (GameMode->GField->TileMap.Contains(Pawn2dLocation2))
@@ -264,7 +276,6 @@ void AGenericPlayer::PawnPossibleMoves(FVector PawnLocation, ETileOwner EnemyCol
 							PossiblePawnMoves.Add(Pawn2dLocation2);
 							PossiblePawnMovesForCheck.Add(Pawn2dLocation2);
 						}
-						//TODO potrei inserire un counter per lo scacco nell'else di questi if
 					}
 					else
 					{
@@ -279,6 +290,7 @@ void AGenericPlayer::PawnPossibleMoves(FVector PawnLocation, ETileOwner EnemyCol
 			}
 		}
 
+		// Kill move
 		FVector2D Pawn2dLocation3(PawnLocation.X + 120, PawnLocation.Y - 120);
 
 		if (GameMode->GField->TileMap.Contains(Pawn2dLocation3))
@@ -319,9 +331,10 @@ void AGenericPlayer::PawnPossibleMoves(FVector PawnLocation, ETileOwner EnemyCol
 		}
 		
 	}
+	// Black pawn legal moves section
 	else
 	{
-		// Location for the vertical move (one tile front)
+		// One bottom tile move
 		FVector2D Pawn2dLocation0(PawnLocation.X - 120, PawnLocation.Y);
 
 		ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
@@ -343,7 +356,7 @@ void AGenericPlayer::PawnPossibleMoves(FVector PawnLocation, ETileOwner EnemyCol
 			}
 		}
 
-		// Location for the first optional move of 2 frontal tile
+		// Two Tile move 
 		FVector2D Pawn2dLocation1(PawnLocation.X - 240, PawnLocation.Y);
 
 		if (GameMode->GField->TileMap.Contains(Pawn2dLocation1))
@@ -461,8 +474,7 @@ void AGenericPlayer::RookPossibleMoves(FVector RookLocation, ETileOwner EnemyCol
 	PossibleRookMoves.Empty();
 	PossibleRookMovesForCheck.Empty();
 
-
-
+	// Given a direction these function will check tiles in a row
 	CalculateRookMoves(RookLocation, FVector2D(0, 1), EnemyColor);
 	CalculateRookMoves(RookLocation, FVector2D(0, -1), EnemyColor);
 	CalculateRookMoves(RookLocation, FVector2D(1, 0), EnemyColor);
@@ -475,11 +487,13 @@ void AGenericPlayer::CalculateRookMoves(FVector RookLocation, FVector2D Directio
 
 	FVector2D NextTileLocation(RookLocation.X + (Direction.X * 120.0), RookLocation.Y + (Direction.Y * 120.0));
 
+	// Check if move position in on game field
 	if (GameMode->GField->TileMap.Contains(NextTileLocation))
 	{
 		ATile* NextTile = GameMode->GField->TileMap[NextTileLocation];
 		ETileStatus Status = NextTile->GetTileStatus();
 
+		// Check if NextTile is empty
 		if (Status == ETileStatus::EMPTY)
 		{
 			FVector Location;
@@ -493,9 +507,11 @@ void AGenericPlayer::CalculateRookMoves(FVector RookLocation, FVector2D Directio
 				PossibleRookMovesForCheck.Add(NextTileLocation);
 			}
 
+			// Recursive call for the next tile in the row
 			CalculateRookMoves(Location, Direction, EnemyColor);
 			
 		}
+		// If is occupied by an enemy
 		else if (Status == ETileStatus::OCCUPIED && NextTile->GetOwner() == EnemyColor)
 		{
 			FVector2D NextTileLocation2dNormalized;
@@ -537,8 +553,7 @@ void AGenericPlayer::BishopPossibleMoves(FVector BishopLocation, ETileOwner Enem
 	PossibleBishopMoves.Empty();
 	PossibleBishopMovesForCheck.Empty();
 
-
-
+	// Diagonal directions
 	CalculateBishopMoves(BishopLocation, FVector2D(1, 1), EnemyColor);
 	CalculateBishopMoves(BishopLocation, FVector2D(1, -1), EnemyColor);
 	CalculateBishopMoves(BishopLocation, FVector2D(-1, 1), EnemyColor);
@@ -547,6 +562,9 @@ void AGenericPlayer::BishopPossibleMoves(FVector BishopLocation, ETileOwner Enem
 
 void AGenericPlayer::CalculateBishopMoves(FVector BishopLocation, FVector2D Direction, ETileOwner EnemyColor)
 {
+	// Same logic used by CalculateRookMoves()
+
+
 	ACHS_GameMode* GameMode = Cast<ACHS_GameMode>(GetWorld()->GetAuthGameMode());
 
 	FVector2D NextTileLocation(BishopLocation.X + (Direction.X * 120), BishopLocation.Y + (Direction.Y * 120));
@@ -609,8 +627,7 @@ void AGenericPlayer::QueenPossibleMoves(FVector QueenLocation, ETileOwner EnemyC
 	PossibleQueenMoves.Empty();
 	PossibleQueenMovesForCheck.Empty();
 
-
-	
+	// Row and diagonal directions
 	CalculateQueenMoves(QueenLocation, FVector2D(0, 1), EnemyColor); 
 	CalculateQueenMoves(QueenLocation, FVector2D(0, -1), EnemyColor); 
 	CalculateQueenMoves(QueenLocation, FVector2D(1, 0), EnemyColor); 
@@ -624,6 +641,8 @@ void AGenericPlayer::QueenPossibleMoves(FVector QueenLocation, ETileOwner EnemyC
 
 void AGenericPlayer::CalculateQueenMoves(FVector QueenLocation, FVector2D Direction, ETileOwner EnemyColor)
 {
+	// Same logic used by CalculateRookMoves()
+
 	ACHS_GameMode* GameMode = Cast<ACHS_GameMode>(GetWorld()->GetAuthGameMode());
 
 	FVector2D NextTileLocation(QueenLocation.X + (Direction.X * 120), QueenLocation.Y + (Direction.Y * 120));
@@ -679,11 +698,12 @@ void AGenericPlayer::CalculateQueenMoves(FVector QueenLocation, FVector2D Direct
 	}
 }
 
-
+// Called at the beginning of the players' turn.
 void AGenericPlayer::IsCheckKing(ETileOwner FriendColor, ETileOwner EnemyColor)
 {
-	
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+
+	// Array reset
 	IllegalKingMoveDueToCheck.Empty();
 	IllegalQueenMoveDueToCheck.Empty();
 	IllegalPawnMoveDueToCheck.Empty();
@@ -691,122 +711,132 @@ void AGenericPlayer::IsCheckKing(ETileOwner FriendColor, ETileOwner EnemyColor)
 	IllegalBishopMoveDueToCheck.Empty();
 	IllegalKnightMoveDueToCheck.Empty();
 
-	// Set to false because could be set to true with precedent calls of possible moves functions
+	// Set false for safety
 	Check = false;
 
+	// Simulate all possible moves
 	SimulatePossibleMoves(FriendColor, EnemyColor);
 	
 	
 }
 
+// Simulate all pieces moves of the friend color and for each move calculate all the possible response moves by the enemy.
+// If the response of the enemy makes friend king on check, than the friend simulated move is illegal.
 void AGenericPlayer::SimulatePossibleMoves(ETileOwner FriendColor, ETileOwner EnemyColor)
 {			
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+
+	// Backup for safety
 	TMap<FVector2D, ABasePiece*> BackupBasePieceMap = GameMode->GField->BasePieceMap;
-	//TODO Probaibilmente dovrò fare il reset degli stati delle tile ad ogni iterazione
 	
+	// Calculate all possible moves by in-game friend pieces
 	CalculatePossibleMoves(FriendColor, EnemyColor);
 	
-	
+	// Array of all movable friend color actors
 	TArray<ABasePiece*> ActorsCopy = Actors;
 	
-
 	for (ABasePiece* SelectedActor : ActorsCopy)
 	{
+		// Get actor location
+		FVector SelectedActorLocation = SelectedActor->GetActorLocation();
 
-			// Get actor location
-			FVector SelectedActorLocation = SelectedActor->GetActorLocation();
-		
+		// Check piece type
+		if (AKing* KingActor = Cast<AKing>(SelectedActor))
+		{
+			// Calculate king possible moves
+			KingPossibleMoves(SelectedActorLocation, EnemyColor);
 
+			// Backup so array doesn't change during all of the iterations
+			TArray<FVector2D> PossibleKingMovesForCheckCopy = PossibleKingMovesForCheck;
 
-			// Try to cast PossiblePice to AKing and check if cast is successful 
-			if (AKing* KingActor = Cast<AKing>(SelectedActor))
-			{
+			// Check bool reset for each iteration
+			Check = false;
 
-				KingPossibleMoves(SelectedActorLocation, EnemyColor);
-				TArray<FVector2D> PossibleKingMovesForCheckCopy = PossibleKingMovesForCheck;
-				Check = false;
+			// Iterate over all piece possible moves
+			for (FVector2D SelectedMovePosition : PossibleKingMovesForCheckCopy)
+			{
+				// Simulate friend move and calculate enemy response move
+				MoveSimulation(SelectedActorLocation, SelectedMovePosition, FriendColor, EnemyColor, SelectedActor);
 
-				
-					for (FVector2D SelectedMovePosition : PossibleKingMovesForCheckCopy)
-					{
-						MoveSimulation(SelectedActorLocation, SelectedMovePosition, FriendColor, EnemyColor, SelectedActor);
-						GameMode->GField->BasePieceMap = BackupBasePieceMap;
-					}
-				
+				// Reset for each loop 
+				GameMode->GField->BasePieceMap = BackupBasePieceMap;
 			}
-			else if (APawnChess* PawnActor = Cast<APawnChess>(SelectedActor))
+
+		}
+		else if (APawnChess* PawnActor = Cast<APawnChess>(SelectedActor))
+		{
+			PawnPossibleMoves(SelectedActorLocation, EnemyColor);
+			TArray<FVector2D> PossiblePawnMovesForCheckCopy = PossiblePawnMovesForCheck;
+			Check = false;
+			for (FVector2D SelectedMovePosition : PossiblePawnMovesForCheckCopy)
 			{
-				PawnPossibleMoves(SelectedActorLocation, EnemyColor);
-				TArray<FVector2D> PossiblePawnMovesForCheckCopy = PossiblePawnMovesForCheck;
-				Check = false;
-				for (FVector2D SelectedMovePosition : PossiblePawnMovesForCheckCopy)
-				{
-					MoveSimulation(SelectedActorLocation, SelectedMovePosition, FriendColor, EnemyColor, SelectedActor);
-					GameMode->GField->BasePieceMap = BackupBasePieceMap;
-				}
-				
+				MoveSimulation(SelectedActorLocation, SelectedMovePosition, FriendColor, EnemyColor, SelectedActor);
+				GameMode->GField->BasePieceMap = BackupBasePieceMap;
 			}
-			else if (AQueen* QueenActor = Cast<AQueen>(SelectedActor))
+
+		}
+		else if (AQueen* QueenActor = Cast<AQueen>(SelectedActor))
+		{
+			QueenPossibleMoves(SelectedActorLocation, EnemyColor);
+			TArray<FVector2D> PossibleQueenMovesForCheckCopy = PossibleQueenMovesForCheck;
+			Check = false;
+
+			for (FVector2D SelectedMovePosition : PossibleQueenMovesForCheckCopy)
 			{
-				QueenPossibleMoves(SelectedActorLocation, EnemyColor);
-				TArray<FVector2D> PossibleQueenMovesForCheckCopy = PossibleQueenMovesForCheck;
-				Check = false;
-			
-					for (FVector2D SelectedMovePosition : PossibleQueenMovesForCheckCopy)
-					{
-						MoveSimulation(SelectedActorLocation, SelectedMovePosition, FriendColor, EnemyColor, SelectedActor);
-						GameMode->GField->BasePieceMap = BackupBasePieceMap;
-					}
-				
+				MoveSimulation(SelectedActorLocation, SelectedMovePosition, FriendColor, EnemyColor, SelectedActor);
+				GameMode->GField->BasePieceMap = BackupBasePieceMap;
 			}
-			else if (ABishop* BishopActor = Cast<ABishop>(SelectedActor))
+
+		}
+		else if (ABishop* BishopActor = Cast<ABishop>(SelectedActor))
+		{
+			BishopPossibleMoves(SelectedActorLocation, EnemyColor);
+			TArray<FVector2D> PossibleBishopMovesForCheckCopy = PossibleBishopMovesForCheck;
+			Check = false;
+
+			for (FVector2D SelectedMovePosition : PossibleBishopMovesForCheckCopy)
 			{
-				BishopPossibleMoves(SelectedActorLocation, EnemyColor);
-				TArray<FVector2D> PossibleBishopMovesForCheckCopy = PossibleBishopMovesForCheck;
-				Check = false;
-				
-				for (FVector2D SelectedMovePosition : PossibleBishopMovesForCheckCopy)
-				{
-					MoveSimulation(SelectedActorLocation, SelectedMovePosition, FriendColor, EnemyColor, SelectedActor);
-					GameMode->GField->BasePieceMap = BackupBasePieceMap;
-				}
+				MoveSimulation(SelectedActorLocation, SelectedMovePosition, FriendColor, EnemyColor, SelectedActor);
+				GameMode->GField->BasePieceMap = BackupBasePieceMap;
 			}
-			else if (AKnight* KnightActor = Cast<AKnight>(SelectedActor))
+		}
+		else if (AKnight* KnightActor = Cast<AKnight>(SelectedActor))
+		{
+			KnightPossibleMoves(SelectedActorLocation, EnemyColor);
+			TArray<FVector2D> PossibleKnightMovesForCheckCopy = PossibleKnightMovesForCheck;
+			Check = false;
+
+			for (FVector2D SelectedMovePosition : PossibleKnightMovesForCheckCopy)
 			{
-				KnightPossibleMoves(SelectedActorLocation, EnemyColor);
-				TArray<FVector2D> PossibleKnightMovesForCheckCopy = PossibleKnightMovesForCheck;
-				Check = false;
-				
-				for (FVector2D SelectedMovePosition : PossibleKnightMovesForCheckCopy)
-				{
-					MoveSimulation(SelectedActorLocation, SelectedMovePosition, FriendColor, EnemyColor, SelectedActor);
-					GameMode->GField->BasePieceMap = BackupBasePieceMap;
-				}
+				MoveSimulation(SelectedActorLocation, SelectedMovePosition, FriendColor, EnemyColor, SelectedActor);
+				GameMode->GField->BasePieceMap = BackupBasePieceMap;
 			}
-			else if (ARook* RookActor = Cast<ARook>(SelectedActor))
+		}
+		else if (ARook* RookActor = Cast<ARook>(SelectedActor))
+		{
+			RookPossibleMoves(SelectedActorLocation, EnemyColor);
+			TArray<FVector2D> PossibleRookMovesForCheckCopy = PossibleRookMovesForCheck;
+			Check = false;
+
+			for (FVector2D SelectedMovePosition : PossibleRookMovesForCheckCopy)
 			{
-				RookPossibleMoves(SelectedActorLocation, EnemyColor);
-				TArray<FVector2D> PossibleRookMovesForCheckCopy = PossibleRookMovesForCheck;
-				Check = false;
-			
-				for (FVector2D SelectedMovePosition : PossibleRookMovesForCheckCopy)
-				{ 
-						MoveSimulation(SelectedActorLocation, SelectedMovePosition, FriendColor, EnemyColor, SelectedActor);				
-						GameMode->GField->BasePieceMap = BackupBasePieceMap;
-					
-				}
+				MoveSimulation(SelectedActorLocation, SelectedMovePosition, FriendColor, EnemyColor, SelectedActor);
+				GameMode->GField->BasePieceMap = BackupBasePieceMap;
+
 			}
-		
+		}
+
 	}
 	
 }
 
-
+// Calculate all possible moves for a player
 void AGenericPlayer::CalculatePossibleMoves(ETileOwner FriendColor, ETileOwner EnemyColor)
 {
 
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
+
+	// Indexes reset
 	PawnIsInGame = 0;
 	QueenIsInGame = 0;
 	BishopIsInGame = 0;
@@ -820,11 +850,9 @@ void AGenericPlayer::CalculatePossibleMoves(ETileOwner FriendColor, ETileOwner E
 
 	Actors.Empty();
 
-	// Iterate on TileArray to find tiles owned by black pieces
+	// Iterate on TileArray to find tiles owned by friend pieces
 	for (const auto& Tile : GameMode->GField->TileArray)
 	{
-		// Tile owner must be BLACK
-
 		if (Tile->GetOwner() == FriendColor)
 		{
 			// Get tile location
@@ -837,27 +865,27 @@ void AGenericPlayer::CalculatePossibleMoves(ETileOwner FriendColor, ETileOwner E
 			PieceLocation2d.X = PieceLocation2d.X / 120;
 			PieceLocation2d.Y = PieceLocation2d.Y / 120;
 
-			// Check if BasePieceMap contains the black piece by his 2d location
+			// Check if BasePieceMap contains the piece by his 2d location
 			if (GameMode->GField->BasePieceMap.Contains(PieceLocation2d))
 			{
-				// Initialize black piece actor
+				// Initialize piece 
 				ABasePiece* Actor = GameMode->GField->BasePieceMap[PieceLocation2d];
 
-				//Add black piece to blackActors array
+				//Add piece to Actors array
 				Actors.Add(Actor);
 			}
 		}
 	}
-	// Check if there is at least one black piece
+	// Check if there is at least one piece
 	if (Actors.Num() > 0)
 	{
-		// Iterate on BlackActors array
+		// Iterate over Actors array
 		for (ABasePiece* PossiblePiece : Actors)
 		{
-			// Get iterated black actor location
+			
 			FVector ActorLocation = PossiblePiece->GetActorLocation();
 
-			// Try to cast PossiblePice to AKing and check if cast is successful 
+			// Check piece type
 			if (AKing* KingActor = Cast<AKing>(PossiblePiece))
 			{
 				// Calcolate King(PossiblePiece) possible moves
@@ -867,9 +895,11 @@ void AGenericPlayer::CalculatePossibleMoves(ETileOwner FriendColor, ETileOwner E
 			else if (APawnChess* PawnActor = Cast<APawnChess>(PossiblePiece))
 			{
 				PawnPossibleMoves(ActorLocation, EnemyColor);
+				// Keeps track of how many friend pawns are in game
 				PawnIsInGame++;
 				if (PossiblePawnMoves.Num() == 0) 
 				{
+					// Keeps track of how many pawns has no legal moves
 					NoPawnMovesLeftIndex++;
 				}
 			}
@@ -916,6 +946,7 @@ void AGenericPlayer::CalculatePossibleMoves(ETileOwner FriendColor, ETileOwner E
 
 }
 
+// Simulate friend move and calculate enemy response and check
 void AGenericPlayer::MoveSimulation(FVector SelectedActorLocation, FVector2D SelectedMovePosition, ETileOwner FriendColor, ETileOwner EnemyColor, ABasePiece* SelectedActor)
 {
 	ACHS_GameMode* GameMode = (ACHS_GameMode*)(GetWorld()->GetAuthGameMode());
@@ -931,13 +962,13 @@ void AGenericPlayer::MoveSimulation(FVector SelectedActorLocation, FVector2D Sel
 	}
 
 	FVector2D SelectedActorLocation2D(SelectedActorLocation);
-	// Set tile located at old piece position as empty and without owner
-	// Set tile located at old piece position as empty and without owner
+
+	// Update new tile (Before move) status and save old status
 	ETileStatus Status0 = GameMode->GField->TileMap[SelectedActorLocation2D]->GetTileStatus();
 	ETileOwner Owner0 = GameMode->GField->TileMap[SelectedActorLocation2D]->GetOwner();
 	GameMode->GField->TileMap[SelectedActorLocation2D]->SetTileStatus(ETileOwner::NONE, ETileStatus::EMPTY);
 
-	// Set tile located at new black piece position as occupied and with black owner
+	// Update new tile (After move) status and save old status
 	ETileStatus Status1 = GameMode->GField->TileMap[SelectedMovePosition]->GetTileStatus();
 	ETileOwner Owner1 = GameMode->GField->TileMap[SelectedMovePosition]->GetOwner();
 	GameMode->GField->TileMap[SelectedMovePosition]->SetTileStatus(FriendColor, ETileStatus::OCCUPIED);
@@ -952,13 +983,15 @@ void AGenericPlayer::MoveSimulation(FVector SelectedActorLocation, FVector2D Sel
 	GameMode->GField->BasePieceMap.Remove(SelectedActorLocation2DNormalized);
 	GameMode->GField->BasePieceMap.Add(NormalizedPosition, SelectedActor);
 
+	// Calculate enemy response
 	CalculatePossibleMoves(EnemyColor, FriendColor);
 
+	// Determinate Illegal moves
+	// If after the selected actor move the friend king in in check, It's an illegal move
 	if (SelectedActor->IsA(AKnight::StaticClass()))
 	{
 		if (Check == true) {
 			IllegalKnightMoveDueToCheck.Add(SelectedMovePosition);
-
 		}
 	}
 	else if (SelectedActor->IsA(AKing::StaticClass()))
@@ -992,6 +1025,7 @@ void AGenericPlayer::MoveSimulation(FVector SelectedActorLocation, FVector2D Sel
 		}
 	}
 
+	// Reset tiles after simulation
 	Check = false;
 	GameMode->GField->TileMap[SelectedActorLocation2D]->SetTileStatus(Owner0, Status0);
 	GameMode->GField->TileMap[SelectedMovePosition]->SetTileStatus(Owner1, Status1);
@@ -999,9 +1033,14 @@ void AGenericPlayer::MoveSimulation(FVector SelectedActorLocation, FVector2D Sel
 
 }
 
+// Verify if the friend color king is on checkmate
+// Needs to use updated illegal moves array, so tipically called after IsCheckKing().
 void AGenericPlayer::IsCheckMate(ETileOwner FriendColor, ETileOwner EnemyColor)
 {
+	// Calculate all friend color moves
 	CalculatePossibleMoves(FriendColor, EnemyColor);
+
+	// If all the friend color actors in game has no legal moves left, player lose
 	if (
 		(KnightIsInGame == NoKnightMovesLeftIndex) &&
 		(PossibleKingMoves.Num() == 0 ) && 
@@ -1020,9 +1059,13 @@ void AGenericPlayer::IsCheckMate(ETileOwner FriendColor, ETileOwner EnemyColor)
 			GameInstance->SetTurnMessage(TEXT("BLACK WINS"));
 		}
 		
+		// Disable input game finished
 		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
 		PlayerController->DisableInput(PlayerController);
+		// Set game finished
 		GameInstance->IsGameFinished = true;
+
+		// Need to reset for minimax simulation
 		IllegalKingMoveDueToCheck.Empty();
 		IllegalQueenMoveDueToCheck.Empty();
 		IllegalPawnMoveDueToCheck.Empty();
@@ -1035,18 +1078,26 @@ void AGenericPlayer::IsCheckMate(ETileOwner FriendColor, ETileOwner EnemyColor)
 
 }
 
+// Takes last move informations and converts it in a string 
 void AGenericPlayer::RegisterMoveConverter(FVector2D MovePosition, FVector2D OldPosition, ABasePiece* BasePieceActor, ETileOwner EnemyColor)
 {
 	RegisterMovesCounter++;
 
+	// Converts coordinates
 	FString YChar = NumberToCharConverter(MovePosition);
 	int XPosition = FMath::RoundToInt(MovePosition.X);
 	FString XChar = FString::Printf(TEXT("%d"), XPosition);
+
+	// Turn count
 	FString CounterString = FString::Printf(TEXT("%d"), RegisterMovesCounter);
+
+	// Much simpler method to calculate check just for register
 	CalculateCheckForRegister(MovePosition, EnemyColor, BasePieceActor);
 	
+	// Check piece type to convert type into char 
 	if (BasePieceActor->IsA(AKnight::StaticClass()))
 	{
+		// This bool keeps track if the last move was a kill move 
 		if (IsKillMove == false) 
 		{
 			Message = CounterString + TEXT(": N") + YChar + XChar;
@@ -1112,11 +1163,13 @@ void AGenericPlayer::RegisterMoveConverter(FVector2D MovePosition, FVector2D Old
 		}
 	}
 
+	// If check move add "+" at the end of the string
 	if (Check == true) {
 
 		Message = Message + TEXT("+");		
 	}
 
+	// Add which player did the move
 	if (EnemyColor == ETileOwner::WHITE)
 	{
 		Message = TEXT("(Black) ") + Message;
@@ -1126,10 +1179,12 @@ void AGenericPlayer::RegisterMoveConverter(FVector2D MovePosition, FVector2D Old
 		Message = TEXT("(White) ") + Message;
 	}
 
+	// Update new message
 	GameInstance->SetRegisterMove(Message);
 
 }
 
+// Converts int coordinates into char notation
 FString AGenericPlayer::NumberToCharConverter(FVector2D MovePosition)
 {
 	FString PieceLetter;
@@ -1162,13 +1217,16 @@ FString AGenericPlayer::NumberToCharConverter(FVector2D MovePosition)
 	return PieceLetter;
 }
 
+// Fast way to calculate check for register
 void AGenericPlayer::CalculateCheckForRegister(FVector2D MovePosition, ETileOwner EnemyColor, ABasePiece* PossiblePiece)
 {
+	// Normalize
 	FVector ActorLocation((MovePosition.X - 1) * 120, (MovePosition.Y - 1) * 120, 10);
-	// Try to cast PossiblePice to AKing and check if cast is successful 
+
+	// Check piece type
 	if (AKing* KingActor = Cast<AKing>(PossiblePiece))
 	{
-		// Calcolate King(PossiblePiece) possible moves
+		// Calcolate King possible moves
 		KingPossibleMoves(ActorLocation, EnemyColor);
 
 	}
@@ -1201,6 +1259,7 @@ void AGenericPlayer::CalculateCheckForRegister(FVector2D MovePosition, ETileOwne
 	
 	}
 
+	// After this operations check bool will be updated
 }
 
 
