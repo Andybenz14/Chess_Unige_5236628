@@ -67,6 +67,12 @@ void UCHS_GameInstance::SetUseMinimax(bool Choose)
 	UseMinimax = Choose;
 }
 
+// Called in Main menu widget
+void UCHS_GameInstance::SetUseTimeAttack(bool Choose)
+{
+	UseTimeAttack = Choose;
+}
+
 // Called in BP_User_Widget when user selects the move who wants to replay
 void UCHS_GameInstance::MoveInterpreterForReplay(FString SelectedMove)
 {

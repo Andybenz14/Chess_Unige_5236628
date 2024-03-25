@@ -94,6 +94,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 		bool UseMinimax;
 
+	// Defined at main menu to selected the game modality
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		bool UseTimeAttack;
+
 	// Array of all match moves
 	UPROPERTY(EditDefaultsOnly)
 		TArray<FString> Moves;
@@ -140,6 +144,10 @@ public:
 	// Used by main menu widget to selected the enemy
 	UFUNCTION(BlueprintCallable)
 		void SetUseMinimax(bool Choose);
+
+	// Used by main menu widget to selected the game modality
+	UFUNCTION(BlueprintCallable)
+		void SetUseTimeAttack(bool Choose);
 
 	// Interpret the move string ( selected by user in game), reset the chessboard to starting position
 	// and calls replay. It disable user input
