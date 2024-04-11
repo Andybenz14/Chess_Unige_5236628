@@ -49,7 +49,7 @@ void AMinimaxPlayer::OnTurn()
 	// Set BETA = +inf
 	int32 Beta = std::numeric_limits<int>::max();
 
-	// Inizialize best move and the actor to move
+	// Initialize best move and the actor to move
 	FVector2D BestMove;
 	ABasePiece* BestActor = nullptr;
 
@@ -57,9 +57,8 @@ void AMinimaxPlayer::OnTurn()
 	TMap<FVector2D, ABasePiece*>Backup = GameMode->GField->BasePieceMap;
 
 	// Minimax call
-	int32 test=AlfaBetaMinimax(Depth, IsMax, Alfa, Beta, BestMove, BestActor);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Black Score: %d"), test));
-
+	AlfaBetaMinimax(Depth, IsMax, Alfa, Beta, BestMove, BestActor);
+	
 	// Reset pieces map for safety
 	GameMode->GField->BasePieceMap = Backup;
 	// Reset tile status for safety
